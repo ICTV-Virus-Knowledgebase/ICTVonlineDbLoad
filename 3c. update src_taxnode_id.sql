@@ -2,10 +2,6 @@
 -- set load_new_msl.prev_taxnode_id and dest_taxnode_id, dest_ictv_id
 --
 
---BEGIN transaction
--- ROLLBACK transaction
--- commit transaction
-
 
 update load_next_msl set 
 --select 	dest._action, dest.change, n.lineage, n.taxnode_id, dest._src_taxon_name, dest._action, dest.*,
@@ -19,14 +15,14 @@ update load_next_msl set
 		end)
 from load_next_msl as dest
 left outer join taxonomy_node n on
-	n.msl_release_num in (dest.dest_msl_release_num-1, dest.dest_msl_release_num)
+	n.msl_release_num = (dest.dest_msl_release_num-1)
 	and
 	n.name=dest._src_taxon_name
 where isWrong is NULL
 and dest._action not in ('new', 'split')
 and n.taxnode_id is not null
 and (dest.prev_taxnode_id is null or dest.prev_taxnode_id <> n.taxnode_id)
-order by sort
+
 --
 -- need to collapse merge nodes - chose taxon with the "oldest" ictv_id (lowest)
 --
@@ -46,18 +42,4 @@ where isWrong is NULL
 AND _action like 'merge%'
 order by dest_ictv_id
 
--- QC
-select report='QC set dest_taxnod_id'
-	, mesg=(case when prev_taxnode_id is null and _action not in ('new') then 'Can NOT find _src_taxon: rank='+isnull(_src_taxon_rank,'NULL')+', name='+isnull(_src_taxon_name,'NULL') else '' end)
-	, [sort], _action,prev_taxnode_id, dest_taxnode_id, dest_ictv_id
-from load_next_msl
-where prev_taxnode_id is null and _action not in ('new')
-
-
-PRINT '### PATCH MSL34b - add missing src names'
-update load_next_msl set -- select [sort], 
-	srcFamily = family 
-from load_next_msl
-where  _action = 'move' -- it's a move!
-AND _src_taxon_name is null -- nothing to "move" from 
-and family is not null -- place to copy from
+	
