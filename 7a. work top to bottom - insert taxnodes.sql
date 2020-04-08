@@ -3,8 +3,9 @@
 --
 -- IMPLEMENT new THEN assign/move/rename: create taxonomy_node rows
 -- 
--- HANDLES: if a taxon's parent has been renamed in this MSL!
+-- DOES NOT HANDLE: if a taxon's parent has been renamed in this MSL!
 --
+-- TIME: 
 BEGIN TRANSACTION
 -- commit is in "QC" at bottom
 --ROLLBACK TRANSACTION
