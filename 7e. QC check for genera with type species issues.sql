@@ -5,7 +5,8 @@
 --
 -- -----------------------------------------------------------------------------
 select 
-	genus.msl_release_num, genus.lineage
+	report='type species directly in genus'
+	, genus.msl_release_num, genus.lineage
 	, species_ct = count(species.taxnode_id)
 	, type_species_ct=sum(species.is_ref)
 	,[genera with wrong type species counts]= case 
@@ -30,12 +31,41 @@ order by
 	genus.msl_release_num desc,
 	genus.left_idx 
 
+select 
+	report='type species directly in genus/subgenera'
+	, genus.msl_release_num, genus.lineage
+	, genus_rank=(select name from taxonomy_level l where l.id = genus.level_id)
+	, species_ct = count(species.taxnode_id)
+	, type_species_ct=sum(species.is_ref)
+	,[genera with wrong type species counts]= case 
+		when genus.name='unassigned' and sum(species.is_ref)=0 then 'OK'
+		when genus.name<>'unassigned' and sum(species.is_ref)=1 then 'OK'
+		when genus.name='unassigned' and sum(species.is_ref)>0 then 'ERROR: [Unassigned] genera should not have type species'
+		when genus.name<>'unassigned' and sum(species.is_ref)<>1 then 'ERROR: genera should have EXACTLY 1 type species'
+		when count(species.taxnode_id)=0 then 'ERROR: genera should have AT LEAST 1 species'
+		else 'ERROR: unanticpated by author of this query'
+		end 
+from taxonomy_node genus
+join taxonomy_node species on species.parent_id = genus.taxnode_id
+where genus.level_id in (500,550) and genus.msl_release_num is not null --and genus.msl_release_num=31
+group by genus.msl_release_num, genus.name, genus.lineage, genus.left_idx, genus.level_id
+having  not (
+	(genus.name='unassigned' and sum(species.is_ref)=0)
+	or 
+	(genus.name<>'unassigned' and sum(species.is_ref)=1)
+)
+order by 
+--	genus.lineage,
+	genus.msl_release_num desc,
+	genus.left_idx 
+
+	select * from taxonomy_node where msl_release_num 
 
 --
 -- UPDATE (MSL32) remov extra type species
 --
 --
-update taxonomy_node set
+/*update taxonomy_node set
 	--select orig_is_ref=is_ref, lineage,in_c
 	is_ref = 0
 from taxonomy_node
@@ -107,7 +137,7 @@ SELECT [taxnode_id]=(select max(taxnode_id)+1 from taxonomy_node)
   FROM [dbo].[taxonomy_node]
   where lineage like 'Unassigned;Alphasatellitidae;Geminialphasatellitinae;Ageyesisatellite;Cotton leaf curl Saudi Arabia alphasatellite'
   and not exists (select * from taxonomy_node where lineage = 'Unassigned;Alphasatellitidae;Geminialphasatellitinae;Ageratum yellow vein Singapore alphasatellite')
-
+  */
   
 
 GO
