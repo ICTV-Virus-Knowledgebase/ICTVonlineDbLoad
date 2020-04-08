@@ -63,6 +63,7 @@ and dest_ictv_id is NULL
 -- show what we did
 --
 SELECT * FROM load_next_msl where _action in ('new','split')
+
 --ROLLBACK TRANSACTION
 --COMMIT TRANSACTION
 
