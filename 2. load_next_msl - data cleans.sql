@@ -1,8 +1,10 @@
 -- data cleaning
+begin transaction
+-- COMMIT TRANSACTION
 
 -- remove leading and trailing spaces (update create in excel)
-update load_next_msl_33 set
---select [change],[accessions],
+update load_next_msl set
+--select [change],[exemplarAccessions],
       [proposal]=rtrim(ltrim(replace(replace([proposal],char(9),' '),'  ',' ')))
       ,[srcHigherTaxon]=rtrim(ltrim(replace(replace([srcHigherTaxon],char(9),' '),'  ',' ')))
       ,[srcOrder]=rtrim(ltrim(replace(replace([srcOrder],char(9),' '),'  ',' ')))
@@ -28,54 +30,58 @@ update load_next_msl_33 set
       ,[subgenus]=rtrim(ltrim(replace(replace([subgenus],char(9),' '),'  ',' ')))
       ,[species]=rtrim(ltrim(replace(replace([species],char(9),' '),'  ',' ')))
       ,[isType]=rtrim(ltrim(replace(replace([isType],char(9),' '),'  ',' ')))
-      ,[accessions]=rtrim(ltrim(replace(replace([accessions],char(9),' '),'  ',' ')))
+      ,[exemplarAccessions]=rtrim(ltrim(replace(replace([exemplarAccessions],char(9),' '),'  ',' ')))
+      ,[exemplarRefSeq]=rtrim(ltrim(replace(replace([exemplarRefSeq],char(9),' '),'  ',' ')))
       ,[exemplarName]=rtrim(ltrim(replace(replace([exemplarName],char(9),' '),'  ',' ')))
-      ,[exemplarID]=rtrim(ltrim(replace(replace([exemplarID],char(9),' '),'  ',' ')))
+      ,[exemplarIsolate]=rtrim(ltrim(replace(replace([exemplarIsolate],char(9),' '),'  ',' ')))
       ,[isComplete]=rtrim(ltrim(replace(replace([isComplete],char(9),' '),'  ',' ')))
       ,[Abbrev]=rtrim(ltrim(replace(replace([Abbrev],char(9),' '),'  ',' ')))
       ,[change]=rtrim(ltrim(replace(replace([change],char(9),' '),'  ',' ')))
-from load_next_msl_33
+      ,[rank]=rtrim(ltrim(replace(replace([rank],char(9),' '),'  ',' ')))
+from load_next_msl
 where
-([proposal] is not null and ([proposal] like ' %' or [proposal] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcHigherTaxon] is not null and ([srcHigherTaxon] like ' %' or [srcHigherTaxon] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcOrder] is not null and ([srcOrder] like ' %' or [srcOrder] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcFamily] is not null and ([srcFamily] like ' %' or [srcFamily] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcSubfamily] is not null and ([srcSubfamily] like ' %' or [srcSubfamily] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcGenus] is not null and ([srcGenus] like ' %' or [srcGenus] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcSpecies] is not null and ([srcSpecies] like ' %' or [srcSpecies] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcIsType] is not null and ([srcIsType] like ' %' or [srcIsType] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([srcAccessions] is not null and ([srcAccessions] like ' %' or [srcAccessions] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([realm] is not null and ([realm] like ' %' or [realm] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subrealm] is not null and ([subrealm] like ' %' or [subrealm] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([kingdom] is not null and ([kingdom] like ' %' or [kingdom] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subkingdom] is not null and ([subkingdom] like ' %' or [subkingdom] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([phylum] is not null and ([phylum] like ' %' or [phylum] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subphylum] is not null and ([subphylum] like ' %' or [subphylum] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([class] is not null and ([class] like ' %' or [class] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subclass] is not null and ([subclass] like ' %' or [subclass] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([order] is not null and ([order] like ' %' or [order] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([suborder] is not null and ([suborder] like ' %' or [suborder] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([family] is not null and ([family] like ' %' or [family] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subfamily] is not null and ([subfamily] like ' %' or [subfamily] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([genus] is not null and ([genus] like ' %' or [genus] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([subgenus] is not null and ([subgenus] like ' %' or [subgenus] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([species] is not null and ([species] like ' %' or [species] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([isType] is not null and ([isType] like ' %' or [isType] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([accessions] is not null and ([accessions] like ' %' or [accessions] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([exemplarName] is not null and ([exemplarName] like ' %' or [exemplarName] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([exemplarID] is not null and ([exemplarID] like ' %' or [exemplarID] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([isComplete] is not null and ([isComplete] like ' %' or [isComplete] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([Abbrev] is not null and ([Abbrev] like ' %' or [Abbrev] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %')) or  
-([change] is not null and ([change] like ' %' or [change] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %'))   
+([proposal] is not null and ([proposal] like ' %' or [proposal] like '% ' or [proposal] like '%'+char(9)+'%' or [proposal] like '%  %')) or  
+([srcHigherTaxon] is not null and ([srcHigherTaxon] like ' %' or [srcHigherTaxon] like '% ' or [srcHigherTaxon] like '%'+char(9)+'%' or [srcHigherTaxon] like '%  %')) or  
+([srcOrder] is not null and ([srcOrder] like ' %' or [srcOrder] like '% ' or [srcOrder] like '%'+char(9)+'%' or [srcOrder] like '%  %')) or  
+([srcFamily] is not null and ([srcFamily] like ' %' or [srcFamily] like '% ' or [srcFamily] like '%'+char(9)+'%' or [srcFamily] like '%  %')) or  
+([srcSubfamily] is not null and ([srcSubfamily] like ' %' or [srcSubfamily] like '% ' or [srcSubfamily] like '%'+char(9)+'%' or [srcSubfamily] like '%  %')) or  
+([srcGenus] is not null and ([srcGenus] like ' %' or [srcGenus] like '% ' or [srcGenus] like '%'+char(9)+'%' or [srcGenus] like '%  %')) or  
+([srcSpecies] is not null and ([srcSpecies] like ' %' or [srcSpecies] like '% ' or [srcSpecies] like '%'+char(9)+'%' or [srcSpecies] like '%  %')) or  
+([srcIsType] is not null and ([srcIsType] like ' %' or [srcIsType] like '% ' or [srcIsType] like '%'+char(9)+'%' or [srcIsType] like '%  %')) or  
+([srcAccessions] is not null and ([srcAccessions] like ' %' or [srcAccessions] like '% ' or [srcAccessions] like '%'+char(9)+'%' or [srcAccessions] like '%  %')) or  
+([realm] is not null and ([realm] like ' %' or [realm] like '% ' or [realm] like '%'+char(9)+'%' or [realm] like '%  %')) or  
+([subrealm] is not null and ([subrealm] like ' %' or [subrealm] like '% ' or [subrealm] like '%'+char(9)+'%' or [subrealm] like '%  %')) or  
+([kingdom] is not null and ([kingdom] like ' %' or [kingdom] like '% ' or [kingdom] like '%'+char(9)+'%' or [kingdom] like '%  %')) or  
+([subkingdom] is not null and ([subkingdom] like ' %' or [subkingdom] like '% ' or [subkingdom] like '%'+char(9)+'%' or [subkingdom] like '%  %')) or  
+([phylum] is not null and ([phylum] like ' %' or [phylum] like '% ' or [phylum] like '%'+char(9)+'%' or [phylum] like '%  %')) or  
+([subphylum] is not null and ([subphylum] like ' %' or [subphylum] like '% ' or [subphylum] like '%'+char(9)+'%' or [subphylum] like '%  %')) or  
+([class] is not null and ([class] like ' %' or [class] like '% ' or [class] like '%'+char(9)+'%' or [class] like '%  %')) or  
+([subclass] is not null and ([subclass] like ' %' or [subclass] like '% ' or [subclass] like '%'+char(9)+'%' or [subclass] like '%  %')) or  
+([order] is not null and ([order] like ' %' or [order] like '% ' or [order] like '%'+char(9)+'%' or [order] like '%  %')) or  
+([suborder] is not null and ([suborder] like ' %' or [suborder] like '% ' or [suborder] like '%'+char(9)+'%' or [suborder] like '%  %')) or  
+([family] is not null and ([family] like ' %' or [family] like '% ' or [family] like '%'+char(9)+'%' or [family] like '%  %')) or  
+([subfamily] is not null and ([subfamily] like ' %' or [subfamily] like '% ' or [subfamily] like '%'+char(9)+'%' or [subfamily] like '%  %')) or  
+([genus] is not null and ([genus] like ' %' or [genus] like '% ' or [genus] like '%'+char(9)+'%' or [genus] like '%  %')) or  
+([subgenus] is not null and ([subgenus] like ' %' or [subgenus] like '% ' or [subgenus] like '%'+char(9)+'%' or [subgenus] like '%  %')) or  
+([species] is not null and ([species] like ' %' or [species] like '% ' or [species] like '%'+char(9)+'%' or [species] like '%  %')) or  
+([isType] is not null and ([isType] like ' %' or [isType] like '% ' or [isType] like '%'+char(9)+'%' or [isType] like '%  %')) or  
+([exemplarAccessions] is not null and ([exemplarAccessions] like ' %' or [exemplarAccessions] like '% ' or [exemplarAccessions] like '%'+char(9)+'%' or [exemplarAccessions] like '%  %')) or  
+([exemplarRefSeq] is not null and ([exemplarRefSeq] like ' %' or [exemplarRefSeq] like '% ' or [exemplarRefSeq] like '%'+char(9)+'%' or [exemplarRefSeq] like '%  %')) or  
+([exemplarName] is not null and ([exemplarName] like ' %' or [exemplarName] like '% ' or [exemplarName] like '%'+char(9)+'%' or [exemplarName] like '%  %')) or  
+([exemplarIsolate] is not null and ([exemplarIsolate] like ' %' or [exemplarIsolate] like '% ' or [exemplarIsolate] like '%'+char(9)+'%' or [exemplarIsolate] like '%  %')) or  
+([isComplete] is not null and ([isComplete] like ' %' or [isComplete] like '% ' or [isComplete] like '%'+char(9)+'%' or [isComplete] like '%  %')) or  
+([Abbrev] is not null and ([Abbrev] like ' %' or [Abbrev] like '% ' or [Abbrev] like '%'+char(9)+'%' or [Abbrev] like '%  %')) or  
+([change] is not null and ([change] like ' %' or [change] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%  %'))  or
+([rank] is not null and ([rank] like ' %' or [rank] like '% ' or [rank] like '%'+char(9)+'%' or [rank] like '%  %'))   
 
+/*
 -- map word smart quotes to regular quotes
-
 print 'open smart quote ('+char(147)+') = '+rtrim(ascii('“'))
 print 'close smart quote ('+char(148)+') = '+rtrim(ascii('”'))
 print 'ASCII quote ('+char(34)+') = '+rtrim(ascii('"'))
+*/
 
-
-update load_next_msl_33 set
+update load_next_msl set
 --select 
       [proposal]=replace(replace([proposal],char(147),char(34)),char(148),char(34))
       ,[srcHigherTaxon]=replace(replace([srcHigherTaxon],char(147),char(34)),char(148),char(34))
@@ -102,13 +108,14 @@ update load_next_msl_33 set
       ,[subgenus]=replace(replace([subgenus],char(147),char(34)),char(148),char(34))
       ,[species]=replace(replace([species],char(147),char(34)),char(148),char(34))
       ,[isType]=replace(replace([isType],char(147),char(34)),char(148),char(34))
-      ,[accessions]=replace(replace([accessions],char(147),char(34)),char(148),char(34))
+      ,[exemplarAccessions]=replace(replace([exemplarAccessions],char(147),char(34)),char(148),char(34))
+      ,[exemplarRefSeq]=replace(replace([exemplarRefSeq],char(147),char(34)),char(148),char(34))
       ,[exemplarName]=replace(replace([exemplarName],char(147),char(34)),char(148),char(34))
-      ,[exemplarID]=replace(replace([exemplarID],char(147),char(34)),char(148),char(34))
+      ,[exemplarIsolate]=replace(replace([exemplarIsolate],char(147),char(34)),char(148),char(34))
       ,[isComplete]=replace(replace([isComplete],char(147),char(34)),char(148),char(34))
       ,[Abbrev]=replace(replace([Abbrev],char(147),char(34)),char(148),char(34))
       ,[change]=replace(replace([change],char(147),char(34)),char(148),char(34))
-from load_next_msl_33
+from load_next_msl
 where
 ([proposal] is not null and ([proposal] like '%'+char(147)+'%' or [proposal] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcHigherTaxon] is not null and ([srcHigherTaxon] like '%'+char(147)+'%' or [srcHigherTaxon] like '%'+char(148)+'%')) or  -- word smart quotes
@@ -135,17 +142,18 @@ where
 ([subgenus] is not null and ([subgenus] like '%'+char(147)+'%' or [subgenus] like '%'+char(148)+'%')) or  -- word smart quotes
 ([species] is not null and ([species] like '%'+char(147)+'%' or [species] like '%'+char(148)+'%')) or  -- word smart quotes
 ([isType] is not null and ([isType] like '%'+char(147)+'%' or [isType] like '%'+char(148)+'%')) or  -- word smart quotes
-([accessions] is not null and ([accessions] like '%'+char(147)+'%' or [accessions] like '%'+char(148)+'%')) or  -- word smart quotes
+([exemplarAccessions] is not null and ([exemplarAccessions] like '%'+char(147)+'%' or [exemplarAccessions] like '%'+char(148)+'%')) or  -- word smart quotes
+([exemplarRefSeq] is not null and ([exemplarRefSeq] like '%'+char(147)+'%' or [exemplarRefSeq] like '%'+char(148)+'%')) or  -- word smart quotes
 ([exemplarName] is not null and ([exemplarName] like '%'+char(147)+'%' or [exemplarName] like '%'+char(148)+'%')) or  -- word smart quotes
-([exemplarID] is not null and ([exemplarID] like '%'+char(147)+'%' or [exemplarID] like '%'+char(148)+'%')) or  -- word smart quotes
+([exemplarIsolate] is not null and ([exemplarIsolate] like '%'+char(147)+'%' or [exemplarIsolate] like '%'+char(148)+'%')) or  -- word smart quotes
 ([isComplete] is not null and ([isComplete] like '%'+char(147)+'%' or [isComplete] like '%'+char(148)+'%')) or  -- word smart quotes
 ([Abbrev] is not null and ([Abbrev] like '%'+char(147)+'%' or [Abbrev] like '%'+char(148)+'%')) or  -- word smart quotes
 ([change] is not null and ([change] like '%'+char(147)+'%' or [change] like '%'+char(148)+'%'))   -- word smart quotes
 
 
 -- remove quotes around values
-update load_next_msl_33 set 
--- select change,[srcAccessions],[accessions],
+update load_next_msl set 
+-- select change,[srcAccessions],[exemplarAccessions],
       [proposal]=(case when [proposal] like char(34)+'%'+char(34) then substring([proposal], 2, len([proposal])-2) else [proposal] end)
       ,[srcHigherTaxon]=(case when [srcHigherTaxon] like char(34)+'%'+char(34) then substring([srcHigherTaxon], 2, len([srcHigherTaxon])-2) else [srcHigherTaxon] end)
       ,[srcOrder]=(case when [srcOrder] like char(34)+'%'+char(34) then substring([srcOrder], 2, len([srcOrder])-2) else [srcOrder] end)
@@ -171,13 +179,14 @@ update load_next_msl_33 set
       ,[subgenus]=(case when [subgenus] like char(34)+'%'+char(34) then substring([subgenus], 2, len([subgenus])-2) else [subgenus] end)
       ,[species]=(case when [species] like char(34)+'%'+char(34) then substring([species], 2, len([species])-2) else [species] end)
       ,[isType]=(case when [isType] like char(34)+'%'+char(34) then substring([isType], 2, len([isType])-2) else [isType] end)
-      ,[accessions]=(case when [accessions] like char(34)+'%'+char(34) then substring([accessions], 2, len([accessions])-2) else [accessions] end)
+      ,[exemplarAccessions]=(case when [exemplarAccessions] like char(34)+'%'+char(34) then substring([exemplarAccessions], 2, len([exemplarAccessions])-2) else [exemplarAccessions] end)
+      ,[exemplarRefSeq]=(case when [exemplarRefSeq] like char(34)+'%'+char(34) then substring([exemplarRefSeq], 2, len([exemplarRefSeq])-2) else [exemplarRefSeq] end)
       ,[exemplarName]=(case when [exemplarName] like char(34)+'%'+char(34) then substring([exemplarName], 2, len([exemplarName])-2) else [exemplarName] end)
-      ,[exemplarID]=(case when [exemplarID] like char(34)+'%'+char(34) then substring([exemplarID], 2, len([exemplarID])-2) else [exemplarID] end)
+      ,[exemplarIsolate]=(case when [exemplarIsolate] like char(34)+'%'+char(34) then substring([exemplarIsolate], 2, len([exemplarIsolate])-2) else [exemplarIsolate] end)
       ,[isComplete]=(case when [isComplete] like char(34)+'%'+char(34) then substring([isComplete], 2, len([isComplete])-2) else [isComplete] end)
       ,[Abbrev]=(case when [Abbrev] like char(34)+'%'+char(34) then substring([Abbrev], 2, len([Abbrev])-2) else [Abbrev] end)
       ,[change]=(case when [change] like char(34)+'%'+char(34) then substring([change], 2, len([change])-2) else [change] end)
-from  load_next_msl_33
+from  load_next_msl
 where  
 ([proposal] is not null and ([proposal] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcHigherTaxon] is not null and ([srcHigherTaxon] like char(34)+'%'+char(34))) or  -- double quotes
@@ -204,39 +213,33 @@ where
 ([subgenus] is not null and ([subgenus] like char(34)+'%'+char(34))) or  -- double quotes
 ([species] is not null and ([species] like char(34)+'%'+char(34))) or  -- double quotes
 ([isType] is not null and ([isType] like char(34)+'%'+char(34))) or  -- double quotes
-([accessions] is not null and ([accessions] like char(34)+'%'+char(34))) or  -- double quotes
+([exemplarAccessions] is not null and ([exemplarAccessions] like char(34)+'%'+char(34))) or  -- double quotes
+([exemplarRefSeq] is not null and ([exemplarRefSeq] like char(34)+'%'+char(34))) or  -- double quotes
 ([exemplarName] is not null and ([exemplarName] like char(34)+'%'+char(34))) or  -- double quotes
-([exemplarID] is not null and ([exemplarID] like char(34)+'%'+char(34))) or  -- double quotes
+([exemplarIsolate] is not null and ([exemplarIsolate] like char(34)+'%'+char(34))) or  -- double quotes
 ([isComplete] is not null and ([isComplete] like char(34)+'%'+char(34))) or  -- double quotes
 ([Abbrev] is not null and ([Abbrev] like char(34)+'%'+char(34))) or  -- double quotes
 ([change] is not null and ([change] like char(34)+'%'+char(34)))   -- double quotes
 
--- DeBrazza's
--- possessive was removed from name in MSL32 (2017.001G.A.v2.43spren.zip)
-update load_next_msl_33 set srcSpecies='DeBrazza monkey arterivirus' where srcSpecies like 'DeBrazza’s monkey arterivirus'
-
--- Alphamesonivirus 6/7
--- 2017.012_015S.A.v1.Nidovirales
-update load_next_msl_33 set change ='new species' from load_next_msl_33 where species in ('Alphamesonivirus 6', 'Alphamesonivirus 7') and change like 'assign species to subgenus%'
-
-
 print ascii('"')
 -- null proposals are bad
 select ERROR='NULL proposal field', *
-from load_next_msl_33
+from load_next_msl
 where proposal is NULL
 
 -- get correct suffixes on proposal names
-update load_next_msl_33 set 
+update load_next_msl set 
 -- select count(*), proposal , 
 	proposal=proposal+'.zip'
-from load_next_msl_33 
+from load_next_msl 
 where  proposal not like '%.___' and proposal not like '%.___x'
 --group by proposal  -- for select summary
 
-update load_next_msl_33 set 
--- select count(*), proposal , 
+update load_next_msl set 
+-- select ERROR='stripping .zip suffix', proposal , 
 	proposal=left(proposal, len(proposal)-4)
-from load_next_msl_33 
-where  proposal  like '%.___.zip' or proposal  like '%.___x.zip'
---group by proposal  -- for select summary
+from load_next_msl 
+where  proposal  like '%.pdf.zip' or proposal  like '%.doc.zip' or proposal  like '%.docx.zip'
+
+
+--COMMIT TRANSACTION

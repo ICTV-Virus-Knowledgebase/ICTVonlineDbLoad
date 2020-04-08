@@ -51,7 +51,8 @@ msl_release_num is not null
 and name in (
 --	'Lipid phage PM2', 'Polyomavirus'
 --	'Unnamed genus'
-	'Dermacentor mivirus'
+--	'Dermacentor mivirus'
+	'NO_MATCHES'
 ) 
 order by dx.name, dx.taxnode_id
 
@@ -80,10 +81,10 @@ select
 	, msl_release_num, lineage, count(*)
 from taxonomy_node
 where msl_release_num is not null
+AND is_deleted = 0 AND is_hidden = 0 AND is_obsolete =0
 group by msl_release_num, lineage
 having count(*) > 1 or  lineage is null
 order by msl_release_num desc
-
 
 -- -----------------------------------------------------------------------------
 --
@@ -99,3 +100,5 @@ from taxonomy_node
 where name like '%;%'
 group by msl_release_num, in_change
 order by msl_release_num, in_change
+
+

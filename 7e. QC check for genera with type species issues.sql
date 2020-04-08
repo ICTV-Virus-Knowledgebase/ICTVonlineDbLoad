@@ -29,7 +29,7 @@ having not (
 order by 
 --	genus.lineage,
 	genus.msl_release_num desc,
-	genus.left_idx 
+	type_species_ct desc
 
 select 
 	report='type species directly in genus/subgenera'
@@ -57,9 +57,7 @@ having  not (
 order by 
 --	genus.lineage,
 	genus.msl_release_num desc,
-	genus.left_idx 
-
-	select * from taxonomy_node where msl_release_num 
+	type_species_ct desc
 
 --
 -- UPDATE (MSL32) remov extra type species
@@ -139,6 +137,7 @@ SELECT [taxnode_id]=(select max(taxnode_id)+1 from taxonomy_node)
   and not exists (select * from taxonomy_node where lineage = 'Unassigned;Alphasatellitidae;Geminialphasatellitinae;Ageratum yellow vein Singapore alphasatellite')
   */
   
+
 
 GO
 
