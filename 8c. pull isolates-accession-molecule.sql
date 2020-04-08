@@ -37,22 +37,23 @@ and (
 print '--'
 print '-- pull from the load'
 print '--'
+
 /*
 select 
 	ldMsl = ld.dest_msl_release_num , ldLineage=ld._dest_lineage
 	, ldAbbrev = ld.Abbrev
 	--, ldMolId=src.molecule_id
-	, ldAccess=ld.Accessions
+	, ldAccess=ld.exemplarAccessions
 	,ldIso=ld.exemplarName
-	, ldIsoID = ld.exemplarID
+	, ldIsoID = ld.exemplarIsolate
 	, ld.change
 	,'||'
 	,abbrev_csv
 	,molecule_id
 	,genbank_accession_csv
 	,[isolate_csv]
-	,'||',*/
-update taxonomy_node set	
+	,'||',
+--*/update taxonomy_node set	
 	abbrev_csv = isnull(ld.Abbrev, abbrev_csv)
 	--, molecule_id=isnull(ld.???, src.molecule_id)
 	, genbank_accession_csv=isnull(ld.exemplarAccessions, genbank_accession_csv)
