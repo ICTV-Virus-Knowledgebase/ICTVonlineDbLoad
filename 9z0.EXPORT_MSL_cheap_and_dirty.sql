@@ -13,7 +13,7 @@ select warning = 'QUICK AND DIRTY EXPORT - no pull-forward of historic propertie
 
 select *
 from MSL_export_fast
-where msl_release_num = (select max(msl_release_num) from taxonomy_node)
+where msl_release_num = (select max(msl_release_num) from taxonomy_toc)
 --and last_change_proposal <> ''
 -- debug
 --and tn.lineage like 'Unassigned;Hepadnaviridae;Orthohepadnavirus%'
