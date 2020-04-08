@@ -3,7 +3,7 @@
 --
 select report='unique species in genera w/o type species'
 	, genus as genus, count(species) as species_count, sum(is_type_species) as tspecies_ct, max(species) as species
-from MSL_export_fast where msl_release_num = 34 AND genus <> ''
+from MSL_export_fast where msl_release_num = 33 AND genus <> ''
 group by genus
 having sum(is_type_species) < 1  and count(species) = 1
 order by species_count, genus
@@ -37,7 +37,7 @@ where name in (
 	group by genus
 	having sum(is_type_species) < 1  and count(species) = 1
 	--order by species_count, genus
-) and tree_id = 34
+) and tree_id = (select top 1 tree_id from taxonomy_toc order by msl_release_num desc)
 
 update taxonomy_node set 
 	is_ref=1
@@ -48,8 +48,9 @@ where name in (
 	group by genus
 	having sum(is_type_species) < 1  and count(species) = 1
 	--order by species_count, genus
-) and tree_id = dbo.get_tree_id_of_latest_msl()
+) and tree_id =  (select top 1 tree_id from taxonomy_toc order by msl_release_num desc)
+
 
 -- rebuild delta nodes to include type change flags. 
-declare @tree int; SET @tree=dbo.get_tree_id_of_latest_msl()
+declare @tree int; SET @tree= (select top 1 tree_id from taxonomy_toc order by msl_release_num desc)
 exec dbo.rebuild_delta_nodes @tree
