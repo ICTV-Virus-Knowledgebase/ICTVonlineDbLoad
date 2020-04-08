@@ -8,16 +8,18 @@ declare @msl int; set @msl=(select MAX(msl_release_num) from taxonomy_node)
 select 'TARGET MSL: ',@msl
 
 select 'just this MSL' as scope, msl_release_num, name, count=COUNT(name)
-	, [duplicate taxon names] = case when name = 'unassigned' then 'OK' else 'PROBLEM!' end
+	, [duplicate taxon names] = (case when name = 'unassigned' and min(level_id)=500 and max(level_id)=500 then 'OK - Unassigned genera permitted' else 'PROBLEM!' end)
 	, MIN(lineage) as min_lineage, MAX(lineage) as max_lineage
 from taxonomy_node
 where msl_release_num = @msl
 group by msl_release_num, name
 having COUNT(name) > 1
 
+
+
 select 
 	'all MSL' as scope, msl_release_num, name, COUNT(name) as [count]
-	, [duplicate taxon names]  =case when name = 'unassigned' then 'OK' else 'PROBLEM!' end 
+	, [duplicate taxon names]  =(case when name = 'unassigned' and min(level_id)=500 and max(level_id)=500 then 'OK - Unassigned genera permitted' else 'PROBLEM!' end)
 	, MIN(lineage) as min_lineage, MAX(lineage) as max_lineage
 from taxonomy_node
 where
@@ -49,12 +51,12 @@ msl_release_num is not null
 and name in (
 --	'Lipid phage PM2', 'Polyomavirus'
 --	'Unnamed genus'
-	'Chayote mosaic virus','Chayote yellow mosaic virus'
+	'Dermacentor mivirus'
 ) 
 order by dx.name, dx.taxnode_id
 
 --  record for postarity
-update taxonomy_node set
+/*update taxonomy_node set
 	-- select * ,
 	notes = isnull(notes+'; ','')+'Known duplicate taxon name: MSL 22 - [Chayote mosaic virus] created in two separate genera (Geminiviridae>Begomovirus & Tymovirus).'
 	+' The next year, the Geminivridae folks renamed their version [Chayote yellow mosaic virus]'
@@ -62,29 +64,7 @@ from taxonomy_node where
 name = 	'Chayote mosaic virus' and msl_release_num = 22
 and (notes is null or not notes like '%known duplicate taxon%')
 
---  record for postarity
-update taxonomy_node set
-	-- select * ,
-	notes = isnull(notes+'; ','')+'Known duplicate taxon name: [unnamed genus] in MSL10-16'
-from taxonomy_node where 
-name = 	'unnamed genus' and msl_release_num between 10 and 16
-and (notes is null or not notes like '%known duplicate taxon%')
-
---  record for postarity
-update taxonomy_node set
-	-- select * ,
-	notes = isnull(notes+'; ','')+'Known duplicate taxon name: MSL 1-13 had genera whose name matched one of their species'
-from taxonomy_node where
-(
-	(name in ('Lipid phage PM2','Polyomavirus') and msl_release_num between 1 and 3)
-	or
-	(name in ('Cardiovirus') and msl_release_num between 5 and 5)
-	or 
-	(name in ('Influenza virus C') and msl_release_num between 12 and 13) 
-)
-and (notes is null or not notes like '%known duplicate taxon%')
-
-
+*/
 
 -- -----------------------------------------------------------------------------
 -- 
@@ -94,14 +74,17 @@ and (notes is null or not notes like '%known duplicate taxon%')
 -- -----------------------------------------------------------------------------
 
 
-select [query duplicate lineage] = 'Found duplicates!'
-	, lineage, count(*)
+select 
+	[query duplicate lineage] = 'Found duplicates!' 
+	+ (case when msl_release_num = (select max(msl_release_num) from taxonomy_node) then '    !!NEW!!' else ''  end)
+	, msl_release_num, lineage, count(*)
 from taxonomy_node
-where msl_release_num = 31
-group by lineage
+where msl_release_num is not null
+group by msl_release_num, lineage
 having count(*) > 1 or  lineage is null
+order by msl_release_num desc
 
-\
+
 -- -----------------------------------------------------------------------------
 --
 -- QUERY for names with ';'
