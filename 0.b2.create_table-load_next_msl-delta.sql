@@ -1,16 +1,22 @@
 
 /*********************************************************************
+ ** load_next_msl (delta version)                                   **
  **                                                                 **
- **  !!! UPDATE MSL default number in constraint at bottom !!!      **
+ ** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! **
+ ** !!!                          BEFORE RUNNING                 !!! **
+ ** !!!      UPDATE MSL default number in constraint at bottom  !!! **
+ ** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! **
  **                                                                 **
  *********************************************************************/
- /** Also, move _action and other computed columns into a trigger
-  ** complicated cases are messy in computed columns
+ /** 
+  ** DELTA VERSION
+  **   designed to only load new and changed taxa
+  **
+  ** todo: 
+  **   move _action and other computed columns into a trigger
+  **   complicated cases are messy in computed columns
   **/
 GO
--- actually it should be renamed to msl_32
---drop table [dbo].[load_next_msl]
-go
 
 /****** Object:  Table [dbo].[load_next_msl]    Script Date: 2/26/2019 10:20:06 AM ******/
 SET ANSI_NULLS ON
@@ -77,7 +83,7 @@ CREATE TABLE [dbo].[load_next_msl](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((34)) FOR [dest_msl_release_num]
+ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((35)) FOR [dest_msl_release_num]
 GO
 
 ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl_isDone]  DEFAULT ((0)) FOR [isDone]
