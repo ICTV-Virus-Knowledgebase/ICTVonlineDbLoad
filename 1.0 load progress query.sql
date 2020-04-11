@@ -2,8 +2,9 @@
 -- monitor status during load
 -- --------------------------------------------------------------
 
-declare  @new_tree int; set @new_tree = 20170000
-declare @prev_tree int; set @prev_tree = @new_tree - 10000
+declare  @new_tree int; set @new_tree = (select max(tree_id) from taxonomy_toc)
+declare @prev_tree int; set @prev_tree = (select prev_tree_id from taxonomy_toc_dx where tree_id = @new_tree)
+
 
 SELECT tab='taxonomy_node', tree_id, LEVEL_id, ct=count(*) 
 from taxonomy_node where tree_id=@new_tree 
@@ -13,9 +14,9 @@ SELECT tab='taxonomy_node', tree_id, level_id=0, ct=count(*)
 from taxonomy_node where tree_id=@new_tree 
 group by tree_id
 
-select tab='load_next_msl', dest_tree_id, count(*)
+select tab='load_next_msl', dest_tree_id, ct=count(*)
 from [load_nexT_msl]
-where not (src_lineage is  null and dest_target is null)
+where not (_src_lineage is  null and _dest_taxon_name is null)
 group by dest_tree_id
 
 SELECT tab='taxonomy_node', tree_id, out_change, ct=count(*) 
@@ -46,7 +47,7 @@ SELECT tab='taxonomy_molecule', *, MESSAGE=case when [taxnode_id] < [load_next_m
 FROM (
 	SELECT m.id, m.abbrev, m.name
 		, [taxnode_id]=(select count(*) from taxonomy_node where molecule_id = m.id and msl_release_num = (select max(msl_release_num) from taxonomy_node))
-		, [load_next_msl]=(select count(*) from load_next_msl ld where isnull(ld.dest_molecule, ld.src_molecule) = m.name and not ld.src_out_change in ('abolish','merge'))
+		, [load_next_msl]=(select count(*) from load_next_msl ld where ld.molecule = m.name and not ld._action in ('abolish','merge'))
 	from taxonomy_molecule as m
 
 ) AS SRC

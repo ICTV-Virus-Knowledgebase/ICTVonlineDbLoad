@@ -8,10 +8,10 @@ declare @target_tree int
 declare @prev_tree int
 declare @next_tree int
 -----------------------------------------------
-set @target_tree=2017*10000  --     MSL 32=2017
+set @target_tree=(select tree_id from taxonomy_toc where msl_release_num=35)
 -----------------------------------------------
-set @prev_tree=@target_tree-10000
-set @next_tree=@target_tree+10000
+set @prev_tree=(select prev_tree_id from taxonomy_toc_dx where tree_id = @target_tree) 
+set @next_tree=(select tree_id from taxonomy_toc_dx where prev_tree_id = @target_tree)
 
 --truncate table load_next_msl;
 
