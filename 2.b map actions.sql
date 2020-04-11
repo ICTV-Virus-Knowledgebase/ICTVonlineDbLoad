@@ -43,6 +43,11 @@ from load_next_msl
 group by filename, dest_msl_release_num, _action
 order by filename, dest_msl_release_num, _action
 
+select report='action summary', filename, dest_msl_release_num, _action='all', row_ct=count(*), max_taxid=max(dest_taxnode_id) 
+from load_next_msl 
+group by filename, dest_msl_release_num
+order by filename, dest_msl_release_num
+
 select 
 	report='QC change vocabulary'
 	, filename

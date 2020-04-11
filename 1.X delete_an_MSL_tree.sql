@@ -8,7 +8,7 @@ declare @target_tree int
 declare @prev_tree int
 declare @next_tree int
 -----------------------------------------------
-set @target_tree=(select tree_id from taxonomy_toc where msl_release_num=35)
+set @target_tree=(select tree_id from taxonomy_toc where msl_release_num=/*>>*/35/*<<*/)
 -----------------------------------------------
 set @prev_tree=(select prev_tree_id from taxonomy_toc_dx where tree_id = @target_tree) 
 set @next_tree=(select tree_id from taxonomy_toc_dx where prev_tree_id = @target_tree)
