@@ -91,15 +91,13 @@ CREATE TABLE [dbo].[load_next_msl](
 	[dest_ictv_id] [int] NULL,
 	[dest_parent_id] [int] NULL,
 	[dest_level_id] [int] NULL,
-	[isDone] [int] NULL
+	[isDone] [nvarchar](500) NULL
 ) ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((35)) FOR [dest_msl_release_num]
 GO
 
-ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl_isDone]  DEFAULT ((0)) FOR [isDone]
-GO
 
 
 /****** Object:  Index [IX_load_next_msl-dest_parent_name]    Script Date: 2/27/2019 12:50:19 AM ******/
