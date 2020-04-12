@@ -40,7 +40,7 @@ and (dest.prev_taxnode_id is null or dest.prev_taxnode_id <> n.taxnode_id)
 order by msg, sort -- put ERROR first, alphabetically.
 
 -- --------------------------------------------------------------------
--- QC
+-- QC - unmapped rows
 -- --------------------------------------------------------------------
 select 
 	STEP='3. load_next_msl_33 - set prev_tax_id.sql'
@@ -51,6 +51,56 @@ from load_next_msl
 where prev_taxnode_id is null
 and not (_action = 'new' and _src_taxon_name is null)
 order by action, sort
+
+-- --------------------------------------------------------------------
+-- QC - try to map all taxon names at all levels
+--
+-- mostly this doesn't matter, if lowest rank taxon maps, which is done above.
+-- --------------------------------------------------------------------
+select * 
+from (
+	select 
+		TAXA_NAMES_NOT_FOUND_IN_PREV_MSL=
+		  (case when  load_next_msl.srcrealm  is not null and srcrealm.name is null then '"'+srcrealm+'": realm not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubrealm  is not null and srcsubrealm.name is null then '"'+srcsubrealm+'": subrealm not found, '   else '' end)
+		  +(case when  load_next_msl.srckingdom  is not null and srckingdom.name is null then '"'+srckingdom+'": kingdom not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubkingdom  is not null and srcsubkingdom.name is null then '"'+srcsubkingdom+'": subkingdom not found, '   else '' end)
+		  +(case when  load_next_msl.srcphylum  is not null and srcphylum.name is null then '"'+srcphylum+'": phylum not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubphylum  is not null and srcsubphylum.name is null then '"'+srcsubphylum+'": subphylum not found, '   else '' end)
+		  +(case when  load_next_msl.srcclass  is not null and srcclass.name is null then '"'+srcclass+'": class not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubclass  is not null and srcsubclass.name is null then '"'+srcsubclass+'": subclass not found, '   else '' end)
+		  +(case when  load_next_msl.srcorder  is not null and srcorder.name is null then '"'+srcorder+'": order not found, '   else '' end)
+		  +(case when  load_next_msl.srcsuborder  is not null and srcsuborder.name is null then '"'+srcsuborder+'": suborder not found, '   else '' end)
+		  +(case when  load_next_msl.srcfamily  is not null and srcfamily.name is null then '"'+srcfamily+'": family not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubfamily  is not null and srcsubfamily.name is null then '"'+srcsubfamily+'": subfamily not found, '   else '' end)
+		  +(case when  load_next_msl.srcgenus  is not null and srcgenus.name is null then '"'+srcgenus+'": genus not found, '   else '' end)
+		  +(case when  load_next_msl.srcsubgenus  is not null and srcsubgenus.name is null then '"'+srcsubgenus+'": subgenus not found, '   else '' end)
+		  +(case when  load_next_msl.srcspecies  is not null and srcspecies.name is null then '"'+srcspecies+'": species not found, '   else '' end)
+		, sort, proposal, spreadsheet, _action, spreadsheet_lineage=_src_lineage, correct_prev_msl_lineage=mapped.lineage, correct_taxnode_id=mapped.taxnode_id
+	from load_next_msl
+	 left outer join taxonomy_node mapped on mapped.taxnode_id = load_next_msl.prev_taxnode_id
+	 left outer join taxonomy_node srcrealm on srcrealm.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcrealm.name = load_next_msl.srcrealm
+	 left outer join taxonomy_node srcsubrealm on srcsubrealm.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubrealm.name = load_next_msl.srcsubrealm
+	 left outer join taxonomy_node srckingdom on srckingdom.msl_release_num=load_next_msl.dest_msl_release_num -1 and srckingdom.name = load_next_msl.srckingdom
+	 left outer join taxonomy_node srcsubkingdom on srcsubkingdom.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubkingdom.name = load_next_msl.srcsubkingdom
+	 left outer join taxonomy_node srcphylum on srcphylum.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcphylum.name = load_next_msl.srcphylum
+	 left outer join taxonomy_node srcsubphylum on srcsubphylum.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubphylum.name = load_next_msl.srcsubphylum
+	 left outer join taxonomy_node srcclass on srcclass.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcclass.name = load_next_msl.srcclass
+	 left outer join taxonomy_node srcsubclass on srcsubclass.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubclass.name = load_next_msl.srcsubclass
+	 left outer join taxonomy_node srcorder on srcorder.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcorder.name = load_next_msl.srcorder
+	 left outer join taxonomy_node srcsuborder on srcsuborder.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsuborder.name = load_next_msl.srcsuborder
+	 left outer join taxonomy_node srcfamily on srcfamily.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcfamily.name = load_next_msl.srcfamily
+	 left outer join taxonomy_node srcsubfamily on srcsubfamily.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubfamily.name = load_next_msl.srcsubfamily
+	 left outer join taxonomy_node srcgenus on srcgenus.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcgenus.name = load_next_msl.srcgenus
+	 left outer join taxonomy_node srcsubgenus on srcsubgenus.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcsubgenus.name = load_next_msl.srcsubgenus
+	 left outer join taxonomy_node srcspecies on srcspecies.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcspecies.name = load_next_msl.srcspecies
+) as src 
+where len(src.TAXA_NAMES_NOT_FOUND_IN_PREV_MSL) > 0
+
+select taxnode_id, parent_id, name, level_id from taxonomy_node where name like '%Bunyvirales%' 
+or taxnode_id in (201850142,201856221,201850137, 201850001)
+order by tree_id desc
+
 
 
 
