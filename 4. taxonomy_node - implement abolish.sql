@@ -7,9 +7,10 @@
 --
 
 -- 
--- NTH: abolish
+-- NTH: abolish & merge
 --
 
+IMPLEMENT MERGE (remove nodes that are not the merge target)
 
 --
 -- pre-flight check/report
