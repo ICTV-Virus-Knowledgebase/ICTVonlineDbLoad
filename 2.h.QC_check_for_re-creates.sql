@@ -47,7 +47,7 @@ select sort, isWrong, proposal, spreadsheet, _src_lineage, _src_taxon_rank, chan
 --
 	isWrong = 'Elliot: In the line before this, 1468, the species Prochlorococcus virus PSSP7 is abolished. But since sort 1469 creates it again in the new genus Tiamatvirus, this is really just a move. So I would delete sort line 1468, and change 1469 to a move.'
 from load_next_msl
-where sort=1468
+where isWrong is null and sort=1468
 
 -- show two error rows
 select rpt='look at both rows to cut-paste combined correction row below', * from load_next_msl where sort in (1468, 1469)
