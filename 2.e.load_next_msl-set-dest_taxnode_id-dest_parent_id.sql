@@ -119,10 +119,22 @@ from load_next_msl where isWrong is null and dest_parent_id is null and _action 
 
 update load_next_msl set subfamily='Avulavirinae', genus='Orthoavulavirus' where sort=500 and subfamily='AvulavirinaeOrthoavulavirus'
 update load_next_msl set genus='Aquaparamyxovirus' where sort=673 and genus='AquaparamyxovirusName!!'
+update load_next_msl set subfamily=NULL where sort=676 and subfamily='Unassigned'
+update load_next_msl set subfamily=NULL where sort=678 and subfamily='Unassigned'
+update load_next_msl set subfamily=NULL where sort=680 and subfamily='Unassigned'
+update load_next_msl set genus='Orthophasmavirus' where sort=794 and genus='Orhtophasmavirus'
+update load_next_msl set subfamily='Ermolyevavirinae' where sort in (1345,1346) and subfamily='Emolyevavirinae'
 
-DECLARE @targ varchar(50); SET @targ='Aquaparamyxovirus'
+/* 
+ --
+ -- ad hoc research query - find taxon in both tables
+ --
+
+DECLARE @targ varchar(50); SET @targ='Ermolyevavirinae'
 select t='taxonomy_node', * from taxonomy_node where name like @targ order by msl_release_num desc
 select t='load_next_msl', * from load_next_msl where _dest_taxon_name like @targ
+*/
+
 --ROLLBACK TRANSACTION
 --COMMIT TRANSACTION
 
