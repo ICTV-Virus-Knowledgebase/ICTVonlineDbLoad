@@ -1,6 +1,15 @@
 --
--- load_new_msl - clear parent IDs, for NEW/SPLIT assign new taxnode_id's
+-- SET load_new_msl: dest_TAXNODE_id, dest_ICTV_id and dest_PARENT_id 
 --
+-- scan both taxa in taxonomy_node(new MSL) and load_next_msl(new, split and renamed) things. 
+--
+--
+-- this must happen after 
+--  * prev MSL is copied to create new one
+--  * load_next_msl is loaded
+-- and before we start applying changes
+--
+
 BEGIN TRANSACTION
 -- COMMIT TRANSACTION
 
