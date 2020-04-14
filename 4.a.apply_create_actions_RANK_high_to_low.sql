@@ -50,8 +50,8 @@ PRINT 'set tree_id '+rtrim(@tree_id)+' and msl_release_num '+rtrim(@msl)
 -- cursor to assign IDs?
 
 SET NOCOUNT ON
-DECLARE @level_id int; 
-DECLARE @rank varchar(50); 
+DECLARE @level_id int
+DECLARE @rank varchar(50)
 DECLARE @msg nvarchar(200)
 DECLARE @count int
 
