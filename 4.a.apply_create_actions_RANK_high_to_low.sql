@@ -5,20 +5,23 @@
  * ORDER: high to low rank
  *
  * ---------------------------------------------------*/
- /* to fix
-  -- MOVE (+rename+isType) @ order  (niether skipped nor rows changed)
-  -- MOVE (+rename+isType) @ family
-  -- MOVE (+rename+isType) @ genus
-  -- MOVE (+rename+isType) @ subgenus
-  -- MOVE (+rename+isType) @ species
-  */
+
+BEGIN TRANSACTION
+-- COMMIT TRANSACTION
+
+
  select 'todo', _action, count(*)
  from load_next_msl 
  group by _action 
 
-
-BEGIN TRANSACTION
--- COMMIT TRANSACTION
+ /* 
+   preflight check
+  */
+if (select  count(*) from load_next_msl where _action='new') > 0 BEGIN
+	declare @msg varchar(500); SET @msg='!!!!!!!PROMOTE action NOT YET IMPLEMENTED!!!!!!!!'
+	print @msg
+	RAISERROR (15600,-1,-1, @msg)
+END
 
 
  -- 
