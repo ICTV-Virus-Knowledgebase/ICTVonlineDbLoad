@@ -94,6 +94,10 @@ AND release.name NOT LIKE 'unassigned'
 
 GO
 
+/*
+
+-- this is simpler, but slower; don't create - or we'll just have more complexity later to know which one is in use.
+
 CREATE OR ALTER VIEW view_taxa_level_counts_by_release_simplified AS
 -- 20200414 CurtisH (simplified)
 select  
@@ -124,3 +128,4 @@ group by release.tree_id, release.notes, release.msl_release_num, release.name
 GO
 
 
+*/
