@@ -7,11 +7,32 @@
 
 -- check molecule abbreves
 select 
-	dest_molecule
-	,(select id from taxonomy_molecule tm where tm.abbrev = dest_molecule) as id
-	,count(*) as usage_ct
-	, case when count(*) is null then 'ERROR: misssing molecule' else '' end as problem
+	report='map molecule names to taxonomy_molecule'
+	, count(*) as usage_ct
+	, molecule
+	,molecule_id = isnull(rtrim(tm.id), '--MISSING--')
+	, best_guess = guess.abbrev
+	, (case when count(*) > 0 and tm.id is null then  'ERROR: misssing molecule' else '' end) as problem
 from load_next_msl
-where dest_molecule is not null
-group by dest_molecule
+left outer join taxonomy_molecule tm on tm.abbrev = molecule
+left outer join taxonomy_molecule guess on guess.abbrev = replace(molecule,' (', '(')
+where molecule is not null
+group by molecule, tm.id,  guess.abbrev
 	
+-- for refernece
+select t='taxonomy_molecule', *  from taxonomy_molecule tm
+
+-- fix ones we can guess
+select 
+	report='fix molecule abbrev in load_next_msl'
+	, molecule
+	, best_guess = guess.abbrev
+--RUN-- update load_next_msl set molecule = guess.abbrev
+from load_next_msl
+left outer join taxonomy_molecule tm on tm.abbrev = molecule
+left outer join taxonomy_molecule guess on guess.abbrev = replace(molecule,' (', '(')
+where molecule	 is NOT null 
+and tm.abbrev		IS null
+and guess.abbrev is NOT null
+
+-- 
