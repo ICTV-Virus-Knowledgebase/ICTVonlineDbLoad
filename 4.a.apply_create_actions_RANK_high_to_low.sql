@@ -261,14 +261,14 @@ BEGIN
 		JOIN load_next_msl src on isWrong is null AND src.prev_taxnode_id = taxonomy_node.taxnode_id
 		JOIN taxonomy_node dest on dest.taxnode_id = src.dest_taxnodE_id
 		WHERE src._action='move'	
-		and src.sort=13
 		and taxonomy_node.level_id = @level_id
+		and taxonomy_node.out_change is null
 
 		-- record completion
 		UPDATE load_next_msl SET isDONE='4.a.apply_create_actions'
 		FROM load_next_msl src 
 		JOIN taxonomy_node on src.prev_taxnode_id = taxonomy_node.taxnode_id
-		WHERE src.isWrong is null AND src._action='rename'	
+		WHERE src.isWrong is null AND src._action='move'	
 		and level_id = @level_id
 
 	ENd
@@ -334,13 +334,13 @@ SET NOCOUNT OFF
 -- report on changes implemented
 --
 
---DEBUG--
-DECLARE @msl int; SET @msl=(select distinct dest_msl_release_num from load_next_msl)
+--DEBUG-- DECLARE @msl int; SET @msl=(select distinct dest_msl_release_num from load_next_msl)
 --
 -- summary counts
 --
--- MSL-1: out_change
-select action=act.change, prevMSL=prev.ct, load_next_msl=new.ct, nextMSL=dest.ct
+select 
+	report='counts by [ACTION]'
+	, action=act.change, prevMSL=prev.ct, load_next_msl=new.ct, nextMSL=dest.ct
 	, (case when  isnull(prev.ct,0)+isnull(dest.ct,0) = isnull(new.ct,0) then 'OK' else 'ERROR' end )
 from (select change from taxonomy_change_in union select change from taxonomy_change_out) as act
 left outer join (
@@ -353,13 +353,13 @@ left outer join (
 left outer join (
 	-- prev-MSL: out_change
 	select  change=out_change, ct=count(*),title='prevMSL.out_action', col='out_change', msl_release_num
-	from taxonomy_node where msl_release_num=(@msl-1) and out_change is not null
+	from taxonomy_node_names where msl_release_num=(@msl-1) and out_change is not null
 	group by msl_release_num, out_change
 ) as prev on prev.change = act.change
 left outer join (
 	-- MSL: in_change DECLARE @msl int; SET @msl=(select distinct dest_msl_release_num from load_next_msl)
 	select change=in_change, ct=count(*), title='currMSL.in_action ', col='in_change=',  msl_release_num
-	from taxonomy_node where msl_release_num=@msl and in_change is not null
+	from taxonomy_node_names where msl_release_num=@msl and in_change is not null
 	group by msl_release_num, in_change
 ) as dest on dest.change = act.change
 order by action
@@ -367,7 +367,7 @@ order by action
 
 
 --rollback transaction
-commit transaction
+--commit transaction
 
 
 
