@@ -30,7 +30,14 @@ DECLARE @dest_ictv_id int
 DECLARE @msg nvarchar(200)
 
 DECLARE UP_CURSOR CURSOR FOR
-SELECT @dest_taxnode_id, @dest_ictv_id FROM load_next_msl WHERE isWrong is null AND dest_taxnode_id is null AND _action in ('new', 'split') FOR UPDATE OF dest_taxnode_id, dest_ictv_id
+	SELECT @dest_taxnode_id, @dest_ictv_id 
+	FROM load_next_msl 
+	WHERE isWrong is null 
+	AND dest_taxnode_id is null 
+	AND _action in ('new', 'split') 
+	-- if a split still contains it's original name, don't give that one a new taxnode/ictv
+	AND not (_action = 'split' and _src_taxon_name = _dest_taxon_name)
+	FOR UPDATE OF dest_taxnode_id, dest_ictv_id
 OPEN UP_CURSOR
 FETCH NEXT FROM UP_CURSOR INTO @dest_taxnode_id, @dest_ictv_id
 
@@ -61,6 +68,7 @@ update load_next_msl set
 from load_next_msl
 where isWrong is null 
 AND _action in ('new','split')
+AND not (_action = 'split' and _src_taxon_name = _dest_taxon_name)
 and dest_ictv_id is NULL
 
 -- -------------------------------------------------------------------------------------------------------------
