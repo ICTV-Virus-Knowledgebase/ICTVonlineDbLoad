@@ -11,9 +11,10 @@
 -- Ex: MSL30, Tymovirales > Betaflexiviridae > [Unassigned] > Unassigned : has no kids
 --
 -- --------------------------------------------------------------------------------------
-select p.msl_release_num, p.taxnode_id, p.ictv_id, p.level_id, p.is_hidden, p.lineage,p.notes, childCount=(p.right_idx-p.left_idx-1)/2
-from taxonomy_node as p
-left outer join taxonomy_node as c on c.parent_id = p.taxnode_id
+select
+	report='scan for non-species nodes with no children'
+	, p.msl_release_num, p.taxnode_id, p.ictv_id, p.rank, p.is_hidden, p.lineage,p.notes, _numKids
+from taxonomy_node_names as p
 where p.msl_release_num is not null
 and p.level_id < 600
 and p.is_deleted = 0
@@ -24,52 +25,95 @@ and not (
 	--p.lineage in ('')--('Unassigned;Poxviridae;Unassigned;Entomopoxvirus','Unassigned;Hepadnaviridae')
 	p.notes like '%known empty taxon!%' and p.notes is not null
 )
-group by p.msl_release_num, p.taxnode_id, p.ictv_id, p.level_id, p.is_hidden,  p.lineage, p.notes, p.left_idx, p.right_idx
-having count(c.taxnode_id) = 0 
+and _numKids = 0 
 if @@ROWCOUNT > 0  raiserror('ERROR fixups 7; empty taxa found', 18, 1) else print('PASS - no empty taxa')
 
 
---
--- WHY Unassigned;Metaviridae;Unassigned;Semotivirus NOT MOVED TO Ortervirales;Belpaoviridae;Unassigned;Semotivirus 
---
-select distinct n.* 
-from [taxonomy_node] n 
-join [taxonomy_node] t on (
-	 --t.name in ('Aspiviridae') 
-	 t.lineage in ('Ortervirales;Belpaoviridae;Unassigned','Unassigned;Solemoviridae;Unassigned')
-) AND n.left_idx between t.left_idx and t.right_idx and n.tree_id = t.tree_id
-order by n.left_idx
 
-select * from [taxonomy_node] where level_id is null and tree_id = (select max(tree_id) from taxonomy_node)
-
--- 
--- clean up messes with Aspiviridae rename
 --
-update taxonomy_node set 
---select lineage, *, 
-parent_id = 20173945 -- original Unassigned;Aspiviridae;Unassigned;Ophiovirus that came from renaming the family
+-- AD HOC QUERIES
+--
+select 'load_next_msl', * from load_next_msl where 'Redondoviridae' in (_src_taxon_name, _dest_taxon_name)
+
+select 'nextMSL', * from taxonomy_node where name = '%NBD2%' order by msl_release_num desc
+
+select report='descendants', n.taxnode_id, n.rank,n.lineage
+from taxonomy_node t
+join taxonomy_node_names n on n.left_idx between t.left_idx and t.right_idx and n.tree_id = t.tree_id
+where t.name='Vilniusvirus'
+order by n.level_id
+
+select report='ancestors', n.parent_id, n.taxnode_id, n.rank, n.name, n.lineage, n.in_change, n.in_filename
+from taxonomy_node t
+join taxonomy_node_names n on t.left_idx between n.left_idx and n.right_idx and n.tree_id = t.tree_id
+where t.name = 'Vilniusvirus'
+order by n.level_id 
+
+select 
+	report='duplicate dest_taxon_names in load_next_msl'
+	, count=src.ct
+	, ld.sort, ld._src_taxon_name, ld._action, ld.rank, ld._dest_parent_name, ld._dest_taxon_name, ld._dest_lineage, ld.isWrong
+from load_nexT_msl ld
+join (
+	select _dest_taxon_name, ct= count(*)
+	from load_next_msl
+	where _action <> 'abolish'
+	--and isWrong is null
+	group by _dest_taxon_name
+	having count(*) > 1
+) src on src._dest_taxon_name=ld._dest_taxon_name
+--where ld.isWrong is null
+order by ld._dest_taxon_name, ld.sort
+
+select 
+	report='sort list' 
+	, prev.taxnode_id, prev.rank, prev.name
+	, prevMSL='<<<<'
+	, ld.prev_taxnode_id, ld._src_taxon_name, ld.sort, ld._action, ld.rank, ld._dest_parent_name, ld._dest_taxon_name, ld.dest_taxnode_id
+	, destMSL='<<<<'
+	,dest.taxnode_id, dest.rank, dest.name, dest.lineage
+from load_next_msl ld
+left outer join taxonomy_node_names prev on prev.taxnode_id = ld.prev_taxnode_id
+left outer join taxonomy_node_names dest on dest.taxnode_id = ld.dest_taxnode_id
+where ld.sort between 173 and 186
+order by ld.sort, isnull(prev.left_idx, dest.left_idx)
+
+
+--
+-- DATA CORRECTIONS
+--
+
+-- add action to load_next_msl, for the record
+--DEBUG-- DELETE FROM LOAD_NEXT_MSL WHERE SORT=1849.5
+insert into load_next_msl (filename, sort, proposal_abbrev, proposal, spreadsheet, srcOrder, SrcFamily, srcSubFamily, change,  _action, rank, prev_taxnode_id, dest_taxnode_id)
+select src.filename, sort+0.5, proposal_abbrev, proposal, spreadsheet, srcOrder, SrcFamily, srcSubFamily, change='abolish',  _action='abolish', rank='subfamily', prev_taxnode_id=prev.taxnode_id, dest_taxnode_id=dest.taxnode_id
+from load_next_msl src
+left outer join taxonomy_node prev on prev.name = srcSubFamily and prev.msl_release_num=dest_msl_release_num-1
+left outer join taxonomy_node dest on dest.name = srcSubFamily and dest.msl_release_num=dest_msl_release_num
+where sort=1849
+and not exists (select * from load_next_msl tst where tst.sort=src.sort+0.5)
+
+-- set out_change on prevMSL
+update taxonomy_node set -- SELECT taxnode_id, level_id, lineage, 
+	out_change=src._action
+	,out_filename=src.proposal
 from taxonomy_node
-where tree_id=20170000 and parent_id = 20176012 -- new, badly formed genus that was implicitly created.
+join load_next_msl src on taxnode_id=src.prev_taxnode_id
+where sort=1849.5
 
-delete 
--- select * 
-from taxonomy_node
-where taxnode_id in (20176013, 20176012)
-
-update taxonomy_node set
---select lineage, *, 
-level_id = 400 -- sub family
-, is_hidden = 1 
-from taxonomy_node
-where tree_id=20170000 and lineage in ('Ortervirales;Belpaoviridae;Unassigned','Unassigned;Solemoviridae;Unassigned') -- new, badly formed subfamilies that was implicitly created.
-
+-- remove row from nextMSL
+delete from taxonomy_node -- SELECT taxnode_id, level_id, lineage, _numKids FROM taxonomy_node
+where taxnode_id in (select dest_taxnode_id from load_next_msl where sort=1849.5)
 --
+
 -- changes of level
 --
-select src_level, dest_level, * 
+select 
+	_src_taxon_rank, _action, _dest_taxon_rank
+	,  * 
 from load_next_msl 
-where ( len(src_lineage)-len(replace(src_lineage,';',''))) <> ( len(dest_target)-len(replace(dest_target,';','')))
-and (dest_in_change not in ('new') or dest_in_change is null) and (src_out_change not in ('abolish') or src_out_change is null)
+where _src_taxon_rank <> _dest_taxon_rank
+and (_action not in ('new') or _action is null) and (_action not in ('abolish') or _action is null)
 if @@ROWCOUNT > 0  raiserror('ERROR fixups 7; taxa change level badly', 18, 1) else print('PASS - no bad level changes')
 
 --
