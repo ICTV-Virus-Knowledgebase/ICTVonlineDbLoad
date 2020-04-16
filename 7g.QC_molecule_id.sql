@@ -4,6 +4,21 @@
 
 select getMSL=dbo.udf_getMSL(NULL), getTreeID=dbo.udf_getTreeID(NULL)
 
+select report='ERROR: (option to fix) load_next_msl.molecule <> taxonomy_node.molecule'
+	, src.sort, src._action, src.rank, src._dest_lineage, src.molecule
+	, mol='>>>', m.id, m.abbrev
+	, node='>>>', dest.taxnode_id, dest.molecule_id, dest.molecule, dest.inher_molecule
+--RUN-- update dest set molecule_id=m.id
+from taxonomy_node_names dest 
+join load_next_msl as src on dest.taxnode_id = src.dest_taxnode_id
+left outer join taxonomy_molecule m on m.abbrev=replace(src.molecule,' (','(')
+where src.isWrong is null
+and src.molecule is not null
+and (
+	m.id <> dest.molecule_id or m.id <> isnull(dest.inher_molecule_id,0)
+)
+
+
 select report='nodes with redundant molecule_type'
 	, rank=l.name
 	, explicitMol=m.abbrev
