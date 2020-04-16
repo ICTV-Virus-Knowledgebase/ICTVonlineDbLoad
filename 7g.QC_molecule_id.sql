@@ -20,6 +20,7 @@ and (
 
 
 select report='nodes with redundant molecule_type'
+	, msl=n.msl_release_num
 	, rank=l.name
 	, explicitMol=m.abbrev
 	, flag=(case 
@@ -65,6 +66,7 @@ and n.taxnode_id in (
 order by n.left_idx
 
 select report='nodes with OVER-RIDE molecule_type' 
+	, msl=n.msl_release_num
 	, rank=l.name
 	, explicitMol=m.abbrev
 	, flag=(case 
@@ -95,6 +97,7 @@ and n.taxnode_id in (
 order by n.left_idx
 
 select report='nodes with interesting  molecule_type situtations (dup, override, missing)'
+	, msl=n.msl_release_num
 	, n.taxnode_id
 	, rank=l.name
 	, explicitMol=m.abbrev
