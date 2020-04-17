@@ -3,23 +3,32 @@
 --
 -- QUERY genera with wrong # of type species
 --
+-- now that we have subgenus ranks, the rule is 
+-- "one and only one type specices per genus, across all it's subgenera, if any"
+--
 -- -----------------------------------------------------------------------------
 select 
-	report='type species directly in genus'
-	, genus.msl_release_num, genus.lineage
+	report='too many/few type species under a genus'
+	, genus.msl_release_num, genus.lineage, genus.name
 	, species_ct = count(species.taxnode_id)
 	, type_species_ct=sum(species.is_ref)
 	,[genera with wrong type species counts]= case 
 		when genus.name='unassigned' and sum(species.is_ref)=0 then 'OK'
 		when genus.name<>'unassigned' and sum(species.is_ref)=1 then 'OK'
 		when genus.name='unassigned' and sum(species.is_ref)>0 then 'ERROR: [Unassigned] genera should not have type species'
-		when genus.name<>'unassigned' and sum(species.is_ref)<>1 then 'ERROR: genera should have EXACTLY 1 type species'
-		when count(species.taxnode_id)=0 then 'ERROR: genera should have AT LEAST 1 species'
+		when genus.name<>'unassigned' and sum(species.is_ref)>1 then 'ERROR: too MANY type species: each genus should have EXACTLY 1 type species'
+		when count(species.taxnode_id)=1 and sum(species.is_ref)=0 then 'ERROR: genus has only 1 species, but it is NOT a type species. A genus must have have EXACTLY 1 species'
+		when sum(species.is_ref)=0 then 'ERROR: genera should have EXACTLY 1 species'
 		else 'ERROR: unanticpated by author of this query'
 		end 
-from taxonomy_node genus
-join taxonomy_node species on species.parent_id = genus.taxnode_id
-where genus.level_id=500 and genus.msl_release_num is not null --and genus.msl_release_num=31
+from taxonomy_node_names genus
+join taxonomy_node_names species on 
+	species.tree_id = genus.tree_id 
+	and species.left_idx between genus.left_idx and genus.right_idx 
+	and species.rank='species'
+where genus.rank='genus'  
+and genus.msl_release_num is not null 
+--and genus.msl_release_num=dbo.udf_getMSL(NULL)-5
 group by genus.msl_release_num, genus.name, genus.lineage, genus.left_idx
 having not (
 	(genus.name='unassigned' and sum(species.is_ref)=0)
@@ -31,33 +40,7 @@ order by
 	genus.msl_release_num desc,
 	type_species_ct desc
 
-select 
-	report='type species directly in genus/subgenera'
-	, genus.msl_release_num, genus.lineage
-	, genus_rank=(select name from taxonomy_level l where l.id = genus.level_id)
-	, species_ct = count(species.taxnode_id)
-	, type_species_ct=sum(species.is_ref)
-	,[genera with wrong type species counts]= case 
-		when genus.name='unassigned' and sum(species.is_ref)=0 then 'OK'
-		when genus.name<>'unassigned' and sum(species.is_ref)=1 then 'OK'
-		when genus.name='unassigned' and sum(species.is_ref)>0 then 'ERROR: [Unassigned] genera should not have type species'
-		when genus.name<>'unassigned' and sum(species.is_ref)<>1 then 'ERROR: genera should have EXACTLY 1 type species'
-		when count(species.taxnode_id)=0 then 'ERROR: genera should have AT LEAST 1 species'
-		else 'ERROR: unanticpated by author of this query'
-		end 
-from taxonomy_node genus
-join taxonomy_node species on species.parent_id = genus.taxnode_id
-where genus.level_id in (500,550) and genus.msl_release_num is not null --and genus.msl_release_num=31
-group by genus.msl_release_num, genus.name, genus.lineage, genus.left_idx, genus.level_id
-having  not (
-	(genus.name='unassigned' and sum(species.is_ref)=0)
-	or 
-	(genus.name<>'unassigned' and sum(species.is_ref)=1)
-)
-order by 
---	genus.lineage,
-	genus.msl_release_num desc,
-	type_species_ct desc
+
 
 --
 -- UPDATE (MSL32) remov extra type species
