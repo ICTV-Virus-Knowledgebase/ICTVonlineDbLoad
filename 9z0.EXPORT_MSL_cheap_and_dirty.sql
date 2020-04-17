@@ -13,7 +13,7 @@ select warning = 'QUICK AND DIRTY EXPORT - no pull-forward of historic propertie
 
 select name, notes
 from taxonomy_node
-where level_id=100 and msl_release_num = (select max(msl_release_num) from taxonomy_node)
+where level_id=100 and msl_release_num = (select max(msl_release_num) from taxonomy_toc)
 
 select *
 from MSL_export_fast
