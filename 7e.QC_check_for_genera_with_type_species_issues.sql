@@ -28,7 +28,7 @@ join taxonomy_node_names species on
 	and species.rank='species'
 where genus.rank='genus'  
 and genus.msl_release_num is not null 
---and genus.msl_release_num=dbo.udf_getMSL(NULL)-5
+and genus.msl_release_num=dbo.udf_getMSL(NULL)-5
 group by genus.msl_release_num, genus.name, genus.lineage, genus.left_idx
 having not (
 	(genus.name='unassigned' and sum(species.is_ref)=0)
