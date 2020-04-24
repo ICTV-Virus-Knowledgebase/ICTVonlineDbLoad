@@ -6,7 +6,8 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE
+
+CREATE   
 PROCEDURE [dbo].[taxonomy_node_compute_indexes] 
 	@taxnode_id int,
 	@left_idx  int = 1,
@@ -28,13 +29,47 @@ PROCEDURE [dbo].[taxonomy_node_compute_indexes]
 	@genus_id int = NULL,
 	@subgenus_id int = NULL,
 	@species_id int = NULL,
-	-- start taxa
+	-- end taxa
+	-- start descendant counts
+	@realm_desc_ct int = 0 OUTPUT,
+    @subrealm_desc_ct int = 0 OUTPUT,
+    @kingdom_desc_ct int = 0 OUTPUT,
+    @subkingdom_desc_ct int = 0 OUTPUT,
+    @phylum_desc_ct int = 0 OUTPUT,
+    @subphylum_desc_ct int = 0 OUTPUT,
+    @class_desc_ct int = 0 OUTPUT,
+    @subclass_desc_ct int = 0 OUTPUT,
+    @order_desc_ct int = 0 OUTPUT,
+    @suborder_desc_ct int = 0 OUTPUT,
+    @family_desc_ct int = 0 OUTPUT,
+    @subfamily_desc_ct int = 0 OUTPUT,
+    @genus_desc_ct int = 0 OUTPUT,
+    @subgenus_desc_ct int = 0 OUTPUT,
+    @species_desc_ct int = 0 OUTPUT,
+	-- end descendant counts
 	@inher_molecule_id int = NULL,
 	@lineage varchar(1000) = NULL
 AS	
 	DECLARE @hidden_as_unassigned int; 
 	DECLARE @use_my_lineage int; 
 	DECLARE @my_lineage varchar(1000);
+	-- start direct kid counts
+    DECLARE @realm_kid_ct int; SET @realm_kid_ct = 0
+    DECLARE @subrealm_kid_ct int; SET @subrealm_kid_ct = 0
+    DECLARE @kingdom_kid_ct int; SET @kingdom_kid_ct = 0
+    DECLARE @subkingdom_kid_ct int; SET @subkingdom_kid_ct = 0
+    DECLARE @phylum_kid_ct int; SET @phylum_kid_ct = 0
+    DECLARE @subphylum_kid_ct int; SET @subphylum_kid_ct = 0
+    DECLARE @class_kid_ct int; SET @class_kid_ct = 0
+    DECLARE @subclass_kid_ct int; SET @subclass_kid_ct = 0
+    DECLARE @order_kid_ct int; SET @order_kid_ct = 0
+    DECLARE @suborder_kid_ct int; SET @suborder_kid_ct = 0
+    DECLARE @family_kid_ct int; SET @family_kid_ct = 0
+    DECLARE @subfamily_kid_ct int; SET @subfamily_kid_ct = 0
+    DECLARE @genus_kid_ct int; SET @genus_kid_ct = 0
+    DECLARE @subgenus_kid_ct int; SET @subgenus_kid_ct = 0
+    DECLARE @species_kid_ct int; SET @species_kid_ct = 0
+	-- end direct kid counts
 
 	-- 
 	-- display hidden nodes (mostly subfamilies)
@@ -145,15 +180,19 @@ AS
 	IF @use_my_lineage = 1 SET @lineage = @my_lineage
 
 	--
-	-- walk our children, recusing
+	-- walk our children, recursing
 	--
 	
+	-- tracking counts : direct kids, and descendants for each rank
+
 	-- clear our children's indexes
 	UPDATE taxonomy_node 
 	SET left_idx=null, right_idx=null 
 	WHERE parent_id = @taxnode_id AND taxnode_id <> @taxnode_id
 
 	DECLARE @child_taxnode_id int
+	DECLARE @child_rank varchar(50)
+	DECLARE @child_is_hidden int
 	
 	DECLARE @child_depth int
 	SET @child_depth = @node_depth + 1
@@ -162,19 +201,43 @@ AS
 
 	-- get next child (repeated inside loop)
 	SET @child_taxnode_id = NULL
-	SELECT TOP 1 @child_taxnode_id = taxnode_id
-		FROM taxonomy_node
-		WHERE parent_id = @taxnode_id
-		AND taxnode_id <> @taxnode_id
-		AND left_idx IS NULL
+	SET @child_rank = NULL
+	SET @child_is_hidden = NULL
+	SELECT TOP 1
+			@child_taxnode_id = n.taxnode_id
+			, @child_is_hidden = n.is_hidden
+			, @child_rank = rank.name
+		FROM taxonomy_node n
+		JOIN taxonomy_level rank on rank.id = n.level_id
+		WHERE n.parent_id = @taxnode_id
+		AND n.taxnode_id <> @taxnode_id
+		AND n.left_idx IS NULL
 		ORDER BY  -- rank, name
-			level_id
-			,case when start_num_sort is null then isnull(name,'ZZZZ') else left(name,start_num_sort) end -- alpha, force unassigned to bottom
-			, case when start_num_sort is null then null else floor(ltrim(substring(name,start_num_sort+1,50))) end -- numeric
+			n.level_id
+			,case when n.start_num_sort is null then isnull(n.name,'ZZZZ') else left(n.name,n.start_num_sort) end -- alpha, force unassigned to bottom
+			, case when n.start_num_sort is null then null else floor(ltrim(substring(n.name,n.start_num_sort+1,50))) end -- numeric
 
 
 	WHILE @child_taxnode_id IS NOT NULL
 	BEGIN
+        -- start kids descendant counts
+        DECLARE @kid_realm_desc_ct int; SET @kid_realm_desc_ct = 0
+        DECLARE @kid_subrealm_desc_ct int; SET @kid_subrealm_desc_ct = 0
+        DECLARE @kid_kingdom_desc_ct int; SET @kid_kingdom_desc_ct = 0
+        DECLARE @kid_subkingdom_desc_ct int; SET @kid_subkingdom_desc_ct = 0
+        DECLARE @kid_phylum_desc_ct int; SET @kid_phylum_desc_ct = 0
+        DECLARE @kid_subphylum_desc_ct int; SET @kid_subphylum_desc_ct = 0
+        DECLARE @kid_class_desc_ct int; SET @kid_class_desc_ct = 0
+        DECLARE @kid_subclass_desc_ct int; SET @kid_subclass_desc_ct = 0
+        DECLARE @kid_order_desc_ct int; SET @kid_order_desc_ct = 0
+        DECLARE @kid_suborder_desc_ct int; SET @kid_suborder_desc_ct = 0
+        DECLARE @kid_family_desc_ct int; SET @kid_family_desc_ct = 0
+        DECLARE @kid_subfamily_desc_ct int; SET @kid_subfamily_desc_ct = 0
+        DECLARE @kid_genus_desc_ct int; SET @kid_genus_desc_ct = 0
+        DECLARE @kid_subgenus_desc_ct int; SET @kid_subgenus_desc_ct = 0
+        DECLARE @kid_species_desc_ct int; SET @kid_species_desc_ct = 0
+		-- end kid descendant counts
+
 		-- recuse into child
 		EXEC [taxonomy_node_compute_indexes] 
 			@taxnode_id = @child_taxnode_id, 
@@ -198,30 +261,144 @@ AS
 			@subgenus_id=@subgenus_id,
 			@species_id=@species_id,
 			-- end taxa
+			-- start kids/descendant counts
+			@realm_desc_ct = @kid_realm_desc_ct OUTPUT,
+			@subrealm_desc_ct = @kid_subrealm_desc_ct OUTPUT,
+			@kingdom_desc_ct = @kid_kingdom_desc_ct OUTPUT,
+			@subkingdom_desc_ct = @kid_subkingdom_desc_ct OUTPUT,
+			@phylum_desc_ct = @kid_phylum_desc_ct OUTPUT,
+			@subphylum_desc_ct = @kid_subphylum_desc_ct OUTPUT,
+			@class_desc_ct = @kid_class_desc_ct OUTPUT,
+			@subclass_desc_ct = @kid_subclass_desc_ct OUTPUT,
+			@order_desc_ct = @kid_order_desc_ct OUTPUT,
+			@suborder_desc_ct = @kid_suborder_desc_ct OUTPUT,
+			@family_desc_ct = @kid_family_desc_ct OUTPUT,
+			@subfamily_desc_ct = @kid_subfamily_desc_ct OUTPUT,
+			@genus_desc_ct = @kid_genus_desc_ct OUTPUT,
+			@subgenus_desc_ct = @kid_subgenus_desc_ct OUTPUT,
+			@species_desc_ct = @kid_species_desc_ct OUTPUT,
+			-- end kids/descendant counts
 			@inher_molecule_id = @inher_molecule_id,
 			@lineage = @lineage
+
+		-- update direct child counts for un-hidden children
+		if @child_is_hidden=0 BEGIN
+			SET @realm_kid_ct		= @realm_kid_ct			+(case when @child_rank='realm' then 1 else 0 end)
+			SET @subrealm_kid_ct	= @subrealm_kid_ct		+(case when @child_rank='subrealm' then 1 else 0 end)
+			SET @kingdom_kid_ct		= @kingdom_kid_ct		+(case when @child_rank='kingdom' then 1 else 0 end)
+			SET @subkingdom_kid_ct	= @subkingdom_kid_ct	+(case when @child_rank='subkingdom' then 1 else 0 end)
+			SET @phylum_kid_ct		= @phylum_kid_ct		+(case when @child_rank='phylum' then 1 else 0 end)
+			SET @subphylum_kid_ct	= @subphylum_kid_ct		+(case when @child_rank='subphylum' then 1 else 0 end)
+			SET @class_kid_ct		= @class_kid_ct			+(case when @child_rank='class' then 1 else 0 end)
+			SET @subclass_kid_ct	= @subclass_kid_ct		+(case when @child_rank='subclass' then 1 else 0 end)
+			SET @order_kid_ct		= @order_kid_ct			+(case when @child_rank='order' then 1 else 0 end)
+			SET @suborder_kid_ct	= @suborder_kid_ct		+(case when @child_rank='suborder' then 1 else 0 end)
+			SET @family_kid_ct		= @family_kid_ct		+(case when @child_rank='family' then 1 else 0 end)
+			SET @subfamily_kid_ct	= @subfamily_kid_ct		+(case when @child_rank='subfamily' then 1 else 0 end)
+			SET @genus_kid_ct		= @genus_kid_ct			+(case when @child_rank='genus' then 1 else 0 end)
+			SET @subgenus_kid_ct	= @subgenus_kid_ct		+(case when @child_rank='subgenus' then 1 else 0 end)
+			SET @species_kid_ct		= @species_kid_ct		+(case when @child_rank='species' then 1 else 0 end)
+		END
+		-- update running descendant counts
+        SET @realm_desc_ct       = @realm_desc_ct       + @kid_realm_desc_ct
+        SET @subrealm_desc_ct    = @subrealm_desc_ct    + @kid_subrealm_desc_ct
+        SET @kingdom_desc_ct     = @kingdom_desc_ct     + @kid_kingdom_desc_ct
+        SET @subkingdom_desc_ct  = @subkingdom_desc_ct  + @kid_subkingdom_desc_ct
+        SET @phylum_desc_ct      = @phylum_desc_ct      + @kid_phylum_desc_ct
+        SET @subphylum_desc_ct   = @subphylum_desc_ct   + @kid_subphylum_desc_ct
+        SET @class_desc_ct       = @class_desc_ct       + @kid_class_desc_ct
+        SET @subclass_desc_ct    = @subclass_desc_ct    + @kid_subclass_desc_ct
+        SET @order_desc_ct       = @order_desc_ct       + @kid_order_desc_ct
+        SET @suborder_desc_ct    = @suborder_desc_ct    + @kid_suborder_desc_ct
+        SET @family_desc_ct      = @family_desc_ct      + @kid_family_desc_ct
+        SET @subfamily_desc_ct   = @subfamily_desc_ct   + @kid_subfamily_desc_ct
+        SET @genus_desc_ct       = @genus_desc_ct       + @kid_genus_desc_ct
+        SET @subgenus_desc_ct    = @subgenus_desc_ct    + @kid_subgenus_desc_ct
+        SET @species_desc_ct     = @species_desc_ct     + @kid_species_desc_ct
 
 		-- compute left_idx for next sibling
 		SET @right_idx = @right_idx + 1
 
 		-- get next child (repeated before loop)
-		SET @child_taxnode_id = NULL		
-		SELECT TOP 1 @child_taxnode_id = taxnode_id
-			FROM taxonomy_node
-			WHERE parent_id = @taxnode_id
-			AND taxnode_id <> @taxnode_id
-			AND left_idx IS NULL
-			ORDER BY -- name 
-				level_id
-				,case when start_num_sort is null then isnull(name,'ZZZZ') else left(name,start_num_sort) end -- alpha
-				, case when start_num_sort is null then null else floor(ltrim(substring(name,start_num_sort+1,50))) end -- numeric
+		SET @child_taxnode_id = NULL
+		SET @child_rank = NULL
+		SET @child_is_hidden = NULL
+		SELECT TOP 1
+				@child_taxnode_id = n.taxnode_id
+				, @child_is_hidden = n.is_hidden
+				, @child_rank = rank.name
+			FROM taxonomy_node n
+			JOIN taxonomy_level rank on rank.id = n.level_id
+			WHERE n.parent_id = @taxnode_id
+			AND n.taxnode_id <> @taxnode_id
+			AND n.left_idx IS NULL
+			ORDER BY  -- rank, name
+				n.level_id
+				,case when n.start_num_sort is null then isnull(n.name,'ZZZZ') else left(n.name,n.start_num_sort) end -- alpha, force unassigned to bottom
+				, case when n.start_num_sort is null then null else floor(ltrim(substring(n.name,n.start_num_sort+1,50))) end -- numeric
 
 	END	
 
-	-- set our RIGHT index
-	UPDATE taxonomy_node
-	SET right_idx = @right_idx
+	-- output our total descendant counts
+    SET @realm_desc_ct       = @realm_desc_ct       + @realm_kid_ct
+    SET @subrealm_desc_ct    = @subrealm_desc_ct    + @subrealm_kid_ct
+    SET @kingdom_desc_ct     = @kingdom_desc_ct     + @kingdom_kid_ct
+    SET @subkingdom_desc_ct  = @subkingdom_desc_ct  + @subkingdom_kid_ct
+    SET @phylum_desc_ct      = @phylum_desc_ct      + @phylum_kid_ct
+    SET @subphylum_desc_ct   = @subphylum_desc_ct   + @subphylum_kid_ct
+    SET @class_desc_ct       = @class_desc_ct       + @class_kid_ct
+    SET @subclass_desc_ct    = @subclass_desc_ct    + @subclass_kid_ct
+    SET @order_desc_ct       = @order_desc_ct       + @order_kid_ct
+    SET @suborder_desc_ct    = @suborder_desc_ct    + @suborder_kid_ct
+    SET @family_desc_ct      = @family_desc_ct      + @family_kid_ct
+    SET @subfamily_desc_ct   = @subfamily_desc_ct   + @subfamily_kid_ct
+    SET @genus_desc_ct       = @genus_desc_ct       + @genus_kid_ct
+    SET @subgenus_desc_ct    = @subgenus_desc_ct    + @subgenus_kid_ct
+    SET @species_desc_ct     = @species_desc_ct     + @species_kid_ct
+
+	-- set our RIGHT index, KID cts and DESC cts
+	UPDATE taxonomy_node SET 
+		right_idx = @right_idx
+        -- start kids/descendant counts
+        , realm_desc_ct = @realm_desc_ct                , realm_kid_ct = @realm_kid_ct
+        , subrealm_desc_ct = @subrealm_desc_ct          , subrealm_kid_ct = @subrealm_kid_ct
+        , kingdom_desc_ct = @kingdom_desc_ct            , kingdom_kid_ct = @kingdom_kid_ct
+        , subkingdom_desc_ct = @subkingdom_desc_ct      , subkingdom_kid_ct = @subkingdom_kid_ct
+        , phylum_desc_ct = @phylum_desc_ct              , phylum_kid_ct = @phylum_kid_ct
+        , subphylum_desc_ct = @subphylum_desc_ct        , subphylum_kid_ct = @subphylum_kid_ct
+        , class_desc_ct = @class_desc_ct                , class_kid_ct = @class_kid_ct
+        , subclass_desc_ct = @subclass_desc_ct          , subclass_kid_ct = @subclass_kid_ct
+        , order_desc_ct = @order_desc_ct                , order_kid_ct = @order_kid_ct
+        , suborder_desc_ct = @suborder_desc_ct          , suborder_kid_ct = @suborder_kid_ct
+        , family_desc_ct = @family_desc_ct              , family_kid_ct = @family_kid_ct
+        , subfamily_desc_ct = @subfamily_desc_ct        , subfamily_kid_ct = @subfamily_kid_ct
+        , genus_desc_ct = @genus_desc_ct                , genus_kid_ct = @genus_kid_ct
+        , subgenus_desc_ct = @subgenus_desc_ct          , subgenus_kid_ct = @subgenus_kid_ct
+        , species_desc_ct = @species_desc_ct            , species_kid_ct = @species_kid_ct
+	    -- start kids/descendant counts
+		-- start kid/descendant strings
+		, taxa_kid_cts = dbo.udf_rankCountsToStringWithPurals(
+				@realm_kid_ct,         @subrealm_kid_ct,
+				@kingdom_kid_ct,       @subkingdom_kid_ct,
+				@phylum_kid_ct,        @subphylum_kid_ct,
+				@class_kid_ct,         @subclass_kid_ct,
+				@order_kid_ct,         @suborder_kid_ct,
+				@family_kid_ct,        @subfamily_kid_ct,
+				@genus_kid_ct,         @subgenus_kid_ct,
+				@species_kid_ct
+			)
+		, taxa_desc_cts = dbo.udf_rankCountsToStringWithPurals(
+				@realm_desc_ct,         @subrealm_desc_ct,
+				@kingdom_desc_ct,       @subkingdom_desc_ct,
+				@phylum_desc_ct,        @subphylum_desc_ct,
+				@class_desc_ct,         @subclass_desc_ct,
+				@order_desc_ct,         @suborder_desc_ct,
+				@family_desc_ct,        @subfamily_desc_ct,
+				@genus_desc_ct,         @subgenus_desc_ct,
+				@species_desc_ct
+			)
 	WHERE taxnode_id = @taxnode_id
+
 
 	-- debug
 	--print str(@node_depth) + '<==' + str(@taxnode_id)

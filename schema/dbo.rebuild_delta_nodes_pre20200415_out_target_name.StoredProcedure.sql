@@ -12,8 +12,7 @@ GO
 
 
 
-
-CREATE procedure [dbo].[rebuild_delta_nodes]
+CREATE procedure [dbo].[rebuild_delta_nodes_pre20200415_out_target_name]
 	@msl int = NULL-- delete related deltas first?
 AS
 	-- -----------------------------------------------------------------------------
@@ -127,11 +126,8 @@ AS
 		from taxonomy_node p
 		left outer join taxonomy_node targ on 
 			p.msl_release_num = targ.msl_release_num-1
-			and (
-				p.out_target in (targ.lineage, targ.name)
-				or
-				p._out_target_name = targ.name
-			)
+			and 
+			p.out_target in (targ.lineage, targ.name)
 			and 
 			p.is_deleted = 0
 		-- allow match to child of target (ie, target is new genus for a species)

@@ -11,6 +11,7 @@ GO
 
 
 
+
 CREATE view [dbo].[taxonomy_node_names] as
 select 
 	-- the underlying table

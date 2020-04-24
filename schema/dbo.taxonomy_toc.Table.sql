@@ -8,6 +8,7 @@ GO
 CREATE TABLE [dbo].[taxonomy_toc](
 	[tree_id] [int] NOT NULL,
 	[msl_release_num] [int] NULL,
+	[comments] [varchar](max) NULL,
  CONSTRAINT [IX_taxonomy_toc-tree_id] UNIQUE NONCLUSTERED 
 (
 	[tree_id] ASC
@@ -17,5 +18,5 @@ CREATE TABLE [dbo].[taxonomy_toc](
 	[tree_id] ASC,
 	[msl_release_num] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
