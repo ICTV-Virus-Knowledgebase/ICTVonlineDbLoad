@@ -1,6 +1,6 @@
 USE [ICTVonlnie34]
 GO
-/****** Object:  StoredProcedure [dbo].[MSL_export_official_20181018_msl_based]    Script Date: 4/24/2020 3:40:38 PM ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
