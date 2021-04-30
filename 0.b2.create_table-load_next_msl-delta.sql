@@ -18,6 +18,7 @@
   **/
 
 -- drop  table [load_next_msl]
+GO
 
 SET ANSI_NULLS ON
 GO
@@ -48,8 +49,8 @@ CREATE TABLE [dbo].[load_next_msl](
 	[srcGenus] [varchar](100) NULL,
 	[srcSubGenus] [varchar](100) NULL,
 	[srcSpecies] [varchar](100) NULL,
-	[srcIsType] [varchar](10) NULL,
-	[srcAccessions] [varchar](5000) NULL,
+	--[srcIsType] [varchar](10) NULL, -- TypeSpecies concept removed in MSL36
+	--[srcAccessions] [varchar](5000) NULL, -- removed in MSL36
 	[empty1] [varchar](1) NULL, -- MSL35 - not used; visual separator in excel
 	[realm] [varchar](100) NULL,
 	[subrealm] [varchar](100) NULL,
@@ -76,12 +77,13 @@ CREATE TABLE [dbo].[load_next_msl](
 	[molecule] [nvarchar](100) NULL,
 	[change] [nvarchar](100) NULL,
 	[rank] [nvarchar](100) NULL,
-	[action]  as [nvarchar](200) NULL, -- computed in step 3, can contain error messages 
+	[comments] [nvarchar](1000) NULL,
+	[_action] [nvarchar](200) NULL, -- computed in step 3, can contain error messages 
 	[_src_taxon_name]  AS (Trim(isnull([srcSpecies],isnull([srcSubGenus],isnull([srcGenus],isnull([srcSubFamily],isnull([srcFamily],isnull([srcSubOrder],isnull([srcOrder],isnull([srcSubClass],isnull([srcClass],isnull([srcSubPhylum],isnull([srcPhylum],isnull([srcSubKingdom],isnull([srcKingdom],isnull([srcSubRealm],[srcRealm])))))))))))))))) PERSISTED,
 	[_src_taxon_rank]  AS (case when [srcSpecies] IS NOT NULL then 'species' when [srcsubgenus] IS NOT NULL then 'subgenus' when [srcgenus] IS NOT NULL then 'genus' when [srcsubfamily] IS NOT NULL then 'subfamily' when [srcfamily] IS NOT NULL then 'family' when [srcSubOrder] IS NOT NULL then 'suborder' when [srcOrder] IS NOT NULL then 'order' when [srcSubClass] IS NOT NULL then 'subclass' when [srcClass] IS NOT NULL then 'class' when [srcSubPhylum] IS NOT NULL then 'subphylum' when [srcPhylum] IS NOT NULL then 'phylum' when [srcSubKingdom] IS NOT NULL then 'subkingdom' when [srcKingdom] IS NOT NULL then 'kingdom' when [srcSubRealm] IS NOT NULL then 'subrealm' when [srcRealm] IS NOT NULL then 'realm'  end) PERSISTED,
 	[_src_lineage]  AS (substring(((((((((((((((((isnull(';'+[srcRealm],'')+isnull(';'+[srcSubRealm],''))+isnull(';'+[srckingdom],''))+isnull(';'+[srcSubkingdom],''))+isnull(';'+[srcphylum],''))+isnull(';'+[srcsubphylum],''))+isnull(';'+[srcClass],''))+isnull(';'+[srcsubclass],''))+isnull(';'+[srcRealm],''))+isnull(';'+[srcRealm],''))+isnull(';'+[srcRealm],''))+isnull(';'+[srcorder],''))+isnull(';'+[srcsuborder],''))+isnull(';'+[srcfamily],''))+isnull(';'+[srcsubfamily],''))+isnull(';'+[srcgenus],''))+isnull(';'+[srcsubgenus],''))+isnull(';'+[srcspecies],''),(2),(2000))) PERSISTED,
 	[_dest_taxon_name]  AS (Trim(isnull([Species],isnull([subGenus],isnull([Genus],isnull([SubFamily],isnull([Family],isnull([subOrder],isnull([order],isnull([subclass],isnull([class],isnull([subphylum],isnull([phylum],isnull([subkingdom],isnull([kingdom],isnull([subrealm],[realm])))))))))))))))) PERSISTED,
-	[_dest_taxon_rank]  AS (case when [Species] IS NOT NULL then 'species' when [subgenus] IS NOT NULL then 'subgenus' when [genus] IS NOT NULL then 'genus' when [subfamily] IS NOT NULL then 'subfamily' when [family] IS NOT NULL then 'family' when [suborder] IS NOT NULL then 'suborder' when [order] IS NOT NULL then 'order' when [subclass] IS NOT NULL then 'subclass' when [class] IS NOT NULL then 'class' when [subphylum] IS NOT NULL then 'subphylum' when [phylum] IS NOT NULL then 'phylum' when [subkingdom] IS NOT NULL then 'subkingdom' when [kingdom] IS NOT NULL then 'kingdom' when [subrealm] IS NOT NULL then 'subrealm' when [realm] IS NOT NULL then 'realm'  end) PERSISTED
+	[_dest_taxon_rank]  AS (case when [Species] IS NOT NULL then 'species' when [subgenus] IS NOT NULL then 'subgenus' when [genus] IS NOT NULL then 'genus' when [subfamily] IS NOT NULL then 'subfamily' when [family] IS NOT NULL then 'family' when [suborder] IS NOT NULL then 'suborder' when [order] IS NOT NULL then 'order' when [subclass] IS NOT NULL then 'subclass' when [class] IS NOT NULL then 'class' when [subphylum] IS NOT NULL then 'subphylum' when [phylum] IS NOT NULL then 'phylum' when [subkingdom] IS NOT NULL then 'subkingdom' when [kingdom] IS NOT NULL then 'kingdom' when [subrealm] IS NOT NULL then 'subrealm' when [realm] IS NOT NULL then 'realm'  end) PERSISTED,
 	[_dest_lineage]  AS (substring((((((((((((((isnull(';'+[realm],'')+isnull(';'+[subrealm],''))+isnull(';'+[kingdom],''))+isnull(';'+[subkingdom],''))+isnull(';'+[phylum],''))+isnull(';'+[subphylum],''))+isnull(';'+[class],''))+isnull(';'+[subclass],''))+isnull(';'+[order],''))+isnull(';'+[suborder],''))+isnull(';'+[family],''))+isnull(';'+[subfamily],''))+isnull(';'+[genus],''))+isnull(';'+[subgenus],''))+isnull(';'+[species],''),(2),(2000))) PERSISTED,
 	[_dest_parent_name]  AS (rtrim(ltrim(reverse(substring(replace(reverse((((((((((((((isnull(';'+[realm],'')+isnull(';'+[subrealm],''))+isnull(';'+[kingdom],''))+isnull(';'+[subkingdom],''))+isnull(';'+[phylum],''))+isnull(';'+[subphylum],''))+isnull(';'+[class],''))+isnull(';'+[subclass],''))+isnull(';'+[order],''))+isnull(';'+[suborder],''))+isnull(';'+[family],''))+isnull(';'+[subfamily],''))+isnull(';'+[genus],''))+isnull(';'+[subgenus],''))+isnull(';'+[species],'')),';',replicate(' ',(1000))),(500),(1500)))))) PERSISTED,
 	[prev_taxnode_id] [int] NULL,
@@ -95,9 +97,8 @@ CREATE TABLE [dbo].[load_next_msl](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((35)) FOR [dest_msl_release_num]
+ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((36)) FOR [dest_msl_release_num]
 GO
-
 
 
 /****** Object:  Index [IX_load_next_msl-dest_parent_name]    Script Date: 2/27/2019 12:50:19 AM ******/
