@@ -6,26 +6,27 @@
 -- MAP acton
 --
 update load_next_msl set 
---select [change],  isType, [rank], 
+    -- select [change], [rank], 
 	_action =(case 
+		when [change] like '%as type%' then (('_ERROR: isType abolished in MSL36): ')+[change]) 
 		when [change] like 'abolish%' then 'abolish' 
-		when [change] like '%assign as type species%' AND [isType]=(0) OR [isType] IS NULL AND [rank]='species' then (('ERROR: (isType='+isnull([isType],'NULL'))+'):')+[change] 
-		when [change] like '%remove as type species%' AND [isType]=(1) OR [isType] IS NULL AND [rank]='species' then (('ERROR: (isType='+isnull([isType],'NULL'))+'):')+[change] 
 		when [change] like '%merge%' then 'merge' 
 		when [change] like 'new%' then 'new' 
 		when [change] like 'Create new%' then 'new' 
 		when [change] like 'family%assigned%' then 'move' 
-		when [change] like '%move%rename%' and cast(_src_taxon_name as varbinary)= cast(_dest_taxon_name as varbinary) then 'ERROR: move-rename, but src_taxon=dest_taxon='+_src_taxon_name +'; sort='+rtrim(sort)
+		when [change] like '%move%rename%' and cast(_src_taxon_name as varbinary(500))= cast(_dest_taxon_name as varbinary(500)) then '_ERROR: move-rename, but src_taxon=dest_taxon='+_src_taxon_name +'; sort='+rtrim(sort)
 		when [change] like '%move%rename%' then 'move' 
 		when [change] like '%move%' then 'move' 
 		when [change] like 'species assign%' then 'move' 
 		when [change] like 'assign%' then 'move' 
 		when [change] like '%rename%' then 'rename'
 		when [change] like 'split%' then 'split' 
-		else 'ERROR:'+[change] 
+		when [change] like 'promote%' then 'promote'
+		else '_ERROR:'+[change]+'; sort='+rtrim(sort)
 	end)
 -- select * 
 from load_next_msl src
+
 
 -- 
 -- QC mapping ERRORS
@@ -52,7 +53,7 @@ select
 	report='QC change vocabulary'
 	, filename
 	,src.dest_msl_release_num
-	, src.change, rank, isType
+	, src.change, rank
 	-- counts
 	,row_ct=count(*) 
 	, _action_legal = -- check against official vocab 
@@ -64,7 +65,8 @@ select
 	-- fix up _action
 	,_action
 from load_next_msl src
-group by filename, dest_msl_release_num, change, rank, istype, _action
+group by filename, dest_msl_release_num, change, rank, _action
+order by _action_legal
 
 
 
