@@ -20,6 +20,7 @@ print '-- remove leading and trailing spaces (update create in excel)'
 update load_next_msl set
 --select [change],[exemplarAccessions],
       [proposal]=rtrim(ltrim(replace(replace(replace([proposal],char(9),' '),char(160),' '),'  ',' ')))
+      ,[proposal_abbrev]=rtrim(ltrim(replace(replace(replace([proposal_abbrev],char(9),' '),char(160),' '),'  ',' ')))
       ,[srcRealm]=rtrim(ltrim(replace(replace(replace([srcRealm],char(9),' '),char(160),' '),'  ',' ')))
       ,[srcSubrealm]=rtrim(ltrim(replace(replace(replace([srcSubrealm],char(9),' '),char(160),' '),'  ',' ')))
       ,[srcKingdom]=rtrim(ltrim(replace(replace(replace([srcKingdom],char(9),' '),char(160),' '),'  ',' ')))
@@ -35,8 +36,6 @@ update load_next_msl set
       ,[srcGenus]=rtrim(ltrim(replace(replace(replace([srcGenus],char(9),' '),char(160),' '),'  ',' ')))
       ,[srcSubgenus]=rtrim(ltrim(replace(replace(replace([srcSubgenus],char(9),' '),char(160),' '),'  ',' ')))
       ,[srcSpecies]=rtrim(ltrim(replace(replace(replace([srcSpecies],char(9),' '),char(160),' '),'  ',' ')))
-      ,[srcIsType]=rtrim(ltrim(replace(replace(replace([srcIsType],char(9),' '),char(160),' '),'  ',' ')))
-      ,[srcAccessions]=rtrim(ltrim(replace(replace(replace([srcAccessions],char(9),' '),char(160),' '),'  ',' ')))
       ,[realm]=rtrim(ltrim(replace(replace(replace([realm],char(9),' '),char(160),' '),'  ',' ')))
       ,[subrealm]=rtrim(ltrim(replace(replace(replace([subrealm],char(9),' '),char(160),' '),'  ',' ')))
       ,[kingdom]=rtrim(ltrim(replace(replace(replace([kingdom],char(9),' '),char(160),' '),'  ',' ')))
@@ -61,9 +60,11 @@ update load_next_msl set
       ,[Abbrev]=rtrim(ltrim(replace(replace(replace([Abbrev],char(9),' '),char(160),' '),'  ',' ')))
       ,[change]=rtrim(ltrim(replace(replace(replace([change],char(9),' '),char(160),' '),'  ',' ')))
       ,[rank]=rtrim(ltrim(replace(replace(replace([rank],char(9),' '),char(160),' '),'  ',' ')))
+
 from load_next_msl
 where
 ([proposal] is not null and ([proposal] like ' %' or [proposal] like '% ' or [proposal] like '%'+char(9)+'%' or [proposal] like '%'+char(160)+'%' or [proposal] like '%  %')) or  
+([proposal_abbrev] is not null and ([proposal_abbrev] like ' %' or [proposal_abbrev] like '% ' or [proposal_abbrev] like '%'+char(9)+'%' or [proposal_abbrev] like '%'+char(160)+'%' or [proposal_abbrev] like '%  %')) or  
 ([srcRealm] is not null and ([srcRealm] like ' %' or [srcRealm] like '% ' or [srcRealm] like '%'+char(9)+'%' or [srcRealm] like '%'+char(160)+'%' or [srcRealm] like '%  %')) or  
 ([srcSubrealm] is not null and ([srcSubrealm] like ' %' or [srcSubrealm] like '% ' or [srcSubrealm] like '%'+char(9)+'%' or [srcSubrealm] like '%'+char(160)+'%' or [srcSubrealm] like '%  %')) or  
 ([srcKingdom] is not null and ([srcKingdom] like ' %' or [srcKingdom] like '% ' or [srcKingdom] like '%'+char(9)+'%' or [srcKingdom] like '%'+char(160)+'%' or [srcKingdom] like '%  %')) or  
@@ -79,8 +80,6 @@ where
 ([srcGenus] is not null and ([srcGenus] like ' %' or [srcGenus] like '% ' or [srcGenus] like '%'+char(9)+'%' or [srcGenus] like '%'+char(160)+'%' or [srcGenus] like '%  %')) or  
 ([srcSubgenus] is not null and ([srcSubgenus] like ' %' or [srcSubgenus] like '% ' or [srcSubgenus] like '%'+char(9)+'%' or [srcSubgenus] like '%'+char(160)+'%' or [srcSubgenus] like '%  %')) or  
 ([srcSpecies] is not null and ([srcSpecies] like ' %' or [srcSpecies] like '% ' or [srcSpecies] like '%'+char(9)+'%' or [srcSpecies] like '%'+char(160)+'%' or [srcSpecies] like '%  %')) or  
-([srcIsType] is not null and ([srcIsType] like ' %' or [srcIsType] like '% ' or [srcIsType] like '%'+char(9)+'%' or [srcIsType] like '%'+char(160)+'%' or [srcIsType] like '%  %')) or  
-([srcAccessions] is not null and ([srcAccessions] like ' %' or [srcAccessions] like '% ' or [srcAccessions] like '%'+char(9)+'%' or [srcAccessions] like '%'+char(160)+'%' or [srcAccessions] like '%  %')) or  
 ([realm] is not null and ([realm] like ' %' or [realm] like '% ' or [realm] like '%'+char(9)+'%' or [realm] like '%'+char(160)+'%' or [realm] like '%  %')) or  
 ([subrealm] is not null and ([subrealm] like ' %' or [subrealm] like '% ' or [subrealm] like '%'+char(9)+'%' or [subrealm] like '%'+char(160)+'%' or [subrealm] like '%  %')) or  
 ([kingdom] is not null and ([kingdom] like ' %' or [kingdom] like '% ' or [kingdom] like '%'+char(9)+'%' or [kingdom] like '%'+char(160)+'%' or [kingdom] like '%  %')) or  
@@ -104,7 +103,7 @@ where
 ([isComplete] is not null and ([isComplete] like ' %' or [isComplete] like '% ' or [isComplete] like '%'+char(9)+'%' or [isComplete] like '%'+char(160)+'%' or [isComplete] like '%  %')) or  
 ([Abbrev] is not null and ([Abbrev] like ' %' or [Abbrev] like '% ' or [Abbrev] like '%'+char(9)+'%' or [Abbrev] like '%'+char(160)+'%' or [Abbrev] like '%  %')) or  
 ([change] is not null and ([change] like ' %' or [change] like '% ' or [change] like '%'+char(9)+'%' or [change] like '%'+char(160)+'%' or [change] like '%  %')) or  
-([rank] is not null and ([rank] like ' %' or [rank] like '% ' or [rank] like '%'+char(9)+'%' or [rank] like '%'+char(160)+'%' or [rank] like '%  %')) 
+([rank] is not null and ([rank] like ' %' or [rank] like '% ' or [rank] like '%'+char(9)+'%' or [rank] like '%'+char(160)+'%' or [rank] like '%  %'))   
 
 
 
@@ -115,7 +114,8 @@ print '--   ASCII quote ('+char(34)+') = '+rtrim(ascii('"'))
 
 update load_next_msl set
 --select 
-      [proposal]=replace(replace([proposal],char(147),char(34)),char(148),char(34))
+       [proposal]=replace(replace([proposal],char(147),char(34)),char(148),char(34))
+      ,[proposal_abbrev]=replace(replace([proposal_abbrev],char(147),char(34)),char(148),char(34))
       ,[srcRealm]=replace(replace([srcRealm],char(147),char(34)),char(148),char(34))
       ,[srcSubrealm]=replace(replace([srcSubrealm],char(147),char(34)),char(148),char(34))
       ,[srcKingdom]=replace(replace([srcKingdom],char(147),char(34)),char(148),char(34))
@@ -131,8 +131,6 @@ update load_next_msl set
       ,[srcGenus]=replace(replace([srcGenus],char(147),char(34)),char(148),char(34))
       ,[srcSubgenus]=replace(replace([srcSubgenus],char(147),char(34)),char(148),char(34))
       ,[srcSpecies]=replace(replace([srcSpecies],char(147),char(34)),char(148),char(34))
-      ,[srcIsType]=replace(replace([srcIsType],char(147),char(34)),char(148),char(34))
-      ,[srcAccessions]=replace(replace([srcAccessions],char(147),char(34)),char(148),char(34))
       ,[realm]=replace(replace([realm],char(147),char(34)),char(148),char(34))
       ,[subrealm]=replace(replace([subrealm],char(147),char(34)),char(148),char(34))
       ,[kingdom]=replace(replace([kingdom],char(147),char(34)),char(148),char(34))
@@ -157,9 +155,11 @@ update load_next_msl set
       ,[Abbrev]=replace(replace([Abbrev],char(147),char(34)),char(148),char(34))
       ,[change]=replace(replace([change],char(147),char(34)),char(148),char(34))
       ,[rank]=replace(replace([rank],char(147),char(34)),char(148),char(34))
+
 from load_next_msl
 where
 ([proposal] is not null and ([proposal] like '%'+char(147)+'%' or [proposal] like '%'+char(148)+'%')) or  -- word smart quotes
+([proposal_abbrev] is not null and ([proposal_abbrev] like '%'+char(147)+'%' or [proposal_abbrev] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcRealm] is not null and ([srcRealm] like '%'+char(147)+'%' or [srcRealm] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcSubrealm] is not null and ([srcSubrealm] like '%'+char(147)+'%' or [srcSubrealm] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcKingdom] is not null and ([srcKingdom] like '%'+char(147)+'%' or [srcKingdom] like '%'+char(148)+'%')) or  -- word smart quotes
@@ -175,8 +175,6 @@ where
 ([srcGenus] is not null and ([srcGenus] like '%'+char(147)+'%' or [srcGenus] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcSubgenus] is not null and ([srcSubgenus] like '%'+char(147)+'%' or [srcSubgenus] like '%'+char(148)+'%')) or  -- word smart quotes
 ([srcSpecies] is not null and ([srcSpecies] like '%'+char(147)+'%' or [srcSpecies] like '%'+char(148)+'%')) or  -- word smart quotes
-([srcIsType] is not null and ([srcIsType] like '%'+char(147)+'%' or [srcIsType] like '%'+char(148)+'%')) or  -- word smart quotes
-([srcAccessions] is not null and ([srcAccessions] like '%'+char(147)+'%' or [srcAccessions] like '%'+char(148)+'%')) or  -- word smart quotes
 ([realm] is not null and ([realm] like '%'+char(147)+'%' or [realm] like '%'+char(148)+'%')) or  -- word smart quotes
 ([subrealm] is not null and ([subrealm] like '%'+char(147)+'%' or [subrealm] like '%'+char(148)+'%')) or  -- word smart quotes
 ([kingdom] is not null and ([kingdom] like '%'+char(147)+'%' or [kingdom] like '%'+char(148)+'%')) or  -- word smart quotes
@@ -207,7 +205,8 @@ where
 print '-- remove quotes around values'
 update load_next_msl set 
 -- select change,[srcAccessions],[exemplarAccessions],
-      [proposal]=(case when [proposal] like char(34)+'%'+char(34) then substring([proposal], 2, len([proposal])-2) else [proposal] end)
+       [proposal]=(case when [proposal] like char(34)+'%'+char(34) then substring([proposal], 2, len([proposal])-2) else [proposal] end)
+      ,[proposal_abbrev]=(case when [proposal_abbrev] like char(34)+'%'+char(34) then substring([proposal_abbrev], 2, len([proposal_abbrev])-2) else [proposal_abbrev] end)
       ,[srcRealm]=(case when [srcRealm] like char(34)+'%'+char(34) then substring([srcRealm], 2, len([srcRealm])-2) else [srcRealm] end)
       ,[srcSubrealm]=(case when [srcSubrealm] like char(34)+'%'+char(34) then substring([srcSubrealm], 2, len([srcSubrealm])-2) else [srcSubrealm] end)
       ,[srcKingdom]=(case when [srcKingdom] like char(34)+'%'+char(34) then substring([srcKingdom], 2, len([srcKingdom])-2) else [srcKingdom] end)
@@ -223,8 +222,6 @@ update load_next_msl set
       ,[srcGenus]=(case when [srcGenus] like char(34)+'%'+char(34) then substring([srcGenus], 2, len([srcGenus])-2) else [srcGenus] end)
       ,[srcSubgenus]=(case when [srcSubgenus] like char(34)+'%'+char(34) then substring([srcSubgenus], 2, len([srcSubgenus])-2) else [srcSubgenus] end)
       ,[srcSpecies]=(case when [srcSpecies] like char(34)+'%'+char(34) then substring([srcSpecies], 2, len([srcSpecies])-2) else [srcSpecies] end)
-      ,[srcIsType]=(case when [srcIsType] like char(34)+'%'+char(34) then substring([srcIsType], 2, len([srcIsType])-2) else [srcIsType] end)
-      ,[srcAccessions]=(case when [srcAccessions] like char(34)+'%'+char(34) then substring([srcAccessions], 2, len([srcAccessions])-2) else [srcAccessions] end)
       ,[realm]=(case when [realm] like char(34)+'%'+char(34) then substring([realm], 2, len([realm])-2) else [realm] end)
       ,[subrealm]=(case when [subrealm] like char(34)+'%'+char(34) then substring([subrealm], 2, len([subrealm])-2) else [subrealm] end)
       ,[kingdom]=(case when [kingdom] like char(34)+'%'+char(34) then substring([kingdom], 2, len([kingdom])-2) else [kingdom] end)
@@ -252,6 +249,7 @@ update load_next_msl set
 from  load_next_msl
 where  
 ([proposal] is not null and ([proposal] like char(34)+'%'+char(34))) or  -- double quotes
+([proposal_abbrev] is not null and ([proposal_abbrev] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcRealm] is not null and ([srcRealm] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcSubrealm] is not null and ([srcSubrealm] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcKingdom] is not null and ([srcKingdom] like char(34)+'%'+char(34))) or  -- double quotes
@@ -267,8 +265,6 @@ where
 ([srcGenus] is not null and ([srcGenus] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcSubgenus] is not null and ([srcSubgenus] like char(34)+'%'+char(34))) or  -- double quotes
 ([srcSpecies] is not null and ([srcSpecies] like char(34)+'%'+char(34))) or  -- double quotes
-([srcIsType] is not null and ([srcIsType] like char(34)+'%'+char(34))) or  -- double quotes
-([srcAccessions] is not null and ([srcAccessions] like char(34)+'%'+char(34))) or  -- double quotes
 ([realm] is not null and ([realm] like char(34)+'%'+char(34))) or  -- double quotes
 ([subrealm] is not null and ([subrealm] like char(34)+'%'+char(34))) or  -- double quotes
 ([kingdom] is not null and ([kingdom] like char(34)+'%'+char(34))) or  -- double quotes
@@ -293,6 +289,7 @@ where
 ([Abbrev] is not null and ([Abbrev] like char(34)+'%'+char(34))) or  -- double quotes
 ([change] is not null and ([change] like char(34)+'%'+char(34))) or  -- double quotes
 ([rank] is not null and ([rank] like char(34)+'%'+char(34)))   -- double quotes
+
 
 
 --print ascii('"')
