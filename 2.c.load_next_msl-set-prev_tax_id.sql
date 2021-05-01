@@ -3,7 +3,6 @@
 --
 begin transaction
 
-
 select 	
 	rpt='Map _src_taxon_name to last MSL'
 	,msg=(case 
@@ -43,12 +42,14 @@ order by msg, sort -- put ERROR first, alphabetically.
 -- QC - unmapped rows
 -- --------------------------------------------------------------------
 select 
-	STEP='3. load_next_msl_33 - set prev_tax_id.sql'
+	STEP='2.c load_next_msl - set prev_tax_id.sql'
 	,QC_ERROR='ERROR: prev_taxnode_id=NULL'
 	, action=_action
 	, * 
 from load_next_msl 
-where prev_taxnode_id is null
+where 
+    prev_taxnode_id is null
+and isWrong is null
 and not (_action = 'new' and _src_taxon_name is null)
 order by action, sort
 
@@ -76,7 +77,7 @@ from (
 		  +(case when  load_next_msl.srcgenus  is not null and srcgenus.name is null then '"'+srcgenus+'": genus not found, '   else '' end)
 		  +(case when  load_next_msl.srcsubgenus  is not null and srcsubgenus.name is null then '"'+srcsubgenus+'": subgenus not found, '   else '' end)
 		  +(case when  load_next_msl.srcspecies  is not null and srcspecies.name is null then '"'+srcspecies+'": species not found, '   else '' end)
-		, sort, proposal, spreadsheet, _action, spreadsheet_lineage=_src_lineage, correct_prev_msl_lineage=mapped.lineage, correct_taxnode_id=mapped.taxnode_id
+		, sort, isWrong, proposal, spreadsheet, _action, spreadsheet_lineage=_src_lineage, correct_prev_msl_lineage=mapped.lineage, correct_taxnode_id=mapped.taxnode_id
 	from load_next_msl
 	 left outer join taxonomy_node mapped on mapped.taxnode_id = load_next_msl.prev_taxnode_id
 	 left outer join taxonomy_node srcrealm on srcrealm.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcrealm.name = load_next_msl.srcrealm
@@ -96,106 +97,276 @@ from (
 	 left outer join taxonomy_node srcspecies on srcspecies.msl_release_num=load_next_msl.dest_msl_release_num -1 and srcspecies.name = load_next_msl.srcspecies
 ) as src 
 where len(src.TAXA_NAMES_NOT_FOUND_IN_PREV_MSL) > 0
-
-select taxnode_id, parent_id, name, level_id from taxonomy_node where name like '%Bunyvirales%' 
-or taxnode_id in (201850142,201856221,201850137, 201850001)
-order by tree_id desc
+and src.isWrong IS NULL -- dont list fixed records
+order by sort
 
 
 
 
--- 
+
+
+
+-- =========================================================================================
+-- =========================================================================================
+--
 -- fix errors
 -- 
+-- =========================================================================================
+-- =========================================================================================
 
--- 2019.054B.Caudovirales_mov4gen_renam2sp.xlsx
+-- 2020.053B.R.Emmerichvirinae.zip
+-- remove srcGenus="unassigned"
+update load_next_msl set srcGenus = NULL
+    -- select sort, srcGenus, *
+	from load_next_msl where sort=71243
 
-select * --update load_next_msl set srcSpecies = 'Salmonella virus HB2014' 
-	from load_next_msl where srcSpecies like 'Salmonella virus BH2014' 
-
--- 2019.006G.Riboviria.xlsx
-select * --update load_next_msl set srcFamily = 'Flaviviridae' 
-	from load_next_msl where srcFamily like 'Flaviriviridae'
-
--- 2019.008P.Sadwavirus_3subg.xlsx
-select * --update load_next_msl set srcSpecies =		'Dioscorea mosaic associated virus'
-	from load_next_msl where srcSpecies like		'Discorea mosaic associated virus'
-select * --update load_next_msl set Species =		'Dioscorea mosaic associated virus'
-	from load_next_msl where Species like		'Discorea mosaic associated virus'
-
---2019.009G.Riboviria_corrections.xlsx
-select * --update load_next_msl set srcFamily =		'Avsunviroidae'
-	from load_next_msl where srcFamily like		'Asunviroidae'
-select * --update load_next_msl set Family =		'Avsunviroidae'
-	from load_next_msl where Family like		'Asunviroidae'
-
---
--- Orthopteran densovirus 1
--- search
--- >> Orthopteran miniambidensovirus 1
-select * --update load_next_msl set srcSpecies =		'Orthopteran densovirus 1'
-	from load_next_msl where srcSpecies like		'Orthoptean densovirus 1'
---select * --update load_next_msl set Species =		'Dioscorea mosaic associated virus'
---	from load_next_msl where Species like		'Orthopteran miniambidensovirus 1'
-
--- 2019.021M.1newgenus_Hexartovirus.xlsx
--- Riboviria;Negarnaviricota;Haploviricotina;Monjiviricetes;Mononegavirales;Artoviridae;Peropuvirus;Barnacle[s] peropuvirus
-select * --update load_next_msl set srcSpecies =		'Balanid hexartovirus', srcSubGenus=NULL
-	from load_next_msl where srcSubGenus  like		'Barnacles peropuvirus'
-select * --update load_next_msl set srcSpecies =		'Barnacle peropuvirus'
-	from load_next_msl where srcSpecies  like	     	'Balanid hexartovirus'
-select * --update load_next_msl set Species =		'Barnacle hexartovirus'
-	from load_next_msl where Species  like	     	'Balanid hexartovirus'
-
-
--- 2019.031M.Nucleorhabdovirus_splitgen.xlsx
--- Riboviria;Mononegavirales;Rhabdoviridae;Nucleorhabdovirus;Sonchus yellow net nucleorhabdovirus  
--- FIX BY IMPROVING WHITE_SPACE removal code earlier in process.
---select replace(srcSpecies,char(160),'X')+']', * --update load_next_msl set srcSpecies =		'Barnacle peropuvirus', srcSubGenus=NULL
---	from load_next_msl where srcSpecies  like		'Sonchus yellow net nucleorhabdovirus '+CHAR(160)
-
--- 2019.061B.Tubulavirales_1ord1fam19gen.xlsx
-select * --update load_next_msl set srcSpecies =		'Propionibacterium virus B5'
-	from load_next_msl where srcSpecies  like	     	'Propionobacterium virus B5'
-select * --update load_next_msl set Species =		'Propionibacterium virus B5'
-	from load_next_msl where Species  like	     	'Propionobacterium virus B5'
-
--- 2019.090B.Taipeivirus_1gen6sp.xlsx
-select * --update load_next_msl set srcSpecies =		'Klebsiella virus 0507KN21'
-	from load_next_msl where srcSpecies  like	     	'Klebsiella virus 0507KN2-1'
-select * --update load_next_msl set Species =		'Klebsiella virus 0507KN21'
-	from load_next_msl where Species  like	     	'Klebsiella virus 0507KN2-1'
-
--- 2019.099B.Demerecviridae_1fam3subfam6gen.xlsx
-select * --update load_next_msl set srcOrder='Caudovirales', srcFamily='Siphoviridae', srcGenus='Jesfedecavirus'
-	from load_next_msl where sort like 1347 and (srcOrder is null or srcFamily is null or srcGenus is null)
-	
-
--- 2019.100B.Drexlerviridae_1newfam.xlsx
-select * --update load_next_msl set srcGenus='Sertoctavirus'
-	from load_next_msl where srcGenus  like  'Seroctavirus'
-select * --update load_next_msl set Genus='Sertoctavirus'
-	from load_next_msl where Genus  like  'Seroctavirus'
-	
-
--- 2019.059B.Halspiviridae_1fam.xlsx
-select * --update load_next_msl set srcSpecies =		'His 1 virus'
-	from load_next_msl where srcSpecies  like	     	'Virus His 1'	
-
---
--- ad hoc searches
---
-/*
-select rpt='adhoc query', lineage, * 
+select genus, ct=count(*)
 from taxonomy_node_names 
-where 
-name like 'Sertoctavirus' --Riboviria;Mononegavirales;Rhabdoviridae;Nucleorhabdovirus;Sonchus yellow net nucleorhabdovirus 
---																												 Sonchus yellow net nucleorhabdovirus  
---																												 Sonchus yellow net nucleorhabdovirus
---and level_id=300
---lineage like 'Riboviria%Asunviroidae%'
-order by msl_release_num desc, left_idx
+where genus like 'Lev%virus'
+group by genus 
 
-*/
+
+-- 2020.095B.R.Leviviricetes-orig.zip
+-- fix typo in srcKingdom: Orth[n]ornavirae => Orthornavirae
+-- fix typo in srcGenus: Levi[vi]virus => Levivirus
+select * --update load_next_msl set srcKingdom = 'Orthornavirae' 
+	from load_next_msl where srcKingdom like 'Orthnornavirae'
+select * --update load_next_msl set srcGenus = 'Levivirus' 
+	from load_next_msl where srcGenus like 'Levivivirus'
+
+
+--
+-- several records were new species created with typos. 
+-- Then a 2nd, corrective, proposal (in the same MSL) renames the species to correct that. 
+--
+-- we are going to merge those into one record. The following fields will contain two
+-- values separated by a **semi-colon**: primary, then fix (and fix2, etc) 
+--    proposal_abbrev
+--    proposal
+-- for the primary record, a comment will be added with the fix.sort. 
+
+-- for the records that 2ndary and Nary records, isWrong will be set to primary.sort, 
+-- and a comment will be added. 
+
+-- The 2ndary and N-iary records will then be deleted. 
+-- 
+-- Action will be that appropriate for the combination of fixes:
+--    new + rename = new
+--    new + move = new 
+--    etc
+--
+
+--
+-- 48859  NEW     Zhezhang alphacrustrhavirus
+-- 130390 RENAME  Zhejiang alphacrustrhavirus
+select 
+	p='PRIMARY>>',load_next_msl.sort, load_next_msl.proposal_abbrev, load_next_msl.proposal, load_next_msl._action
+	,f='FIX>>',             fix.sort,           fix.proposal_abbrev,           fix.proposal,           fix._action
+	,m='UPDATE>>',
+	-- UPDATE load_next_msl SET 
+		-- APPEND comment about fix
+		  [comments]     =isnull(load_next_msl.[comments]+'; ','')+'updated (fixed) with sort='+ltrim(fix.sort)+' proposal='+fix.proposal+' comment='+isnull(fix.comments,'') 
+		-- CONCATENATE with SEMICOLON
+		, proposal_abbrev=load_next_msl.proposal_abbrev+';'+fix.proposal_abbrev
+		, proposal       =load_next_msl.proposal+';'+fix.proposal
+		-- REPLACE
+		, realm          =fix.realm
+		, subrealm       =fix.subrealm
+		, kingdom        =fix.kingdom
+		, subkingdom     =fix.subkingdom
+		, phylum         =fix.phylum
+		, subphylum      =fix.subphylum
+		, class          =fix.class
+		, subclass       =fix.subclass
+		, [order]        =fix.[order]
+		, suborder       =fix.suborder
+		, family         =fix.family
+		, subfamily      =fix.subfamily
+		, genus          =fix.genus
+		, subgenus       =fix.subgenus
+		, species        =fix.species
+	--,a='ALL>>', *
+from load_next_msl, load_next_msl fix 
+where load_next_msl.sort=48859 and fix.sort=130390
+and load_next_msl.proposal not like '%;%'
+
+-- mark fix record as applied
+update load_next_msl set isWrong='48859', [comments]=isnull([comments]+'; ','')+'Fixes 48859; records were merged' where sort=130390 and isWrong is null
+
+--QC
+select * from load_next_msl where sort in (48859,130390)
+
+
+--
+--  54855 -- NEW     Saphire orthonairovirus
+-- 130391 -- RENAME  Sapphire orthonairovirus
+--select * from taxonomy_level
+select 
+	p='PRIMARY>>',load_next_msl.sort, load_next_msl.proposal_abbrev, load_next_msl.proposal, load_next_msl._action, load_next_msl.species
+	,f='FIX>>',             fix.sort,           fix.proposal_abbrev,           fix.proposal,           fix._action,           fix.species
+	,m='UPDATE>>',
+	-- UPDATE load_next_msl SET 
+		-- APPEND comment about fix
+		  [comments]     =isnull(load_next_msl.[comments]+'; ','')+'updated (fixed) with sort='+ltrim(fix.sort)+' proposal='+fix.proposal+' comment='+isnull(fix.comments,'') 
+		-- CONCATENATE with SEMICOLON
+		, proposal_abbrev=load_next_msl.proposal_abbrev+';'+fix.proposal_abbrev
+		, proposal       =load_next_msl.proposal+';'+fix.proposal
+		-- REPLACE
+		, realm          =fix.realm
+		, subrealm       =fix.subrealm
+		, kingdom        =fix.kingdom
+		, subkingdom     =fix.subkingdom
+		, phylum         =fix.phylum
+		, subphylum      =fix.subphylum
+		, class          =fix.class
+		, subclass       =fix.subclass
+		, [order]        =fix.[order]
+		, suborder       =fix.suborder
+		, family         =fix.family
+		, subfamily      =fix.subfamily
+		, genus          =fix.genus
+		, subgenus       =fix.subgenus
+		, species        =fix.species
+	--,a='ALL>>', *
+from load_next_msl, load_next_msl fix 
+where load_next_msl.sort=54855 and fix.sort=130391
+and load_next_msl.proposal not like '%;%'
+-- mark fix record as applied
+update load_next_msl set isWrong='54855', [comments]=isnull([comments]+'; ','')+'Fixes 54855; records were merged' where sort=130391 and isWrong is null
+
+--QC
+select * from load_next_msl where sort in (54855,130391)
+
+
+--
+--  29947 -- NEW     Buffalo Creek orhtobunyavirus
+-- 130392 -- RENAME  Buffalo Creek orthobunyavirus
+--select * from taxonomy_level
+select 
+	p='PRIMARY>>',load_next_msl.sort, load_next_msl.proposal_abbrev, load_next_msl.proposal, load_next_msl._action, load_next_msl.species
+	,f='FIX>>',             fix.sort,           fix.proposal_abbrev,           fix.proposal,           fix._action,           fix.species
+	,m='UPDATE>>',
+	-- UPDATE load_next_msl SET 
+		-- APPEND comment about fix
+		  [comments]     =isnull(load_next_msl.[comments]+'; ','')+'updated (fixed) with sort='+ltrim(fix.sort)+' proposal='+fix.proposal+' comment='+isnull(fix.comments,'') 
+		-- CONCATENATE with SEMICOLON
+		, proposal_abbrev=load_next_msl.proposal_abbrev+';'+fix.proposal_abbrev
+		, proposal       =load_next_msl.proposal+';'+fix.proposal
+		-- REPLACE
+		, realm          =fix.realm
+		, subrealm       =fix.subrealm
+		, kingdom        =fix.kingdom
+		, subkingdom     =fix.subkingdom
+		, phylum         =fix.phylum
+		, subphylum      =fix.subphylum
+		, class          =fix.class
+		, subclass       =fix.subclass
+		, [order]        =fix.[order]
+		, suborder       =fix.suborder
+		, family         =fix.family
+		, subfamily      =fix.subfamily
+		, genus          =fix.genus
+		, subgenus       =fix.subgenus
+		, species        =fix.species
+	--,a='ALL>>', *
+from load_next_msl, load_next_msl fix 
+where load_next_msl.sort=29947 and fix.sort=130392
+and load_next_msl.proposal not like '%;%'
+-- mark fix record as applied
+update load_next_msl set isWrong='29947', [comments]=isnull([comments]+'; ','')+'Fixes 29947; records were merged' where sort=130392 and isWrong is null
+
+--QC
+select * from load_next_msl where sort in (29947,130392)
+
+
+--  56844 -- NEW     Guadaloupe phasivirus
+-- 130393 -- RENAME  Guadeloupe phasivirus 
+--
+--select * from taxonomy_level
+select 
+	p='PRIMARY>>',load_next_msl.sort, load_next_msl.proposal_abbrev, load_next_msl.proposal, load_next_msl._action, load_next_msl.species
+	,f='FIX>>',             fix.sort,           fix.proposal_abbrev,           fix.proposal,           fix._action,           fix.species
+	,m='UPDATE>>',
+	-- UPDATE load_next_msl SET 
+		-- APPEND comment about fix
+		  [comments]     =isnull(load_next_msl.[comments]+'; ','')+'updated (fixed) with sort='+ltrim(fix.sort)+' proposal='+fix.proposal+' comment='+isnull(fix.comments,'') 
+		-- CONCATENATE with SEMICOLON
+		, proposal_abbrev=load_next_msl.proposal_abbrev+';'+fix.proposal_abbrev
+		, proposal       =load_next_msl.proposal+';'+fix.proposal
+		-- REPLACE
+		, realm          =fix.realm
+		, subrealm       =fix.subrealm
+		, kingdom        =fix.kingdom
+		, subkingdom     =fix.subkingdom
+		, phylum         =fix.phylum
+		, subphylum      =fix.subphylum
+		, class          =fix.class
+		, subclass       =fix.subclass
+		, [order]        =fix.[order]
+		, suborder       =fix.suborder
+		, family         =fix.family
+		, subfamily      =fix.subfamily
+		, genus          =fix.genus
+		, subgenus       =fix.subgenus
+		, species        =fix.species
+	--,a='ALL>>', *
+from load_next_msl, load_next_msl fix 
+where load_next_msl.sort=56844 and fix.sort=130393
+and load_next_msl.proposal not like '%;%'
+-- mark fix record as applied
+update load_next_msl set isWrong='56844', [comments]=isnull([comments]+'; ','')+'Fixes 56844; records were merged' where sort=130393 and isWrong is null
+
+--QC
+select * from load_next_msl where sort in (56844, 130393)
+
+
+--
+-- final QC
+--
+select sort, iswrong, prev_taxnode_id, srcspecies, species, proposal_abbrev, proposal, comments
+from load_next_msl
+where cast(sort as int) in (
+130390,130391,130392,130393
+,
+48859,54855,29947,56844
+)
+
+
+--
+-- sort=11022
+-- action=move species
+-- proposal=2020.005B.R.Ackermannviridae.zip
+-- ERROR: species name is "Erwinia virus Ea2810", should be "Erwinia virus Ea2809"
+update load_next_msl set
+	-- SELECT srcSpecies,
+	srcSpecies = 'Erwinia virus Ea2809'
+from load_next_msl 
+where sort=11022 and srcSpecies='Erwinia virus Ea2810'
+
+-- 
+-- sort=1216, 
+-- action=move subfamily 
+-- 2020.001M_014M_015M_016M.R.Rhabdoviridae.zip 
+-- ERROR: no previous subfamily named, appears it should be "create subfamily". 
+--  Changing and proceeding. 
+update load_next_msl set 
+	-- SELECT _action,
+	_action = 'new'
+from load_next_msl 
+where sort=1216 and _action='move'
+
+-- 
+-- sort=122400, 
+-- action=abolish 
+-- 2020.169B.R.Tunavirus.zip 
+-- ERROR: no prev taxon. Doesn't exist in proposal; remove;
+-- 
+update load_next_msl set 
+	-- SELECT _action,
+	isWrong = 'not_in_proposal', comments='not_in_proposal'
+from load_next_msl 
+where sort=122400 and isWrong is null
+
+
 --rollback transaction
 --commit transaction 
