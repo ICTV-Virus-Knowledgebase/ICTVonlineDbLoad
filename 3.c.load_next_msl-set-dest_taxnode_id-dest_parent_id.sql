@@ -91,10 +91,13 @@ JOIN taxonomy_node targ
 		(targ.level_id=100/*root*/ and load_next_msl._dest_parent_name=''/*root*/)
 	)
 where isWrong is NULL
-and _action in ('new', 'split', 'move')
+and _action in ('new', 'split', 'move','promote')
 and load_next_msl.dest_parent_id is null
 -- END UPDATE
 --order by targ.level_id
+
+select * from taxonomy_change_in
+select * from taxonomy_change_out
 
 --
 -- things that will exist
@@ -109,11 +112,10 @@ JOIN load_next_msl targ
 	AND targ._dest_taxon_name = load_next_msl._dest_parent_name 
 	AND targ.dest_taxnodE_id is not null
 where load_next_msl.isWrong is NULL and targ.isWrong is NULL 
-and load_next_msl._action in ('new', 'split', 'move')
+and load_next_msl._action in ('new', 'split', 'move', 'promote')
 and load_next_msl.dest_parent_id is null
 -- END UPDATE 
 -- order by targ._dest_taxon_rank
-
 
 --
 -- show what we did
@@ -134,13 +136,38 @@ from load_next_msl where isWrong is null and dest_parent_id is null and _action 
 -- Data Fixes 
 -- --------------------------------
 
-update load_next_msl set subfamily='Avulavirinae', genus='Orthoavulavirus' where sort=500 and subfamily='AvulavirinaeOrthoavulavirus'
-update load_next_msl set genus='Aquaparamyxovirus' where sort=673 and genus='AquaparamyxovirusName!!'
-update load_next_msl set subfamily=NULL where sort=676 and subfamily='Unassigned'
-update load_next_msl set subfamily=NULL where sort=678 and subfamily='Unassigned'
-update load_next_msl set subfamily=NULL where sort=680 and subfamily='Unassigned'
-update load_next_msl set genus='Orthophasmavirus' where sort=794 and genus='Orhtophasmavirus'
-update load_next_msl set subfamily='Ermolyevavirinae' where sort in (1345,1346) and subfamily='Emolyevavirinae'
+-- they added Family Metaxyviridae, but forgot to add genus Cofodevirus, then moved species into said genus
+insert into load_next_msl (
+	filename
+	,sort
+	,proposal_abbrev, proposal, spreadsheet
+	, realm, kingdom, phylum, class, [order], family
+	, genus
+	, molecule, change
+	, rank
+	, _action
+	,dest_taxnode_id
+	,dest_ictv_id
+	,dest_parent_id
+	,[comments]
+)
+select 
+	filename
+	, sort=sort +0.5
+	,proposal_abbrev, proposal, spreadsheet
+	, realm, kingdom, phylum, class, [order], family
+	, genus='Cofodevirus'
+	, molecule, change
+	, rank='genus'
+	, _action
+	,dest_taxnode_id=(select max(dest_taxnode_id)+1 from load_next_msl)
+	,dest_ictv_id=(select max(dest_taxnode_id)+1 from load_next_msl)
+	,dest_parent_id=dest_taxnode_id
+	,[comments]='Missing from MSL summary sheet. Added by CurtisH in load_next_msl'
+ from load_next_msl where sort=47869
+
+ -- now go re-run "set parent" update and QC
+
 
 /* 
  --
