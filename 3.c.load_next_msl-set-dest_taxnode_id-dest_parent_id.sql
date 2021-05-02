@@ -174,7 +174,7 @@ select
  -- ad hoc research query - find taxon in both tables
  --
 
-DECLARE @targ varchar(50); SET @targ='Ermolyevavirinae'
+DECLARE @targ varchar(50); SET @targ='Cofodevirus'
 select t='taxonomy_node', * from taxonomy_node where name like @targ order by msl_release_num desc
 select t='load_next_msl', * from load_next_msl where _dest_taxon_name like @targ
 */
