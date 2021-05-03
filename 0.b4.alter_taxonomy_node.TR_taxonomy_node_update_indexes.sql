@@ -134,7 +134,6 @@ BEGIN
 
 	-- re-index this node's parent's substree - the name changed and that affects the (computed) lineage field
 	IF UPDATE(name) RAISERROR ('TR_taxonomy_node_update_indexes: UPDATE(name): [subtree index]', 1, 1)
-	PRINT ('HI')
 	IF UPDATE(molecule_id) RAISERROR ('TR_taxonomy_node_update_indexes: UPDATE(molecule_id): [subtree index].', 1, 1)
 	DECLARE @taxnode_id int
 	DECLARE @left_idx  int
