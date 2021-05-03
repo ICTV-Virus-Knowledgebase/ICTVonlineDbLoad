@@ -25,6 +25,8 @@ AS
 -- 	UPDATE: parent_taxnode_id changes only
 --
 -- AUTHOR: Curtis Hendrickson (curtish) 2007-Dec-28
+-- 20210502 add child count output params to call of [taxonomy_node_compute_indexes]
+--          that SP was update on 20200422 to "Add kid/descendant taxa-by-rank counts to taxonomy_node"
 
 SET NOCOUNT ON
 --RAISERROR ('TR_taxonomy_node_update_indexes', 1, 1)
