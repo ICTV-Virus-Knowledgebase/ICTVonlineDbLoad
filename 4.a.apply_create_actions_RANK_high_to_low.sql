@@ -249,7 +249,7 @@ BEGIN
 	END
 	
 	-- DEBUG:
-	-- DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='genus';
+	-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='genus';
 	print '-- -----------------------------------------------------------------------------'
 	PRINT '-- MOVE (+rename+promote+demote) @ '+@rank
 	print '-- -----------------------------------------------------------------------------'
@@ -271,13 +271,14 @@ BEGIN
 			,abbrev_csv=src.abbrev
 			,isolate_csv=src.exemplarIsolate
 			,molecule_id=destMol.id
+			,level_id=destRank.id
 		FROM taxonomy_node 
 		JOIN load_next_msl src on isWrong is null AND src.dest_taxnode_id = taxonomy_node.taxnode_id
 		left outer join taxonomy_molecule destMol on destMol.abbrev=src.molecule
+		left outer join taxonomy_level destRank on destRank.name = src._dest_taxon_rank
 		WHERE src._action in ('move','promote','demote')
 		and level_id = @level_id
-
-
+	
 		-- update prev msl
 		-- SELECT 'prev_msl',-- 
 		UPDATE taxonomy_node SET 
