@@ -60,3 +60,8 @@ where  taxonomy_node.msl_release_num= (@msl-1)
 -- skip stuff already copied
 and not exists (select * from taxonomy_node as test where test.taxnode_id = taxonomy_node.taxnode_id+dx.tree_id_delta)
 order by left_idx
+
+
+select report='copied MSL'+rtrim(@msl), level_id, count(*) from taxonomy_node 
+where msl_release_num = @msl
+group by level_id
