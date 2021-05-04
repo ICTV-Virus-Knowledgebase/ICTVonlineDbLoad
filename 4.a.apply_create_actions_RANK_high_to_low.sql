@@ -9,24 +9,35 @@
 BEGIN TRANSACTION
 -- COMMIT TRANSACTION
 
+-- rollback transaction
+
+/**** fixes*****/
+update load_next_msl set isWrong = 'blank entry in MSL' where sort=66777
+
+/* DEBUG MSL36
+select 'before',taxnode_id, lineage, _numKids from taxonomy_node where taxnode_id in ( 201900520, 202000520) or (msl_release_num=36 and name in ('Kuttervirus','Viunavirus')) order by msl_release_num, left_idx
+*/
 
  select 'todo', _action, count(*)
  from load_next_msl 
+ where isWrong is null
  group by _action 
 
  /* 
    preflight check
-  */
-if (select  count(*) from load_next_msl where _action='new') > 0 BEGIN
+
+if (select  count(*) from load_next_msl where _action='promote') > 0 BEGIN
 	declare @msg varchar(500); SET @msg='!!!!!!!PROMOTE action NOT YET IMPLEMENTED!!!!!!!!'
 	print @msg
 	RAISERROR (15600,-1,-1, @msg)
 END
+*/
 
 
  -- 
  -- data fixes (splits with same name were not exempted from getting new taxnode/ictv ids)
  --
+
  update load_next_msl set dest_taxnode_id=dest.taxnode_id, dest_ictv_id=dest.ictv_id
  -- select sort,_src_lineage, rank, _action, _dest_lineage, dest_taxnode_id, dest_ictv_id, taxnode_id, ictv_id, lineage
  from load_next_msl
@@ -69,7 +80,7 @@ BEGIN
 	PRINT '-- ## '+@rank+' ('+rtrim(@level_id)+')'
 	PRINT '-- ##############################################################################'
 	-- DEBUG:
-	-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='species';
+	-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='class';
 	print '-- -----------------------------------------------------------------------------'
 	PRINT '-- RENAME @ '+@rank
 	print '-- -----------------------------------------------------------------------------'
@@ -79,6 +90,16 @@ BEGIN
 	if @count = 0 BEGIN
 		PRINT 'SKIP: No actions for rank '+@rank
 	END ELSE BEGIN
+
+		-- debug
+		SELECT 'DEBUG'='RENAME', src.sort, n.taxnode_id, n.lineage, _action, _dest_taxon_rank, new_name=src._dest_taxon_name,'>>>',N.*
+		FROM TAXONOMY_NODE n
+		join taxonomy_node P on n.left_idx between p.left_idx and p.right_idx and p.tree_id = n.tree_id
+		JOIN load_next_msl src on isWrong is null AND src.dest_taxnode_id = p.taxnode_id
+		left outer join taxonomy_molecule destMol on destMol.abbrev=src.molecule
+		WHERE src._action='rename'	
+		and p.level_id = @level_id
+		order by n.left_idx
 
 		-- change current name
 		UPDATE taxonomy_node SET 
@@ -95,7 +116,6 @@ BEGIN
 		left outer join taxonomy_molecule destMol on destMol.abbrev=src.molecule
 		WHERE src._action='rename'	
 		and level_id = @level_id
-
 
 		-- update prev msl
 		UPDATE taxonomy_node SET 
@@ -118,18 +138,20 @@ BEGIN
 	END 
 
 	-- DEBUG:
-	-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='subfamily';
+	select _dest_taxon_rank ,_action, ct=count(*) from load_next_msl where isWrong is null AND  _action in ('new','split') group by _dest_taxon_rank ,_action
+	-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='subgenus';
 	print '-- -----------------------------------------------------------------------------'
 	PRINT '-- NEW/SPLIT @ '+@rank
 	print '-- -----------------------------------------------------------------------------'
 
-	SELECT @count=count(*) 
+	SELECT @count=count(*)
 	FROM load_next_msl where isWrong is null AND _action in ('new') AND _dest_taxon_rank = @rank
 	if @count = 0 BEGIN
 		PRINT 'SKIP: No actions for rank '+@rank
 	END ELSE BEGIN
+	
+		-- NEW/SPLIT: insert new row
 
-		-- insert new row
 		INSERT INTO taxonomy_node (
 			taxnode_id
 			,tree_id
@@ -178,15 +200,17 @@ BEGIN
 			(_action like 'split' AND _src_taxon_name <> _dest_taxon_name)
 		) 
 		AND _dest_taxon_rank = @rank
+
 		AND
 			-- reentrant: skip ones already inserted
 			(src.dest_taxnode_id NOT in (select n.taxnode_id from taxonomy_node as n where n.msl_release_num = src.dest_msl_release_num))
 		ORDER BY level_id, _dest_taxon_name
 
-		-- split where name is same - just set in_*
+
+		-- SPLIT (only) where name is same - just set in_*
 		 
 		update taxonomy_node set
-			--DEBUG-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='subfamily'; select taxnode_id, 
+			--DEBUG-- DECLARE @count int; DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='class'; select taxnode_id, 
 			-- change linker
 			in_change = src._action
 			,in_filename = src.proposal
@@ -210,9 +234,11 @@ BEGIN
 			taxonomy_node.in_change is null 
 
 
-		print '-- record completion'
-		UPDATE load_next_msl SET isDONE='4.a.apply_create_actions'
-		-- select src.*
+		print '-- NEW/SPLIT: record completion in load_next_msl.isDONE'
+		-- DEBUG DECLARE @rank varchar(100); SET @rank='kingdom'
+		UPDATE load_next_msl SET 
+		-- DEBUG DECLARE @rank varchar(100); SET @rank='realm'; select src.*,
+			isDONE='4.a.apply_create_actions'
 		FROM load_next_msl src 
 		JOIN taxonomy_node on src.dest_taxnode_id = taxonomy_node.taxnode_id
 		WHERE src.isWrong is null AND src._action in ('new', 'split')	
@@ -225,13 +251,13 @@ BEGIN
 	-- DEBUG:
 	-- DECLARE @rank varchar(50); DECLARE @level_id int; DECLARE @msg varchar(500); SELECT @rank=name, @level_id=id FROM taxonomy_level WHERE name='genus';
 	print '-- -----------------------------------------------------------------------------'
-	PRINT '-- MOVE (+rename+isType) @ '+@rank
+	PRINT '-- MOVE (+rename+promote+demote) @ '+@rank
 	print '-- -----------------------------------------------------------------------------'
 
 	SELECT @count=count(*) 
-	FROM load_next_msl where isWrong is null AND _action='move' AND _dest_taxon_rank = @rank
+	FROM load_next_msl where isWrong is null AND _action in ('move','promote','demote') AND _dest_taxon_rank = @rank
 	if @count = 0 BEGIN
-		PRINT 'SKIP: No actions for rank '+@rank
+		PRINT 'SKIP: No MOVE actions for rank '+@rank
 	END ELSE BEGIN
 
 		-- change current name and parent 
@@ -248,7 +274,7 @@ BEGIN
 		FROM taxonomy_node 
 		JOIN load_next_msl src on isWrong is null AND src.dest_taxnode_id = taxonomy_node.taxnode_id
 		left outer join taxonomy_molecule destMol on destMol.abbrev=src.molecule
-		WHERE src._action='move'	
+		WHERE src._action in ('move','promote','demote')
 		and level_id = @level_id
 
 
@@ -263,7 +289,7 @@ BEGIN
 		FROM taxonomy_node 
 		JOIN load_next_msl src on isWrong is null AND src.prev_taxnode_id = taxonomy_node.taxnode_id
 		JOIN taxonomy_node dest on dest.taxnode_id = src.dest_taxnodE_id
-		WHERE src._action='move'	
+		WHERE src._action in ('move','promote','demote')	
 		and taxonomy_node.level_id = @level_id
 		and taxonomy_node.out_change is null
 
@@ -271,7 +297,7 @@ BEGIN
 		UPDATE load_next_msl SET isDONE='4.a.apply_create_actions'
 		FROM load_next_msl src 
 		JOIN taxonomy_node on src.prev_taxnode_id = taxonomy_node.taxnode_id
-		WHERE src.isWrong is null AND src._action='move'	
+		WHERE src.isWrong is null AND src._action in ('move','promote','demote')
 		and level_id = @level_id
 
 	ENd
@@ -289,16 +315,28 @@ BEGIN
 	END ELSE BEGIN
 
 		-- when MSL created, included this taxon, so remove the copy in the current MSL
-		-- *since it will be merged and no longer exist)
+		-- (since it will be merged and no longer exist)
+
+		-- first, move any children to the MERGE target
+		UPDATE taxonomy_node SET 
+			parent_id = dest_parent.taxnode_id
+		FROM taxonomy_node 
+		JOIN taxonomy_node src_parent on src_parent.taxnode_id = taxonomy_node.parent_id  and src_parent._numKids > 0
+		JOIN load_next_msl src on src.isWrong is null AND src_parent.taxnode_id=src.dest_taxnode_id 
+		JOIN taxonomy_node dest_parent on dest_parent.msl_release_num = src.dest_msl_release_num and dest_parent.name = src._dest_taxon_name
+		where src._action='merge'
+		and src_parent.level_id = (select id from taxonomy_level where name ='genus')
+
+		-- then delete the MERGE source from this MSL
 		DELETE FROM taxonomy_node 
 		--SELECT a='DELETE',_action, taxonomy_node.taxnode_id, taxonomy_node.lineage, src._src_taxon_name, new_name=src._dest_taxon_name, prev_taxnode_id=src.prev_taxnode_id, isWrong
 		FROM taxonomy_node 
-		JOIN load_next_msl src on isWrong is null AND msl_releasE_num = src.dest_msl_releasE_num AND src._src_taxon_name = taxonomy_node.name 
+		JOIN load_next_msl src on isWrong is null AND msl_release_num = src.dest_msl_releasE_num AND src._src_taxon_name = taxonomy_node.name 
 		WHERE src._action='merge'	
 		and level_id = @level_id
 
 
-		-- update prev msl
+		-- set "OUT" change fields on prev MSL
 		UPDATE taxonomy_node SET 
 		--SELECT taxonomy_node.taxnode_id, taxonomy_node.lineage, '|'+_action+'|', _dest_taxon_rank, new_name=src._dest_taxon_name,
 			out_change = _action
@@ -367,10 +405,20 @@ left outer join (
 ) as dest on dest.change = act.change
 order by action
 
+-- QC
+-- compare load_next_msl with taxonomy_node.in_action
+select src.* , lvl.id
+from (
+	select r='QC: load_next_msl._action=new', _action, _dest_taxon_rank, ct=count(*), doneCt=count(isDone) from load_next_msl where isWrong is null and _action = 'new' group by _action, _dest_taxon_rank
+	union all
+	select r='QC: tax_node.MSL36.in_change=new ***', in_change, rank, ct=count(*), isDONE=0 from taxonomy_node_names where msl_release_num = 36 and in_change in ('new') group by in_change, rank
+) as src
+join taxonomy_level lvl on lvl.name = src._dest_taxon_rank
+order by lvl.id, _action
 
+/* DEBUG MSL36
+select 'after',taxnode_id, lineage, _numKids from taxonomy_node where taxnode_id in ( 201900520, 202000520) or (msl_release_num=36 and name in ('Kuttervirus','Viunavirus')) order by msl_release_num, left_idx
+*/
 
 --rollback transaction
 --commit transaction
-
-
-
