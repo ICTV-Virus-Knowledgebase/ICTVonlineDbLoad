@@ -1,13 +1,10 @@
 --
--- manual fixups
+-- QC empty taxa & in-appropriate rank changes
 --
-
-
--- ***** MSL 35 *****************************************************************************************************************************************
 
 -- --------------------------------------------------------------------------------------
 -- 
--- SCAN for orphan 'Unassigned' - NOT WORKING
+PRINT '#QC SCAN for orphan "Unassigned" (QC may miss some things)'
 -- Ex: MSL30, Tymovirales > Betaflexiviridae > [Unassigned] > Unassigned : has no kids
 --
 -- --------------------------------------------------------------------------------------
@@ -30,129 +27,41 @@ if @@ROWCOUNT > 0  raiserror('ERROR fixups 7; empty taxa found', 18, 1) else pri
 
 
 
---
--- AD HOC QUERIES
---
-/*
-select 'load_next_msl', * from load_next_msl where 'Redondoviridae' in (_src_taxon_name, _dest_taxon_name)
-
-select 'nextMSL', * from taxonomy_node where name = '%NBD2%' order by msl_release_num desc
-
-select report='descendants', n.taxnode_id, n.rank,n.lineage
-from taxonomy_node t
-join taxonomy_node_names n on n.left_idx between t.left_idx and t.right_idx and n.tree_id = t.tree_id
-where t.name in ('Scindoambidensovirus') and t.msl_release_num=35
-order by n.left_idx
-
-select report='ancestors', n.parent_id, n.taxnode_id, n.rank, n.name, n.lineage, n.in_change, n.in_filename
-from taxonomy_node t
-join taxonomy_node_names n on t.left_idx between n.left_idx and n.right_idx and n.tree_id = t.tree_id
-where t.name = 'Vilniusvirus'
-order by n.level_id 
-
-select 
-	report='duplicate dest_taxon_names in load_next_msl'
-	, count=src.ct
-	, ld.sort, ld._src_taxon_name, ld._action, ld.rank, ld._dest_parent_name, ld._dest_taxon_name, ld._dest_lineage, ld.isWrong
-from load_nexT_msl ld
-join (
-	select _dest_taxon_name, ct= count(*)
-	from load_next_msl
-	where _action <> 'abolish'
-	--and isWrong is null
-	group by _dest_taxon_name
-	having count(*) > 1
-) src on src._dest_taxon_name=ld._dest_taxon_name
---where ld.isWrong is null
-order by ld._dest_taxon_name, ld.sort
-
-select 
-	report='sort list' 
-	, prev.taxnode_id, prev.rank, prev.name
-	, prevMSL='<<<<'
-	, ld.prev_taxnode_id, ld._src_taxon_name, ld.sort, ld._action, ld.rank, ld._dest_parent_name, ld._dest_taxon_name, ld.dest_taxnode_id
-	, destMSL='<<<<'
-	,dest.taxnode_id, dest.rank, dest.name, dest.lineage
-from load_next_msl ld
-left outer join taxonomy_node_names prev on prev.taxnode_id = ld.prev_taxnode_id
-left outer join taxonomy_node_names dest on dest.taxnode_id = ld.dest_taxnode_id
-where ld.sort between 173 and 186
-order by ld.sort, isnull(prev.left_idx, dest.left_idx)
-*/
-
--- ===================================================================================================================================
---
--- DATA CORRECTIONS
---
--- ===================================================================================================================================
-
--- see *fix files
-
 
 -- ===================================================================================================================================
 -- === MORE QC
 -- ===================================================================================================================================
 
+PRINT '#QC Checking for inapproapriate RANK changes'
 select 
-	_src_taxon_rank, _action, _dest_taxon_rank
+	report='inappropriate rank change:'
+	,_src_taxon_rank, _action, _dest_taxon_rank
 	,  * 
 from load_next_msl 
 where _src_taxon_rank <> _dest_taxon_rank
-and (_action not in ('new') or _action is null) and (_action not in ('abolish') or _action is null)
-if @@ROWCOUNT > 0  raiserror('ERROR fixups 7; taxa change level badly', 18, 1) else print('PASS - no bad level changes')
+and (_action not in ('new','promote','demote') or _action is null) 
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a; taxa change level badly', 18, 1) else print('PASS - no bad level changes')
 
---
--- DELETE 'Unassigned' subfamilies/genera with prejudice
---
--- RUN until 0 rows deleted (2x) - deleting an unassigned genus and leave an unassigned subfamily empty!
---
-/*
-delete from taxonomy_node where taxnode_id in 
-(
-	select p.taxnode_id
-	--select p.msl_release_num, p.taxnode_id, p.level_id, p.is_hidden, p.lineage
-	from taxonomy_node as p
-	left outer join taxonomy_node as c on c.parent_id = p.taxnode_id
-	where p.msl_release_num is not null
-	and (
-		(p.level_id = 400 and p.is_hidden = 1) -- subfamily
-		or
-		(p.name = 'Unassigned')
-	)
-	group by p.msl_release_num, p.taxnode_id, p.level_id, p.is_hidden,  p.lineage
-	having count(c.taxnode_id) = 0 
-)
-*/
-/*
--- query detail on children for a taxon across the years.
-select tree=msl_release_num, lineage, * from taxonomy_node
-where lineage like 'Unassigned;Hepadnaviridae%' 
-order by tree_id, left_idx
-
--- query for details on a particular taxon's children
-select t.lineage as 'target', tn.lineage as 'hit', tn.*
-from taxonomy_node t
-left outer join taxonomy_node as tn on tn.left_idx between t.left_idx and t.right_idx and tn.tree_id = t.tree_id
-where t.taxnode_id =20162972
-order by tn.left_idx
-
-*/
 
 
 -- -------------------------------------------------------------------
--- lowercase 'unassigned'
+PRINT '#QC: lowercase unassigned'
 -- -------------------------------------------------------------------
-update taxonomy_node set 
-	--select ascii(name), name, 
+
+select ascii(name), name, 
+	-- UPDATE taxonomy_node SET
 	name = 'Unassigned' 
 from taxonomy_node
 where name = 'unassigned' and ascii(name)=117 -- lowercase U
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a; lower-case unassigned (obsolete)', 18, 1) else print('PASS - no lower-case unassigned nodes')
 
 -- -------------------------------------------------------------------
--- 3.	The ‘Unassigned’ designation when used for genera is sometimes upper, sometimes lower case
+PRINT '#QC: The Unassigned designation when used for genera is sometimes upper, sometimes lower case'
 -- -------------------------------------------------------------------
-update taxonomy_node set
+select *,
+	-- UPDATE taxonomy_node SET
 	name = NULL
+from taxonomy_node 
 where taxnode_id in (
 	select	-- select *,
 		taxnode_id
@@ -160,29 +69,35 @@ where taxnode_id in (
 	where level_id=400 -- subfamily
 	and is_hidden = 1 and name = 'unassigned'
 )
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a; genus with Unasssigned name (obsolete)', 18, 1) else print('PASS - no genera with name=unassigned ')
+
 -- -------------------------------------------------------------------
+PRINT '#QC: CTRL-ENTER in genbank_accession_csv'
 -- 1.	See extra line 2974 of your spreadsheet. 
 -- CTRL-ENTER introduced in MSL30. Fixes 2 rows.
 -- -------------------------------------------------------------------
-update taxonomy_node set 
-	-- select genbank_accession_csv, replace(genbank_accession_csv, char(10), ' '),
+select genbank_accession_csv, replace(genbank_accession_csv, char(10), ' '),
+	-- UPDATE taxonomy_node SET
 	genbank_accession_csv=replace(genbank_accession_csv, char(10), ', ')
 from taxonomy_node 
 where genbank_accession_csv like '%'+char(10)+'%' 
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a; CTRL-ENTERs in genbank_accession_csv ', 18, 1) else print('PASS - no CTRL-ENTERs found ')
 
 
 
 
 
---
--- clean up quoted proposal filenames! ARG - shoudln't get this far!!!!
---
+-- -------------------------------------------------------------------
+PRINT '#QC:  quoted proposal filenames! '
+-- -------------------------------------------------------------------
 select 'quoted proposal name' as problem 
 	, msl_release_num, lineage, in_filename, in_change, out_filename, out_change
 from taxonomy_node n
 where in_filename like '"%"'
 or out_filename like '"%"'
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  quoted proposal filenames ', 18, 1) else print('PASS - no  quoted proposal filenames ')
 	
+/*
 update taxonomy_node set
 	in_filename = REPLACE(in_filename,'"','')
 where in_filename like '"%"'
@@ -194,26 +109,77 @@ where out_filename like '"%"'
 update taxonomy_node_delta set
 	proposal = REPLACE(proposal,'"','')
 where proposal like '"%"'
+*/
+
+--
+PRINT '#QC: check for bogus filenames - should end with .zip or .pdfa'
+-- 
+select taxnode_id, in_filename, lineage,'>>SET>>',
+-- update taxonomy_node set NEED TO CUSTOMIZE FIX
+	in_filename = replace(in_filename,';','.pdf;')
+from taxonomy_node 
+where 
+(in_filename is not null and in_filename not like '%.pdf'  and in_filename not like '%.zip')
+or
+(in_filename like '%;%' and in_filename not like '%%.pdf;%'  and in_filename not like '%.zip;%')
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  in_filename mising .pdf and .zip ', 18, 1) else print('PASS - no   in_filename mising .pdf and .zip ')
+	
+
+select taxnode_id, out_filename, lineage, '>>SET>>',
+-- update taxonomy_node set NEED TO CUSTOMIZE FIX
+	out_filename = replace(out_filename,';','.pdf;')
+from taxonomy_node 
+where 
+(out_filename is not null and out_filename not like '%.pdf'  and out_filename not like '%.zip')
+or
+(out_filename like '%;%' and out_filename not like '%%.pdf;%'  and out_filename not like '%.zip;%')
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  out_filename mising .pdf and .zip ', 18, 1) else print('PASS - no   out_filename mising .pdf and .zip ')
+
+
+
+select *, '>>SET>>',
+-- update taxonomy_node set NEED TO CUSTOMIZE FIX
+	proposal = replace(proposal,';','.pdf;')
+from taxonomy_node_delta
+where 
+(proposal is not null and proposal not like '%.pdf'  and proposal not like '%.zip')
+or
+(proposal like '%;%' and proposal not like '%%.pdf;%'  and proposal not like '%.zip;%')
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  delta.proposal mising .pdf and .zip ', 18, 1) else print('PASS - no delta.proposal mising .pdf and .zip ')
 
 
 --
--- add .pdf to existing filenames that lack an extension of .pdf or .zip
+PRINT '#QC: check for bogus filenames lists - no spaces around ;'
 -- 
-update taxonomy_node set 
---select *,
-	in_filename = in_filename + '.pdf'
+select taxnode_id, in_filename, lineage,'>>SET>>',
+-- update taxonomy_node set 
+	in_filename = replace(replace(in_filename,' ;',';'),'; ',';')
 from taxonomy_node 
-where in_filename is not null and in_filename not like '%.pdf'  and in_filename not like '%.zip'
+where 
+in_filename like '% ;%' 
+or 
+in_filename like '%; %'
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  in_filename has whitespace around ; ', 18, 1) else print('PASS - no  in_filename has whitespace around ')
+	
 
-update taxonomy_node set 
---select *,
-	out_filename = out_filename + '.pdf'
+select taxnode_id, out_filename, lineage,'>>SET>>',
+-- update taxonomy_node set 
+	out_filename = replace(replace(out_filename,' ;',';'),'; ',';')
 from taxonomy_node 
-where out_filename is not null and out_filename not like '%.pdf'  and out_filename not like '%.zip'
-
-update taxonomy_node_delta set
--- select *,
-	proposal = proposal + '.pdf'
+where 
+out_filename like '% ;%' 
+or 
+out_filename like '%; %'
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  out_filename has whitespace around ; ', 18, 1) else print('PASS - no  out_filename has whitespace around ')
+	
+select *, '>>SET>>',
+-- update taxonomy_node_delta set 
+	proposal =  replace(replace(proposal,' ;',';'),'; ',';')
 from taxonomy_node_delta
-where proposal is not null and proposal not like '%.pdf'  and proposal not like '%.zip'
+where 
+proposal like '% ;%'   
+or
+proposal like '%; %'
+if @@ROWCOUNT > 0  raiserror('ERROR fixups 7a;  delta.proposal mising .pdf and .zip ', 18, 1) else print('PASS - no delta.proposal mising .pdf and .zip ')
+
 
