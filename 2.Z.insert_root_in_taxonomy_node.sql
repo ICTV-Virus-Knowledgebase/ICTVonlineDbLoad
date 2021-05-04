@@ -1,11 +1,13 @@
 
 -- 
 -- set metadata for NEW TREE ROOT
+
+select * from taxonomy_toc
 --
-DECLARE @msl int;                 SET @msl=/*>>*/ '35'/*<<*/
-DECLARE @root_name varchar(50);   SET @root_name= '2019'
+DECLARE @msl int;                 SET @msl=/*>>*/ '36'/*<<*/
+DECLARE @root_name varchar(50);   SET @root_name= '2020'
 DECLARE @tree_id int;             select @tree_id=tree_id from taxonomy_toc where msl_release_num=@msl 
-DECLARE @root_notes varchar(150); SET @root_notes='EC 51, Berlin, Germany, July 2019; Email ratification March 2020 (MSL #'+rtrim(@msl)+')'
+DECLARE @root_notes varchar(150); SET @root_notes='EC 52, Online, October 2020; Email ratification March 2021 (MSL #'+rtrim(@msl)+')'
 
 print 'MSL='+rtrim(@msl)
 print 'NAME='+@root_name
