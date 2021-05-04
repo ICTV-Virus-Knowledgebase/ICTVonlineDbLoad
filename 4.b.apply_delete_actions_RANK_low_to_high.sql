@@ -1,7 +1,7 @@
 --
 -- Apply actions from load_new_msl to edit axonomy_node
 --
-
+begin transaction
 -- 
 -- must abolish AFTER moving, or some taxa may not be empty (and thus removable)
 --
@@ -14,14 +14,12 @@
 --
 -- pre-flight check/report
 ---
-begin transaction
-
 select 
 	pre_flight='applying '+rtrim(count(*)-count(isWrong))+' abolish actions'
 	, isWrong='('+rtrim(count(isWrong))+' other was/were surpressed)'
 	, done=rtrim(count(isDone))+' already applied'
 	, msg=(case 
-		when count(isnull(prev_taxnode_id, isWrong)) <> count(*) then 'ERROR: not all actions have prev_taxnode_id set!!!' 
+		when count(isnull(rtrim(prev_taxnode_id), isWrong)) <> count(*) then 'ERROR: not all actions have prev_taxnode_id set!!!' 
 		else 'ok' 
 		end)
 from load_next_msl as src 
@@ -106,6 +104,18 @@ where isWrong is null AND _action='abolish'
 
 print '-- REMEMBER TO COMMIT'
 select '****** LAST STEP ********'='COMMIT after checking post-flight results'
+select 
+	report='applying '+rtrim(count(*)-count(isWrong))+' abolish actions'
+	, isWrong='('+rtrim(count(isWrong))+' other was/were surpressed)'
+	, done=rtrim(count(isDone))+' already applied'
+	, msg=(case 
+		when count(isnull(rtrim(prev_taxnode_id), isWrong)) <> count(*) then 'ERROR: not all actions have prev_taxnode_id set!!!' 
+		else 'ok' 
+		end)
+from load_next_msl as src 
+left outer join taxonomy_node n on n.msl_release_num = src.dest_msl_releasE_num and n.taxnode_id = src.prev_taxnode_id
+where 
+	(_action = 'abolish')
 
 -- rollback transaction
 -- commit transaction 
