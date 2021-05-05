@@ -2,10 +2,11 @@ print '--'
 print '-- pull metadata from previous years and from load_next_msl'
 print '--'
 print ''
+
+
 print '--'
 print '-- from prev year'
 print '--'
-
 
 /*
 -- debug
@@ -16,8 +17,7 @@ select
 	, destAbbrev = taxonomy_node.abbrev_csv, destMolId = taxonomy_node.molecule_id, destAccess=taxonomy_node.genbank_accession_csv, destIso=taxonomy_node.[isolate_csv]
 	, destLineage = taxonomy_node.lineage
 	,'||',
-*/	
-update taxonomy_node set	
+--*/update taxonomy_node set	
 	abbrev_csv = src.abbrev_csv, molecule_id=src.molecule_id, genbank_accession_csv=src.genbank_accession_csv,[isolate_csv]=src.[isolate_csv]
 from taxonomy_node
 join taxonomy_node_delta d on d.new_taxid = taxonomy_node.taxnode_id
