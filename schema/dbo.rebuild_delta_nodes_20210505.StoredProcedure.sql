@@ -1,7 +1,7 @@
 USE [ICTVonline36]
 GO
 
-/****** Object:  StoredProcedure [dbo].[rebuild_delta_nodes]    Script Date: 5/5/2021 1:40:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[rebuild_delta_nodes_20210505]    Script Date: 5/5/2021 1:41:18 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -16,8 +16,7 @@ GO
 
 
 
-
-CREATE procedure [dbo].[rebuild_delta_nodes]
+CREATE procedure [dbo].[rebuild_delta_nodes_20210505]
 	@msl int = NULL-- delete related deltas first?
 AS
 	-- -----------------------------------------------------------------------------
@@ -26,8 +25,6 @@ AS
 	--
 	-- RUN TIME: 7 seconds
 	-- -----------------------------------------------------------------------------
-	--
-	-- 20210505 curtish (Issue #5): obsolete is_now_type when MSL > 35
 
 	set @msl=(select isnull(@msl,MAX(msl_release_num)) from taxonomy_node)
 	select 'TARGET MSL: ',@msl
@@ -58,9 +55,6 @@ AS
 		,is_new=(case when n.in_change='new' then 1 else 0 end)
 		,is_split=(case when n.in_change='split' then 1 else 0 end)
 		,is_now_type = (case
-			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when n.msl_release_num > 35 then 0
-			-- logic for previous MSLs
 			when p.is_ref = 1 and n.is_ref = 0 then -1
 			when p.is_ref = 0 and n.is_ref = 1 then 1
 			else 0 end)
@@ -100,9 +94,6 @@ AS
 		, src.is_promoted
 		, is_moved = case when prev_pmsl.lineage <> next_pmsl.lineage AND (prev_pmsl.level_id<>100/*root*/ or next_pmsl.level_id <> 100/*root*/) then 1 else 0 end
 		,is_now_type = (case
-			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when next_msl.msl_release_num > 35 then 0
-			-- logic for previous MSLs
 			when prev_msl.is_ref = 1 and next_msl.is_ref = 0 then -1
 			when prev_msl.is_ref = 0 and next_msl.is_ref = 1 then 1
 			else 0 end)
@@ -188,9 +179,6 @@ AS
 		p.taxnode_id, n.taxnode_id
 		,is_moved = (case when pp.lineage <> pn.lineage AND pp.level_id<>100/*root*/ then 1 else 0 end)
 		,is_now_type = (case
-			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when n.msl_release_num > 35 then 0
-			-- logic for previous MSLs
 			when p.is_ref = 1 and n.is_ref = 0 then -1
 			when p.is_ref = 0 and n.is_ref = 1 then 1
 			else 0 end)
