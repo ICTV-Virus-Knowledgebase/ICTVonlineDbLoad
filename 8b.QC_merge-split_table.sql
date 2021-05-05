@@ -3,13 +3,15 @@
 --
 -- as of MSL34 237 ICTV_IDs not in merge/split table - all hidden
 -- normally a taxon should at least be in there as a dist=0 self/self
-select [visble taxa missing from merge split]='MISSING', ictv_id, ct=count(*), hid=sum(is_hidden), min(lineage), max(lineage)
+select [visble taxa missing from merge split]='MISSING', ictv_id, ct=count(*), hid=sum(is_hidden), min(lineage), max(lineage), max(in_change)
 from taxonomy_node
 where msl_release_num is not null and is_hidden=0
 group by ictv_id
-having ictv_id not in (select next_ictv_id from taxonomy_node_merge_split)
-and ictv_id not in (select prev_ictv_id from taxonomy_node_merge_split)
-order by ct desc
+having 
+	ictv_id NOT in (select NEXT_ictv_id from taxonomy_node_merge_split)
+and 
+	ictv_id NOT in (select PREV_ictv_id from taxonomy_node_merge_split)
+order by ictv_id desc
 
 /* -- RESEARCH
 
