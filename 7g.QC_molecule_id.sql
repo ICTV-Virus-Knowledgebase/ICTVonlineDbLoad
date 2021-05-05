@@ -134,7 +134,7 @@ and n.taxnode_id in (
 
 	) as src
 )
-order by flag, n.left_idx
+order by n.left_idx --flag, n.left_idx
 
 
 select report=' lineages with Unassigned  molecule_type situtations (dup, override, missing)'
