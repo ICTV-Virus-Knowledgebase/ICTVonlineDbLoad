@@ -26,7 +26,9 @@ select
 from taxonomy_node_delta delta 
 left outer join taxonomy_node prev on prev.taxnode_id = delta.prev_taxid
 left outer join taxonomy_node next on next.taxnode_id = delta.new_taxid
-where next.msl_release_num =33
+where 
+	-- latest MSL
+	next.msl_release_num = (select max(msl_release_num) from taxonomy_toc) 
 and (
 	prev.abbrev_csv <> next.abbrev_csv 
 	or
