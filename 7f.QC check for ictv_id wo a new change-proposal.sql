@@ -2,6 +2,7 @@
 -- try to find ictv_id's with no "New" root node
 --
 
+
 -- example: Cherry rasp leaf virus
 
 select report='ictv_ids with virgin births'
@@ -23,11 +24,25 @@ from taxonomy_node
 where ictV_id = 20140192
 order by msl_release_num
 
+select report='Cherry rasp leaf virus (raw taxnode)'
+	, msl_release_num, taxnode_id, ictv_id, in_change, in_target, in_filename, lineage
+from taxonomy_node
+where taxnode_id in (
+	-- things w/o new
+	select taxnode_id
+	from taxonomy_node
+	where msl_release_num is not null
+	and name ='Cherry rasp leaf virus'
+)
+and msl_release_num is not null
+order by msl_release_num, left_idx
+
 select report='Cherry rasp leaf virus'
 	, target_taxnode_id, msl_release_num, taxnode_id, ictv_id, in_change, in_target, in_filename, lineage
 from taxonomy_node_x
 where target_taxnode_id in (
 	-- things w/o new
+
 	select target_taxnode_id
 	from taxonomy_node_x
 	where msl_release_num is not null
