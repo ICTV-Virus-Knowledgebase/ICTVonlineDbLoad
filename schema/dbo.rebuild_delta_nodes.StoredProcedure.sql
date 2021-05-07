@@ -18,7 +18,7 @@ GO
 
 
 
-CREATE procedure [dbo].[rebuild_delta_nodes]
+ALTER procedure [dbo].[rebuild_delta_nodes]
 	@msl int = NULL-- delete related deltas first?
 AS
 	-- -----------------------------------------------------------------------------
@@ -28,7 +28,7 @@ AS
 	-- RUN TIME: 7 seconds
 	-- -----------------------------------------------------------------------------
 	--
-	-- 20210505 curtish (Issue #5): obsolete is_now_type when MSL > 35
+	-- 20210505 curtish (Issue #5): obsolete is_now_type when MSL > 35, then add it back in
 
 	set @msl=(select isnull(@msl,MAX(msl_release_num)) from taxonomy_node)
 	select 'TARGET MSL: ',@msl
@@ -60,7 +60,7 @@ AS
 		, is_split=(case when n.in_change='split' then 1 else 0 end)
 		, is_now_type = (case
 			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when n.msl_release_num > 35 then 0
+			--when n.msl_release_num > 35 then 0
 			-- logic for previous MSLs
 			when p.is_ref = 1 and n.is_ref = 0 then -1
 			when p.is_ref = 0 and n.is_ref = 1 then 1
@@ -105,7 +105,7 @@ AS
 		, is_demoted = (case when prev_msl.level_id < next_msl.level_id then 1 else 0 end)
 		, is_now_type = (case
 			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when next_msl.msl_release_num > 35 then 0
+			--when next_msl.msl_release_num > 35 then 0
 			-- logic for previous MSLs
 			when prev_msl.is_ref = 1 and next_msl.is_ref = 0 then -1
 			when prev_msl.is_ref = 0 and next_msl.is_ref = 1 then 1
@@ -184,17 +184,21 @@ AS
 	--
 	-- NO CHANGE - deltas between nodes with same lineage
 	--
+	-- still set proposal, in case of attribute change (is_ref, etc)
 	-- ******************************************************************************************************
-	insert into taxonomy_node_delta (prev_taxid, new_taxid, is_moved, is_promoted, is_demoted, is_now_type)
+	insert into taxonomy_node_delta (prev_taxid, new_taxid, proposal, notes, is_moved, is_promoted, is_demoted, is_now_type)
 	select 
 		--p.msl_release_num, p_lin=p.lineage, p_name=p.name, -- debug
-		p.taxnode_id, n.taxnode_id
+		prev_taxid=p.taxnode_id
+		, new_taxid=n.taxnode_id
+		, proposal=p.out_filename
+		, notes=p.out_notes
 		, is_moved = (case when pp.lineage <> pn.lineage AND pp.level_id<>100/*root*/ then 1 else 0 end)
 		, is_promoted = (case when p.level_id > n.level_id then 1 else 0 end)
 		, is_demoted = (case when p.level_id < n.level_id then 1 else 0 end)
 		, is_now_type = (case
 			-- is_ref/is_type obsoleted after MSL35 (Issue #5)
-			when n.msl_release_num > 35 then 0
+			--when n.msl_release_num > 35 then 0
 			-- logic for previous MSLs
 			when p.is_ref = 1 and n.is_ref = 0 then -1
 			when p.is_ref = 0 and n.is_ref = 1 then 1
@@ -262,4 +266,5 @@ AS
 	--
 	*/
 GO
+
 
