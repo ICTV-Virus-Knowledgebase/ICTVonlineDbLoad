@@ -25,6 +25,7 @@ select report='nodes with redundant molecule_type'
 	, explicitMol=m.abbrev
 	, flag=(case 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id = p.inher_molecule_id then '>>dup>>' 
+		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id and m.left_idx between mi.left_idx and mi.right_idx then 'narrows' 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id then 'overrides' 
 		when n.inher_molecule_id is null and  n.level_id>=500 then '!MISSING!'
 	end)
@@ -71,6 +72,7 @@ select report='nodes with OVER-RIDE molecule_type'
 	, explicitMol=m.abbrev
 	, flag=(case 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id = p.inher_molecule_id then '>>dup>>' 
+		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id and m.left_idx between mi.left_idx and mi.right_idx then 'narrows' 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id then 'overrides' 
 		when n.inher_molecule_id is null and  n.level_id>=500 then '!MISSING!'
 	end)
@@ -103,6 +105,7 @@ select report='nodes with interesting  molecule_type situtations (dup, override,
 	, explicitMol=m.abbrev
 	, flag=(case 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id = p.inher_molecule_id then '>>dup>>' 
+		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id and m.left_idx between mi.left_idx and mi.right_idx then 'narrows' 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id then 'overrides' 
 		when n.inher_molecule_id is null and  n.level_id>=500 then '!MISSING!'
 	end)
@@ -142,6 +145,7 @@ select report=' lineages with Unassigned  molecule_type situtations (dup, overri
 	, explicitMol=m.abbrev
 	, flag=(case 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id = p.inher_molecule_id then '>>dup>>' 
+		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id and m.left_idx between mi.left_idx and mi.right_idx then 'narrows' 
 		when n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id then 'overrides' 
 		when n.inher_molecule_id is null and  n.level_id>=500 then '!MISSING!'
 	end)
