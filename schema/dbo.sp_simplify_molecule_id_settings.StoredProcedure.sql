@@ -1,15 +1,13 @@
 USE [ICTVonline]
 GO
 
-
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
 
-ALTER procedure [dbo].[sp_simplify_molecule_id_settings]
+CREATE procedure [dbo].[sp_simplify_molecule_id_settings]
 	@msl int = NULL-- delete related deltas first?
 AS
 	-- declare @msl int; set @msl = NULL -- DEBUG
@@ -18,7 +16,7 @@ AS
 	select [TARGET MSL]=@msl, [TARGET TREE]=@tree_id
 	print '@msl='+rtrim(@msl)
 
-	
+	select taxnode_id, [rank], name, molecule, inher_molecule from taxonomy_node_names where [order] = 'Bunyavirales' and msl_release_num=36 order by left_idx
 --
 -- push molecule_id to parent ranks if entire subtree is homogeneous.
 --
@@ -97,4 +95,3 @@ END
 	exec sp_simplify_molecule_id_settings
 	*/
 GO
-

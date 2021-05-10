@@ -7,6 +7,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
+
+
 CREATE   
 PROCEDURE [dbo].[taxonomy_node_compute_indexes] 
 	@taxnode_id int,
@@ -86,9 +88,9 @@ AS
 		WHERE level.name =  'tree'
 	*/
 	-- debug
-	--print str(@node_depth) + '==>' + str(@taxnode_id)
+	--print '[taxonomy_node_compute_indexes] '+str(@node_depth) + '==>' + str(@taxnode_id)
 
-	-- update data for this node
+	--print '[taxonomy_node_compute_indexes] '+'-- update data for this node'
 	SELECT 
 		-- update computed cached levels, if not already set
 		-- start taxa
@@ -126,7 +128,8 @@ AS
 	LEFT OUTER JOIN taxonomy_level level on level.id = self.level_id
 	WHERE	self.taxnode_id = @taxnode_id
 	
-	-- set our LEFT index & cached parent taxa
+	
+	--print '[taxonomy_node_compute_indexes] '+'-- set our LEFT index & cached parent taxa'
 	UPDATE taxonomy_node
 	SET 
 		left_idx=@left_idx
@@ -185,7 +188,7 @@ AS
 	
 	-- tracking counts : direct kids, and descendants for each rank
 
-	-- clear our children's indexes
+	--print '[taxonomy_node_compute_indexes] '+'-- clear our childrens indexes'
 	UPDATE taxonomy_node 
 	SET left_idx=null, right_idx=null 
 	WHERE parent_id = @taxnode_id AND taxnode_id <> @taxnode_id
@@ -238,7 +241,7 @@ AS
         DECLARE @kid_species_desc_ct int; SET @kid_species_desc_ct = 0
 		-- end kid descendant counts
 
-		-- recuse into child
+		--print '[taxonomy_node_compute_indexes] '+'-- recuse into child: @taxnode_id='+rtrim(@child_taxnode_id)+', lineage='+@lineage
 		EXEC [taxonomy_node_compute_indexes] 
 			@taxnode_id = @child_taxnode_id, 
 			@left_idx   = @right_idx, 

@@ -13,8 +13,7 @@ GO
 
 
 
-
-CREATE procedure [dbo].[MSL_export_official]
+CREATE procedure [dbo].[MSL_export_official_20210510_preMSL36]
 	@msl_or_tree int = NULL,
 	@taxnode_id int = NULL
 as
@@ -30,7 +29,6 @@ as
 -- Run time 
 --	~ 15 minutes (full)
 -- -------------------------------------------------------------------------
--- 20210510 MSL36 remove is_ref, remove column giving rank where molecule_id is set
 -- 20181018 changed from msl_release_num based joins to tree_id for better index usage
 --          time 70min >> 14 min
 -- -------------------------------------------------------------------------
@@ -89,6 +87,7 @@ select
 	,[genus]        = isnull([genus].name,'')
 	,[subgenus]     = isnull([subgenus].name,'')
 	,[species]      = isnull([species].name,'')
+	, type_species = tn.is_ref
 	-- add info on most recent change to that taxon
 	--,tn.taxnode_id, tn.ictv_id, 
 	-- select msl_release_num, ictV_id, name, abbrev from taxonomy_node where abbrev is not null
@@ -138,13 +137,12 @@ select
 		and mol.abbrev is not null
 		order by tn.tree_id-tancestor.tree_id, tancestor.node_depth desc
 	),'')
-	-- DEBUG - where did molecule data come from
-	/*
 	, moleculeRank=isnull((
 		-- we could push this into the trigger...
 		(select top 1 rank from taxonomy_node_names tns where tns.tree_id = tn.tree_id and tn.left_idx between tns.left_idx and tns.right_idx and tns.molecule_id = tn.inher_molecule_id order by tns.node_depth desc)
 	),'')
-	,molecule_src=isnull((
+	-- DEBUG - where did molecule data come from
+	/*,molecule_src=isnull((
 		-- most recent change tag of node or ancestor 
 		select top(1) rtrim(tancestor.msl_release_num)+':'+tancestor.lineage -- mol.abbrev
 		from taxonomy_node_merge_split tms

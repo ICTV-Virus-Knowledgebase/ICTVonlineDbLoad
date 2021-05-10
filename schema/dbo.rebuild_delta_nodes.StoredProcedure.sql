@@ -1,10 +1,8 @@
 USE [ICTVonline]
 GO
 
-
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
@@ -18,7 +16,7 @@ GO
 
 
 
-ALTER procedure [dbo].[rebuild_delta_nodes]
+CREATE procedure [dbo].[rebuild_delta_nodes]
 	@msl int = NULL-- delete related deltas first?
 AS
 	-- -----------------------------------------------------------------------------
@@ -266,5 +264,3 @@ AS
 	--
 	*/
 GO
-
-

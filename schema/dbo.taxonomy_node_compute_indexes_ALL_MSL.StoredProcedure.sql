@@ -42,10 +42,5 @@ END
 
  exec taxonomy_node_compute_indexes_ALL_MSL
 
-select MSL=msl_release_num, tree_id, name, notes, order_desc_ct, family_desc_ct, subfamily_desc_ct, genus_desc_ct, species_desc_ct
-from taxonomy_node 
-where msl_release_num is not null and level_id = 100
-order by tree_id desc
-
  */
 GO
