@@ -1,2 +1,4 @@
 # WORD backups
 \~*
+# db backups
+backups/
