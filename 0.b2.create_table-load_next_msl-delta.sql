@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[load_next_msl](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((36)) FOR [dest_msl_release_num]
+ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((37)) FOR [dest_msl_release_num]
 GO
 
 
