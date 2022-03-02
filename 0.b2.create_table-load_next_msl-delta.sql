@@ -49,9 +49,9 @@ CREATE TABLE [dbo].[load_next_msl](
 	[srcGenus] [varchar](100) NULL,
 	[srcSubGenus] [varchar](100) NULL,
 	[srcSpecies] [varchar](100) NULL,
-	--[srcIsType] [varchar](10) NULL, -- TypeSpecies concept removed in MSL36
+	--[srcIsType] [varchar](10) NULL, -- TypeSpecies concept removed in MSL35
 	--[srcAccessions] [varchar](5000) NULL, -- removed in MSL36
-	[empty1] [varchar](1) NULL, -- MSL35 - not used; visual separator in excel
+	--[empty1] [varchar](1) NULL, -- MSL36 removed; MSL35 - not used; visual separator in excel
 	[realm] [varchar](100) NULL,
 	[subrealm] [varchar](100) NULL,
 	[kingdom] [varchar](100) NULL,
@@ -73,6 +73,7 @@ CREATE TABLE [dbo].[load_next_msl](
 	[exemplarName] [nvarchar](4000) NULL,
 	[exemplarIsolate] [nvarchar](500) NULL,
 	[isComplete] [varchar](100) NULL,
+	[hostSource] [varchar](100) NULL, -- MSL36 added
 	[Abbrev] [nvarchar](100) NULL,
 	[molecule] [nvarchar](100) NULL,
 	[change] [nvarchar](100) NULL,
