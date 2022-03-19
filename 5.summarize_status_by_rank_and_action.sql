@@ -20,7 +20,7 @@ select sort, isWRong from load_next_msl where isWrong like '%blank%'
 select 
 	msl._action, msl.prev_taxnode_id, msl.dest_taxnode_id, msl.dest_ictv_id, msl.dest_parent_id, msl.isDone
 	,n.taxnode_id, n.ictv_id, n.in_change
-from load_next_msl msl
+from load_next_msl_isok msl
 join taxonomy_node n on n.taxnode_id = msl.dest_taxnode_id
 where dest_taxnode_id is not null --and dest_ictv_id is null
 order by msl._action 

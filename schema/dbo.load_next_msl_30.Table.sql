@@ -47,55 +47,6 @@ CREATE TABLE [dbo].[load_next_msl_30](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
-CREATE NONCLUSTERED INDEX [_dta_index_load_next_msl_9_879342197__K1] ON [dbo].[load_next_msl_30]
-(
-	[src_tree_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [_dta_index_load_next_msl_9_879342197__K17_31] ON [dbo].[load_next_msl_30]
-(
-	[dest_target] ASC
-)
-INCLUDE([dest_taxnode_id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [_dta_index_load_next_msl_9_879342197__K17_K22_1_2_3_4_5_6_7_8_9_10_11_12_13_14_15_16_18_19_20_21_23_24_25_26_27_28_29_30_31] ON [dbo].[load_next_msl_30]
-(
-	[dest_target] ASC,
-	[dest_level] ASC
-)
-INCLUDE([src_tree_id],[src_msl_release_num],[src_left_idx],[src_taxnode_id],[src_ictv_id],[src_is_hidden],[src_lineage],[src_level],[src_name],[src_is_type],[src_isolates],[src_ncbi_accessions],[src_abbrevs],[src_molecule],[dest_in_change],[src_out_change],[orig_ref_filename],[ref_filename],[ref_notes],[ref_problems],[dest_is_type],[dest_is_hidden],[dest_isolates],[dest_ncbi_accessions],[dest_abbrevs],[dest_molecule],[dest_msl_release_num],[dest_tree_id],[dest_taxnode_id]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-dest_in_change] ON [dbo].[load_next_msl_30]
-(
-	[dest_in_change] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-dest_target] ON [dbo].[load_next_msl_30]
-(
-	[dest_target] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-src_out_change] ON [dbo].[load_next_msl_30]
-(
-	[src_out_change] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'List of representative isolate names (CSV)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'load_next_msl_30', @level2type=N'COLUMN',@level2name=N'src_isolates'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'List of NCBI accession numbers (CSV of [segment_name:]acession)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'load_next_msl_30', @level2type=N'COLUMN',@level2name=N'src_ncbi_accessions'

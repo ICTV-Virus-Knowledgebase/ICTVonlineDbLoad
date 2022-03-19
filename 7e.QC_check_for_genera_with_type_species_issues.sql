@@ -7,6 +7,10 @@
 -- "one and only one type specices per genus, across all it's subgenera, if any"
 --
 -- -----------------------------------------------------------------------------
+
+print 'Type species concept abolishe din MSL36: this script is no longer needed'
+
+/*
 select 
 	report='too many/few type species under a genus'
 	, genus.msl_release_num, genus.lineage, genus.name
@@ -40,7 +44,7 @@ order by
 	genus.msl_release_num desc,
 	type_species_ct desc
 
-
+*/
 
 --
 -- UPDATE (MSL32) remov extra type species

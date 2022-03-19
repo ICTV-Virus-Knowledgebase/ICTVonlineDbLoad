@@ -45,3 +45,8 @@ update load_next_msl set [isComplete]=NULL where [isComplete]=''
 update load_next_msl set [Abbrev]=NULL where [Abbrev]='' 
 update load_next_msl set [change]=NULL where [change]='' 
 update load_next_msl set [rank]=NULL where [rank]='' 
+update load_next_msl set [hostSource]=NULL where [hostSource]='' 
+update load_next_msl set [molecule]=NULL where [molecule]='' 
+update load_next_msl set [comments]=NULL where [comments]='' 
+
+select * from load_next_msl

@@ -31,7 +31,7 @@ select 'AFTER src=NULL', * from load_next_msl where sort in (113438,92052)
 select 
 	report='counts by [ACTION]'
 	,action=act.change, prevMSL=prev.ct, load_next_msl=new.ct, nextMSL=dest.ct
-	, (case when  isnull(prev.ct,0)+isnull(dest.ct,0) = isnull(new.ct,0) then 'OK' else 'ERROR' end )
+	, status=(case when  isnull(prev.ct,0)+isnull(dest.ct,0) = isnull(new.ct,0) then 'OK' else 'ERROR' end )
 from (select change from taxonomy_change_in union select change from taxonomy_change_out) as act
 left outer join (
 	-- load_next_msl
@@ -60,8 +60,8 @@ order by action
 -- DECLARE @msl int; SET @msl=(select distinct dest_msl_release_num from load_next_msl); print 'MSL: '+rtrim(@MSL)
 select 
 	report='counts by [ACTION, RANK]'
-	, action=act.change, rank.name, dest_rank.name, prevMSL=prev.ct, load_next_msl=new.ct, nextMSL=dest.ct
-	, (case when  isnull(prev.ct,0)+isnull(dest.ct,0) = isnull(new.ct,0) then 'OK' else 'ERROR' end )
+	, action=act.change, prevRank=rank.name, destRank=dest_rank.name, prevMSL=prev.ct, load_next_msl=new.ct, nextMSL=dest.ct
+	, status=(case when  isnull(prev.ct,0)+isnull(dest.ct,0) = isnull(new.ct,0) then 'OK' else 'ERROR' end )
 from (select change from taxonomy_change_in union select change from taxonomy_change_out) as act
 join taxonomy_level as rank on 1=1
 join taxonomy_level as dest_rank on 1=1
@@ -70,7 +70,7 @@ left outer join (
 	select change=_action, rank=isnull(_src_taxon_rank,_dest_taxon_rank), dest_rank=_dest_taxon_rank,  ct=count(*), title='load_next_msl', col='_action',  msl=dest_msl_release_num
 	from load_next_msl
 	where isWrong is null
-	group by dest_msl_release_num, _action, rank, _src_taxon_rank, _dest_taxon_rank
+	group by dest_msl_release_num, _action, _src_taxon_rank, _dest_taxon_rank
 ) as new on new.change = act.change and new.rank = rank.name and new.dest_rank = dest_rank.name
 left outer join (
 	-- prev-MSL: out_change
@@ -138,7 +138,7 @@ select
 	, taxnode_id, level_id, lineage, out_change 
 from taxonomy_node where 
 --rank='subgenus'and 
-msl_release_num=34 and out_change='move'
+msl_release_num=36 and out_change='move'
 order by level_id 
 
 

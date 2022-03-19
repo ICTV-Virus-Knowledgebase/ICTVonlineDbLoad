@@ -13,20 +13,13 @@ CREATE TABLE [dbo].[taxonomy_level](
 	[suffix] [varchar](50) NULL,
 	[suffix_viroid] [varchar](50) NULL,
 	[suffix_nuc_acid] [varchar](50) NULL,
+	[suffix_viriform] [varchar](50) NULL,
 	[notes] [text] NULL,
  CONSTRAINT [pk_taxonomy_level] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [IX_taxonomy_level] ON [dbo].[taxonomy_level]
-(
-	[name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[taxonomy_level]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_level_taxonomy_level] FOREIGN KEY([parent_id])
 REFERENCES [dbo].[taxonomy_level] ([id])

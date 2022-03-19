@@ -6,17 +6,29 @@
  * legal suffixes defined here
  */
 SELECT 'legal suffices in suffix_ columns:', *
-  FROM [ICTVonline36].[dbo].[taxonomy_level]
+  FROM [taxonomy_level]
 
+ /*
+  * MLS37 data fixes - nope: Ops –these have been around since MSL 34/35. 
+  */
+select _dest_lineage, srcGenus, genus, change, rank, * 
+from load_next_msl
+where genus  like '%viirus'
+or    genus like '%vrus'
+
+select distinct msl_release_num, genus from taxonomy_node_names
+where genus  like '%viirus'
+or    genus like '%vrus'
+order by msl_release_num, genus
 
 /*
  * QC taxonomy_node.name suffixes
  */
-select [load_next_msl suffix QC], [sort], _action, _dest_lineage
+select [load_next_msl suffix QC], [sort], proposal, _action, _dest_lineage
 	, status=(case when errors='' then 'OK' else 'ERROR' end)
 	, raw_errors = errors
 from (
-	select  [load_next_msl suffix QC]='load_next_msl', [sort], _action, _dest_lineage
+	select  [load_next_msl suffix QC]='load_next_msl', [sort], proposal, _action, _dest_lineage
 		, errors=
 			(case when not (n.realm like '%'+realm.suffix or n.realm like '%'+realm.suffix_viroid or n.realm like '%'+realm.suffix_nuc_acid) then 'realm:'+n.realm+';' else '' end)
 			+(case when not (n.subrealm like '%'+subrealm.suffix  or n.subrealm like '%'+subrealm.suffix_viroid or n.subrealm like '%'+subrealm.suffix_nuc_acid) then 'subrealm:'+n.subrealm+';' else '' end)

@@ -7,7 +7,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[load_next_msl](
 	[filename] [nvarchar](200) NOT NULL,
-	[sort] [float] NULL,
 	[isWrong] [nvarchar](500) NULL,
 	[proposal_abbrev] [varchar](100) NULL,
 	[proposal] [varchar](100) NOT NULL,
@@ -28,7 +27,6 @@ CREATE TABLE [dbo].[load_next_msl](
 	[srcGenus] [varchar](100) NULL,
 	[srcSubGenus] [varchar](100) NULL,
 	[srcSpecies] [varchar](100) NULL,
-	[empty1] [varchar](1) NULL,
 	[realm] [varchar](100) NULL,
 	[subrealm] [varchar](100) NULL,
 	[kingdom] [varchar](100) NULL,
@@ -50,6 +48,7 @@ CREATE TABLE [dbo].[load_next_msl](
 	[exemplarName] [nvarchar](4000) NULL,
 	[exemplarIsolate] [nvarchar](500) NULL,
 	[isComplete] [varchar](100) NULL,
+	[hostSource] [varchar](100) NULL,
 	[Abbrev] [nvarchar](100) NULL,
 	[molecule] [nvarchar](100) NULL,
 	[change] [nvarchar](100) NULL,
@@ -70,50 +69,16 @@ CREATE TABLE [dbo].[load_next_msl](
 	[dest_ictv_id] [int] NULL,
 	[dest_parent_id] [int] NULL,
 	[dest_level_id] [int] NULL,
-	[isDone] [nvarchar](500) NULL
+	[isDone] [nvarchar](1000) NULL,
+	[merged_left_sort] [nvarchar](50) NULL,
+	[merged_right_sort] [nvarchar](50) NULL,
+	[merged_reason] [nvarchar](50) NULL,
+	[sort] [nvarchar](50) NOT NULL,
+ CONSTRAINT [AK_sort_uniq] UNIQUE NONCLUSTERED 
+(
+	[sort] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-SET ARITHABORT ON
-SET CONCAT_NULL_YIELDS_NULL ON
-SET QUOTED_IDENTIFIER ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-SET NUMERIC_ROUNDABORT OFF
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-dest_parent_name] ON [dbo].[load_next_msl]
-(
-	[_dest_parent_name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ARITHABORT ON
-SET CONCAT_NULL_YIELDS_NULL ON
-SET QUOTED_IDENTIFIER ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-SET NUMERIC_ROUNDABORT OFF
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-dest_taxon_name] ON [dbo].[load_next_msl]
-(
-	[_dest_taxon_name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ARITHABORT ON
-SET CONCAT_NULL_YIELDS_NULL ON
-SET QUOTED_IDENTIFIER ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-SET NUMERIC_ROUNDABORT OFF
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl-src_taxon_name] ON [dbo].[load_next_msl]
-(
-	[_src_taxon_name] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((36)) FOR [dest_msl_release_num]
+ALTER TABLE [dbo].[load_next_msl] ADD  CONSTRAINT [DF_load_next_msl__msl_release_num]  DEFAULT ((37)) FOR [dest_msl_release_num]
 GO

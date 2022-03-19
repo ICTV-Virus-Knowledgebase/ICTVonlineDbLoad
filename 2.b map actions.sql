@@ -6,7 +6,7 @@
 -- MAP acton
 --
 update load_next_msl set 
-    -- select [change], [rank], 
+    -- select distinct [change], [rank], 
 	_action =(case 
 		when [change] like '%as type%' then (('_ERROR: isType abolished in MSL36): ')+[change]) 
 		when [change] like 'abolish%' then 'abolish' 

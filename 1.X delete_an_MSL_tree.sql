@@ -8,11 +8,12 @@ declare @target_tree int
 declare @prev_tree int
 declare @next_tree int
 -----------------------------------------------
-set @target_tree=(select tree_id from taxonomy_toc where msl_release_num=/*>>*/35/*<<*/)
+set @target_tree=(select tree_id from taxonomy_toc where msl_release_num=/*>>*/37/*<<*/)
 -----------------------------------------------
 set @prev_tree=(select prev_tree_id from taxonomy_toc_dx where tree_id = @target_tree) 
 set @next_tree=(select tree_id from taxonomy_toc_dx where prev_tree_id = @target_tree)
 
+PRINT 'delete tree_id '+rtrim(@target_tree)+' (prev_tree='+isnull(rtrim(@prev_tree),'NULL')+', next_tree='+isnull(rtrim(@next_tree),'NULL')+')'
 --truncate table load_next_msl;
 
 --update taxonomy_node set parent_id = null where tree_id=@target_tree

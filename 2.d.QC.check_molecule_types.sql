@@ -13,12 +13,16 @@ select
 	,molecule_id = isnull(rtrim(tm.id), '--MISSING--')
 	, best_guess = guess.abbrev
 	, (case when count(*) > 0 and tm.id is null then  'ERROR: misssing molecule' else '' end) as problem
+	, proposal_count=count(distinct(proposal))
 from load_next_msl
 left outer join taxonomy_molecule tm on tm.abbrev = molecule
 left outer join taxonomy_molecule guess on guess.abbrev = replace(molecule,' (', '(')
 where molecule is not null
 group by molecule, tm.id,  guess.abbrev
 	
+-- report which proposals to change? 
+select proposal, molecule, rows=count(*) from load_next_msl where molecule like '%(%)%' group by proposal, molecule order by proposal
+
 -- for refernece
 select t='taxonomy_molecule', *  from taxonomy_molecule tm
 

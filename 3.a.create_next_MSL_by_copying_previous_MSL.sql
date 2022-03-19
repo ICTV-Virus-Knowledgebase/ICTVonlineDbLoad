@@ -36,10 +36,10 @@ insert into taxonomy_node (
 	, isolate_csv
 	, is_ref
 	, is_hidden
-) 
+) s
 select 
 	-- DEBUG
-	-- taxonomy_node.tree_id, taxnode_id, parent_id, dx.msl_release_num, dx.tree_id_delta,
+	-- DECLARE @msl int; SET @msl=36; select  taxonomy_node.tree_id, taxnode_id, parent_id, dx.msl_release_num, dx.tree_id_delta,
 	-- ACTUAL
 	taxnode_id=taxnode_id+dx.tree_id_delta -- normally 100k, but half that if 2nd MSL in a year
 	, parent_id=parent_id+dx.tree_id_delta

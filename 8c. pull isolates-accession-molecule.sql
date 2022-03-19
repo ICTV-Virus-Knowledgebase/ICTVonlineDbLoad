@@ -8,7 +8,7 @@ print '--'
 print '-- from prev year'
 print '--'
 
-/*
+
 -- debug
 select 
 	srcMsl = src.msl_release_num , srcLineage=src.lineage
@@ -17,7 +17,7 @@ select
 	, destAbbrev = taxonomy_node.abbrev_csv, destMolId = taxonomy_node.molecule_id, destAccess=taxonomy_node.genbank_accession_csv, destIso=taxonomy_node.[isolate_csv]
 	, destLineage = taxonomy_node.lineage
 	,'||',
---*/update taxonomy_node set	
+--update taxonomy_node set	
 	abbrev_csv = src.abbrev_csv, molecule_id=src.molecule_id, genbank_accession_csv=src.genbank_accession_csv,[isolate_csv]=src.[isolate_csv]
 from taxonomy_node
 join taxonomy_node_delta d on d.new_taxid = taxonomy_node.taxnode_id
@@ -38,8 +38,8 @@ print '--'
 print '-- pull from the load'
 print '--'
 
-/*
-select 
+
+select report='pull access/iso from load_next_msl',
 	ldMsl = ld.dest_msl_release_num , ldLineage=ld._dest_lineage
 	, ldAbbrev = ld.Abbrev
 	--, ldMolId=src.molecule_id
@@ -53,13 +53,13 @@ select
 	,genbank_accession_csv
 	,[isolate_csv]
 	,'||',
---*/update taxonomy_node set	
+--update taxonomy_node set	
 	abbrev_csv = isnull(ld.Abbrev, abbrev_csv)
 	--, molecule_id=isnull(ld.???, src.molecule_id)
 	, genbank_accession_csv=isnull(ld.exemplarAccessions, genbank_accession_csv)
 	,[isolate_csv]=isnull(ld.exemplarName+isnull(' '+ld.exemplarIsolate,''),[isolate_csv])
 from taxonomy_node
-join load_next_msl ld on ld.dest_taxnode_id = taxonomy_node.taxnode_id
+join load_next_msl_isok ld on ld.dest_taxnode_id = taxonomy_node.taxnode_id
 where taxonomy_node.msl_release_num = (select max(msl_release_num) from taxonomy_toc) -- latest MSL
 and (
 	(ld.Abbrev is not null and taxonomy_node.abbrev_csv is null or ld.Abbrev <> taxonomy_node.abbrev_csv)
@@ -70,5 +70,4 @@ and (
 	or
 	(ld.exemplarName is not null and taxonomy_node.[isolate_csv] is null or taxonomy_node.[isolate_csv] <> (ld.exemplarName+isnull(' '+ld.exemplarIsolate,'')) )
 )
-
 

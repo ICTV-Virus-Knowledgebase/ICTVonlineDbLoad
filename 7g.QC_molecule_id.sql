@@ -1,6 +1,18 @@
 --
 -- 7g QC molecule type
 --
+--
+-- first run cleanup SP
+--
+-- Start by opening XLSX report file
+--
+-- we don't have a way of flagging things we've reviewed, so many "problems" get re-reported every year. 
+-- 
+-- first run 
+
+-- push up all molecule_id settings when a subtree is consistent
+-- MSL37 9m35s (ec2-54-89-205-80.compute-1.amazonaws.com)
+exec sp_simplify_molecule_id_settings
 
 select getMSL=dbo.udf_getMSL(NULL), getTreeID=dbo.udf_getTreeID(NULL)
 
@@ -98,7 +110,7 @@ and n.taxnode_id in (
 )
 order by n.left_idx
 
-select report='nodes with interesting  molecule_type situtations (dup, override, missing)'
+select report='nodes with interesting  molecule_type situtations (override, missing)'
 	, msl=n.msl_release_num
 	, n.taxnode_id
 	, rank=l.name
@@ -126,7 +138,7 @@ and n.taxnode_id in (
 			distinct a.taxnode_id--, a.lineage, srcL=t.lineage
 		from taxonomy_node a
 		join taxonomy_node t on t.left_idx between a.left_idx and a.right_idx and t.tree_id = a.tree_id
-		where t.tree_id =  dbo.udf_getTreeID(NULL)
+		where t.tree_id =   dbo.udf_getTreeID(NULL)
 		and  (
 			-- mol explicitly set
 			t.molecule_id is not null
@@ -137,7 +149,20 @@ and n.taxnode_id in (
 
 	) as src
 )
+and  (-- only override and missing
+  -- override
+  (n.molecule_id is not null and p.inher_molecule_id is not null and n.molecule_id <> p.inher_molecule_id and not m.left_idx between mi.left_idx and mi.right_idx)
+  or 
+  -- missing
+  (n.inher_molecule_id is null and  n.level_id>=500)
+)
 order by n.left_idx --flag, n.left_idx
+
+select n.ictv_id, n.msl_release_num, n.name, n.molecule, p.inher_molecule --, * 
+from taxonomy_node_names n
+left outer join taxonomy_node_names p on p.taxnode_id = n.parent_id
+where n.name in ('Sepolyvirales', 'Alphapleolipovirus HHPV1','Rubodvirus')
+order by n.ictv_id, n.msl_release_num
 
 
 select report=' lineages with Unassigned  molecule_type situtations (dup, override, missing)'

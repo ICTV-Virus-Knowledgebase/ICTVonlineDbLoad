@@ -1,12 +1,20 @@
 /*
 * QC: taxonomy_node.name for suffixes
 */
+/*
+-- MSL37 fixes
+ALTER TABLE [taxonomy_level] ADD suffix_viriform nvarchar(50) NULL;
+GO
+update [taxonomy_level] set suffix_viriform='viriformidae' where name= 'family'
+update [taxonomy_level] set suffix_viriform='viriform' where name= 'genus'
+GO
+*/
 
 /* 
  * legal suffixes defined here
  */
 SELECT 'legal suffices in suffix_ columns:', *
-  FROM [ICTVonline36].[dbo].[taxonomy_level]
+  FROM [taxonomy_level]
 
 /*
  * QC taxonomy_node.name suffixes
@@ -16,6 +24,7 @@ select n.msl_release_num, n.[rank], n.name
 		when n.name like '%'+l.suffix then 'suffix'
 		when n.name like '%'+l.suffix_viroid then 'suffix_viroid'
 		when n.name like '%'+l.suffix_nuc_acid then 'suffix_nuc_acid'
+		when n.name like '%'+l.suffix_viriform then 'suffix_viriform'
 		else 'ERROR'
 		end)
 from taxonomy_node_names n
@@ -38,6 +47,8 @@ and not (
 	n.name like '%'+l.suffix_viroid
 	or 
 	n.name like '%'+l.suffix_nuc_acid
+	or 
+	n.name like '%'+l.suffix_viriform
 	-- 
 	-- historical suffixes
 	--
@@ -58,3 +69,4 @@ and not (
 )
 order by msl_release_num desc, left_idx
 
+select msl_release_num, name, out_change, out_target from taxonomy_node where name in ('Tunggulviirus','Incheonvrus') order by name, msl_release_num

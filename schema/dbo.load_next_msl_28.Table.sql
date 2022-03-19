@@ -31,29 +31,5 @@ CREATE TABLE [dbo].[load_next_msl_28](
 	[dest_taxnode_id] [int] NULL
 ) ON [PRIMARY]
 GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl_28-dest_in_change] ON [dbo].[load_next_msl_28]
-(
-	[dest_in_change] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl_28-dest_target] ON [dbo].[load_next_msl_28]
-(
-	[dest_target] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-SET ANSI_PADDING ON
-GO
-
-CREATE NONCLUSTERED INDEX [IX_load_next_msl_28-src_out_change] ON [dbo].[load_next_msl_28]
-(
-	[src_out_change] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Unique name or lineage (semi-colon delimited)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'load_next_msl_28', @level2type=N'COLUMN',@level2name=N'dest_target'
 GO

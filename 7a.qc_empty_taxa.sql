@@ -26,7 +26,22 @@ and _numKids = 0
 if @@ROWCOUNT > 0  raiserror('ERROR fixups 7; empty taxa found', 18, 1) else print('PASS - no empty taxa')
 
 
-
+-- 
+-- MSL37 fix:  Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;Mesyanzhinovviridae;Rabinowitzvirinae;Yuavirus missing Keylargovirus JL001
+-- 
+select * from taxonomy_node where msl_release_num in (36,37) and ( name like 'keylargovirus%' or name like 'Alphaproteobacteria virus phiJl001')
+select * from load_next_msl where species like 'keylargovirus%'
+update taxonomy_node set -- select *, 
+	parent_id= (select taxnode_id from taxonomy_node where msl_release_num=37 and name='Keylargovirus')
+from taxonomy_node where name='Keylargovirus JL001'  and lineage = 'Duplodnaviria;Heunggongvirae;Uroviricota;Caudoviricetes;Mesyanzhinovviridae;Rabinowitzvirinae;Yuavirus;Keylargovirus JL001'
+update taxonomy_node set -- select *, 
+	out_target = (select lineage from taxonomy_node where msl_release_num=37 and name='Keylargovirus JL001')
+from taxonomy_node where  msl_release_num=36 and name='Alphaproteobacteria virus phiJl001'
+update load_next_msl_isok set -- select *,
+	change='move', _action='move'
+	, dest_parent_id = (select taxnode_id  from taxonomy_node n where n.msl_release_num=dest_msl_release_num and name = _dest_parent_name)
+from load_next_msl_isok
+where species = 'Keylargovirus JL001' and _action <> 'move'
 
 -- ===================================================================================================================================
 -- === MORE QC

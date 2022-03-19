@@ -22,22 +22,6 @@ CREATE TABLE [dbo].[taxonomy_node_delta](
 	[tag_csv]  AS ((((((((case when [is_merged]=(1) then 'Merged,' else '' end+case when [is_split]=(1) then 'Split,' else '' end)+case when [is_renamed]=(1) then 'Renamed,' else '' end)+case when [is_new]=(1) then 'New,' else '' end)+case when [is_deleted]=(1) then 'Abolished,' else '' end)+case when [is_moved]=(1) then 'Moved,' else '' end)+case when [is_promoted]=(1) then 'Promoted,' else '' end)+case when [is_demoted]=(1) then 'Demoted,' else '' end)+case when [is_now_type]=(1) then 'Assigned as Type Species,' when [is_now_type]=(-1) then 'Removed as Type Species,' else '' end)
 ) ON [PRIMARY]
 GO
-SET ARITHABORT ON
-SET CONCAT_NULL_YIELDS_NULL ON
-SET QUOTED_IDENTIFIER ON
-SET ANSI_NULLS ON
-SET ANSI_PADDING ON
-SET ANSI_WARNINGS ON
-SET NUMERIC_ROUNDABORT OFF
-GO
-
-CREATE NONCLUSTERED INDEX [_dta_index_taxonomy_node_delta_8_143339575__K2_K1_K13] ON [dbo].[taxonomy_node_delta]
-(
-	[new_taxid] ASC,
-	[prev_taxid] ASC,
-	[tag_csv] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
 ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_prev_taxid]  DEFAULT (NULL) FOR [prev_taxid]
 GO
 ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_new_taxid]  DEFAULT (NULL) FOR [new_taxid]

@@ -2,16 +2,25 @@
 -- set load_new_msl.prev_taxnode_id and dest_taxnode_id
 --
 begin transaction
-
+select * from taxonomy_node_names where name ='pharaohvirus'
+select * from load_next_msl where genus = 'pharaohvirus'
+/*
+ * TRY TO MAP
+ */
 select 	
 	rpt='Map _src_taxon_name to last MSL'
 	,msg=(case 
 		when toc.msl_release_num is null			then 'ERROR: MSL='+rtrim(dest_msl_release_num)+' missing from taxonomy_toc table!!!' 
+
+		when n.taxnode_id is null 
+		and dest._action in ('rename','move','abolish') then 'ERROR: ['+dest._src_taxon_name+'] missing from taxonomy_node table!!!!'
+
 		when n.taxnode_id is not null				
 		and dest._action not in ('new','split')	    then 'set src & dest taxnode_id'
 
 		when n.taxnode_id is not null				then 'set src taxnode_id' 
 		when dest._action not in ('new','split')	then 'set dest taxnode_id'
+
 	end)
 	, '['+dest._src_taxon_name+']', n.lineage, n.taxnode_id, dest._src_taxon_name, dest._action, dest.*,
 --
@@ -58,6 +67,10 @@ order by action, sort
 --
 -- mostly this doesn't matter, if lowest rank taxon maps, which is done above.
 -- --------------------------------------------------------------------
+
+-- 
+
+
 select * 
 from (
 	select 
@@ -113,6 +126,46 @@ order by sort
 -- 
 -- =========================================================================================
 -- =========================================================================================
+
+
+/* ------------------------------------------------------------------------
+ *  MSL37 fixes 
+ * ------------------------------------------------------------------------
+ */
+select srcSpecies, proposal,
+-- update load_next_msl set
+	srcSpecies = 'Culex ohlsrhavirus'
+	-- select msl_release_num, species, lineage from taxonomy_node_names where species like 'culex ohlsr%'
+from load_next_msl
+where  srcSpecies like 'Culex ohlsrharhavirus'
+
+select srcSpecies, proposal,
+-- update load_next_msl set
+	srcSpecies = 'Bas-Congo tibrovirus'
+	-- select msl_release_num, species, lineage from taxonomy_node_names where species like 'Bas%Congo tibrovirus%'
+from load_next_msl
+where  srcSpecies like 'Bas Congo tibrovirus'
+
+-- Orthornarivae => Orthornavirae
+select msl_release_num, species, lineage from taxonomy_node_names where kingdom like 'Orth%ae' AND RANK = 'KINGDOM'
+select srcKingdom, proposal,
+-- update load_next_msl set
+	srcKingdom = 'Orthornavirae'
+	-- 
+from load_next_msl
+where  srcKingdom like 'Orthornarivae'
+
+select kingdom, proposal,
+-- update load_next_msl set
+	kingdom = 'Orthornavirae'
+	-- 
+from load_next_msl
+where  kingdom like 'Orthornarivae'
+
+/* ------------------------------------------------------------------------
+ *  MSL36 fixes 
+ * ------------------------------------------------------------------------
+ */
 
 -- 2020.053B.R.Emmerichvirinae.zip
 -- remove srcGenus="unassigned"
