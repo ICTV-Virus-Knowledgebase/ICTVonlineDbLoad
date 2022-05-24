@@ -16,16 +16,17 @@
 
  1. [taxonomy_node](dbo.taxonomy_node.Table.sql) 
   * This table contains all the taxonomy hierarchies for all the years, and the information needed to link between years. 
+
 | Column | Type | Key | Description |
 | -----  | ---- | --- | ----------- |
-|  |  |  | **primary taxonomy tree columns**  |
+| **>>>>>>>** | **>>>** | **>>>>>** | **primary taxonomy tree columns**  |
 | taxnode_id | int | PK | uniquely identifies a taxon in a year |
 | parent_id  | int | FK taxonomy_node.taxnode_id | defines the intra-year taxonomy heirarchy, must point to a taxon of a higher rank |
 | tree_id    | int | FK taxonomy_toc.tree_id | defines the year (should match 1-1 with msl_release_num) |
 | msl_release_num | int | FK taxonomy_toc.tree_id | defines the MSL (Master Species List), if this is an ICTV taxonomy (should match 1-1 with tree_id) |
 | level_id   | int | FK taxonomy_level.id | defines rank taxa (Order, Family, Genus, ...) |
 | name       | varchar | | Name of the taxon |
-|  |  |  | **links to previous and next year**<BR>these are used to generate [taxonomy_node_delta] and [taxonomy_node_merge_split] tables  |
+| **>>>>>>>** | **>>>** | **>>>>>** | **links to previous and next year**<BR>these are used to generate [taxonomy_node_delta] and [taxonomy_node_merge_split] tables  |
 | ictv_id | int | FK taxonomy_node.taxnode_id | id of the first time a taxon created, links taxa across (rename,move,promote,demote), but not (split,merge) |
 | in_change | varchar | | change relative to previous year: new or split |
 | in_target | varchar | | (not used) |
@@ -35,7 +36,7 @@
 | out_target | varchar | | name or lineage (semicolon separated names) of taxon in the next year |
 | out_filename | varchar | | CSV of filename(s) of proposal(s) justifying the change(s) |
 | out_notes | varchar | | |
-|  |  |  | **taxon attributess**  |
+| **>>>>>>>** | **>>>** | **>>>>>** | **taxon attributess**  |
 | molecule_id | int | FK taxonomy_molecule.id| type of genome |
 | start_sort_num | int  | | offset within name to find a number to be parsed and used to override alphabetical sorting of name - mostly applies when there are more than 9 of something, and an alphabetical sort would place 10 before 2. |
 | abbrev_csv | nvarchar | | abbreviations for the virus |
@@ -55,7 +56,7 @@
 | filename | varchar | | document this record was loaded from, usually proposal .xlsx file, or merge thereof |
 | row_num | int | | row number in ```filename``` original document |
 | xref | varchar | | used in ICTVdb taxonomy (tree_id=10090000) to store accession string for ICTVdb database (obsolete) |
-| | | | **following columns are cached values set by a trigger**<BR>[TR_taxonomy_node_UPDATE_indexes](dbo.TR_taxonomy_node_UPDATE_indexes.StoredProcedure.sql),<BR> which in turn calls the stored procedure [taxonomy_node_compute_indexes](dbo.taxonomy_node_compute_indexes.StoredProcedure.sql) to do the actual update**. |
+| **>>>>>>>** | **>>>** | **>>>>>** | **following columns are cached values set by a trigger**<BR>[TR_taxonomy_node_UPDATE_indexes](dbo.TR_taxonomy_node_UPDATE_indexes.StoredProcedure.sql),<BR> which in turn calls the stored procedure [taxonomy_node_compute_indexes](dbo.taxonomy_node_compute_indexes.StoredProcedure.sql) to do the actual update**. |
 | left_idx,right_idx,node_depth | int | | ordering in a depth-first traversal of the MSL taxonomy for that year. Used for parent-of/child-of queries |
 | lineage | varchar | | ";"-separated list of names based on parent_id | 
 | inher_molecule_id | int | FK taxonomy_molecule.id | molecule ID of closest ancestor with a molecule_id setting |
@@ -64,34 +65,43 @@
 | {rank}_desc_ct | int | number of all taxa of {rank} that are in this taxon (desc=descendent) |
 | taxa_kid_cts | varchar | | English summary of {rank}_kid_ct (eg, "2 kingdoms, 2 families, 4 genera") ||
 | taxa_desc_cts | varchar | | English summary of {rank}_desc_ct (eg, "2 kingdoms, 6 phyla, 2 subphyla, 21 classes, 30 orders, 8 suborders, 117 families, 53 subfamilies, 1019 genera, 84 subgenera, 4317 species") ||
-| | | | **computed columns** |  
+| **>>>>>>>** | **>>>** | **>>>>>** | **computed columns** |  
 | cleaned_name | varchar | | ```name``` with any diacritical marks removed | 
 | cleaned_problems | varchar | | what diacritical marks were removed from ```name```  | 
 | flags | varcahr | | semi-colon separated list of is_XXX flags that are set |
 | _numKids | int | | number of sub-taxa (recursive) | 
-|_out_target_parent | varchar | | if ```out_target``` is a ;-separated lineage, all but the last name in the lineage |
-|_out_target_name | varchar | | if ```out_target``` is a ;-separated lineage, only last name in the lineage |
+| _out_target_parent | varchar | | if ```out_target``` is a ;-separated lineage, all but the last name in the lineage |
+| _out_target_name | varchar | | if ```out_target``` is a ;-separated lineage, only last name in the lineage |
 
  1. Supporting TABLES that define years and controled vocabularies:
   * [taxonomy_toc](dbo.taxonomy_toc.Table.sql) - Table of Contents 
-        - defines MSL release numbers and tree IDs. Must have a row for each taxonomy stored in ```taxonomy_node```. 
-        - data glympse [taxonomy_toc.png](img/taxonomy_toc.png)
+    * defines MSL release numbers and tree IDs. Must have a row for each taxonomy stored in ```taxonomy_node```. 
+    * data glympse ![taxonomy_toc.png](img/taxonomy_toc.png)
   * [taxonomy_change_in](dbo.taxonomy_change_in.Table.sql) - defines values for ```taxonomy_node.in_change```
-        - data glympse [taxonomy_change_in.png](img/taxonomy_change_in.png)
+    * data glympse ![taxonomy_change_in.png](img/taxonomy_change_in.png)
   * [taxonomy_change_out](dbo.taxonomy_change_out.Table.sql) - defines values for ```taxonomy_node.out_change```
-        - data glympse [taxonomy_change_out.png](img/taxonomy_change_out.png)
-  * [taxonomy_level](dbo.taxonomy_level.Table.sql) - defines values for ```taxonomy_node.level_id```, maps level_id to rank name (Order, Family, Genus,...), and defines allowable suffixes per        - data glympse [taxonomy_level.png](img/taxonomy_level.png)
- rank.
+    * data glympse ![taxonomy_change_out.png](img/taxonomy_change_out.png)
+  * [taxonomy_level](dbo.taxonomy_level.Table.sql) - defines ranks
+    * defines values for ```taxonomy_node.level_id```
+    *  maps level_id to rank name (Order, Family, Genus,...)
+    * defines allowable suffixes per
+    * data glympse ![taxonomy_level.png](img/taxonomy_level.png)
   * [taxonomy_molecule](dbo.taxonomy_molecule.Table.sql) 
-     - defines values for ```taxonomy_node.molecule_id```. 
-     - Also defines a hierarchy for molecule types using : ![taxonomy_molecule.design_nested_sets.png](img/taxonomy_molecule.design_nested_sets.png)
-     - data glympse [taxonomy_molecule.png](img/taxonomy_molecule.png)
+    * defines values for ```taxonomy_node.molecule_id```. 
+    * data glympse ![taxonomy_molecule.png](img/taxonomy_molecule.png)
+    * Also defines a hierarchy for molecule types using : ![taxonomy_molecule.design_nested_sets.png](img/taxonomy_molecule.design_nested_sets.png)
 
 ##  Cache Tables
 
 these store data pre-computed from taxonomy_node, which makes the queries that serve the website possible in real time. 
-  * [taxonomy_node_delta](dbo.taxonomy_node_delta.Table.sql) - link the taxa of one year in ```taxonomy_node```, to the taxa of the next year, annotate what changed and why
-  * [taxonomy_node_merge_split](dbo.taxonomy_node_merge_split.Table.sql) - link each taxa in ```taxonomy_node``` to all previous and future versions of that taxon. This is essentially a transitive closure of the ```taxonomy_node_delta```.
+  * [taxonomy_node_delta](dbo.taxonomy_node_delta.Table.sql) 
+    * link the taxa of one year in ```taxonomy_node```, to the taxa of the next year, annotate what changed and why
+    * computed by [dbo.rebuild_delta_nodes.StoredProcedure.sql](dbo.rebuild_delta_nodes.StoredProcedure.sql) for recent MSLs, hand-built for some of the older ones
+    * ![taxonomy_node_delta.png](img/taxonomy_node_delta.png)
+  * [taxonomy_node_merge_split](dbo.taxonomy_node_merge_split.Table.sql)
+    * link each taxa in ```taxonomy_node``` to all previous and future versions of that taxon. 
+    * This is essentially a transitive closure of the ```taxonomy_node_delta```.
+    * computed by Stored Procedure [dbo.rebuild_node_merge_split.StoredProcedure.sql](dbo.rebuild_node_merge_split.StoredProcedure.sql)
 
 ## Supporting VIEWS that simplify access
 
