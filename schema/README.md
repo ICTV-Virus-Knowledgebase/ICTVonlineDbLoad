@@ -15,9 +15,8 @@ Tables form several major groups:
   * schema/dbo.taxonomy_level.Table.sql
   * schema/dbo.taxonomy_molecule.Table.sql
 
-##.Supporting VIEWS that simplify access
+## Supporting VIEWS that simplify access
 
-  * schema/dbo.load_next_msl_isOk.View.sql
   * schema/dbo.MSL_export_fast.View.sql
   * schema/dbo.taxonomy_node_dx.View.sql
   * schema/dbo.taxonomy_node_names.View.sql
@@ -48,9 +47,10 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
   * schema/dbo.virus_isolates_220319.Table.sql
   * schema/dbo.virus_isolates_load.Table.sql
 
-## ETL/Load tables
+## ETL/Load tables & Views
 
   * schema/dbo.load_next_msl.Table.sql
+  * schema/dbo.load_next_msl_isOk.View.sql
   * schema/dbo.load_next_msl_28.Table.sql
   * schema/dbo.load_next_msl_29.Table.sql
   * schema/dbo.load_next_msl_30.Table.sql
