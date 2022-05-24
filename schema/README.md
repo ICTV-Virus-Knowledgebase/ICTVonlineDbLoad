@@ -9,27 +9,27 @@ Tables form several major groups:
 
 
  1. Supporting TABLES that define years and controled vocabularies:
-  * [taxonomy_toc](dbo.taxonomy_toc.Table.sql)
-  * [taxonomy_change_in](dbo.taxonomy_change_in.Table.sql)
-  * [taxonomy_change_out](dbo.taxonomy_change_out.Table.sql)
-  * [taxonomy_level](dbo.taxonomy_level.Table.sql)
-  * [taxonomy_molecule](dbo.taxonomy_molecule.Table.sql)
+  * [taxonomy_toc](dbo.taxonomy_toc.Table.sql) - Table of Contents - defines MSL release numbers and tree IDs. Must have a row for each taxonomy stored in ```taxonomy_node```
+  * [taxonomy_change_in](dbo.taxonomy_change_in.Table.sql) - defines values for ```taxonomy_node.in_change```
+  * [taxonomy_change_out](dbo.taxonomy_change_out.Table.sql) - defines values for ```taxonomy_node.out_change```
+  * [taxonomy_level](dbo.taxonomy_level.Table.sql) - defines values for ```taxonomy_node.level_id```, maps level_id to rank name. 
+  * [taxonomy_molecule](dbo.taxonomy_molecule.Table.sql) - defines values for ```taxonomy_node.molecule_id```. Also defines a hierarchy for molecule types, see [taxonomy_molecule.design_nested_sets.png](taxonomy_molecule.design_nested_sets.png)
 
 ## Supporting VIEWS that simplify access
 
   * [MSL_export_fast](dbo.MSL_export_fast.View.sql)
-  * [taxonomy_node_dx](dbo.taxonomy_node_dx.View.sql)
-  * [taxonomy_node_names](dbo.taxonomy_node_names.View.sql)
-  * [taxonomy_node_x](dbo.taxonomy_node_x.View.sql)
-  * [taxonomy_toc_dx](dbo.taxonomy_toc_dx.View.sql)
+  * [taxonomy_node_dx](dbo.taxonomy_node_dx.View.sql) - join of taxonomy_node through taxonomy_node_delta (twice) with previous and next year's taxonomies.
+  * [taxonomy_node_names](dbo.taxonomy_node_names.View.sql) - join of taxonomy_node with controlled vocabulary tables, so in addition to "genus_id" actually has "genus" with the actual name of the genus.
+  * [taxonomy_node_x](dbo.taxonomy_node_x.View.sql) - join of taxonom_node thorugh ```taxonomy_node_merge_split```, to list all previous and future versions of this taxon
+  * [taxonomy_toc_dx](dbo.taxonomy_toc_dx.View.sql) - join of taxonomy_toc with itself to link current year to previous year, used for lookup of previous year's tree_id
   * [view_taxa_level_counts_by_release](dbo.view_taxa_level_counts_by_release.View.sql)
   * [view_taxonomy_stats](dbo.view_taxonomy_stats.View.sql)
 
 ##  Cache Tables
 
 these store data pre-computed from taxonomy_node, which makes the queries that serve the website possible in real time. 
-  * [taxonomy_node_delta](dbo.taxonomy_node_delta.Table.sql)
-  * [taxonomy_node_merge_split](dbo.taxonomy_node_merge_split.Table.sql)
+  * [taxonomy_node_delta](dbo.taxonomy_node_delta.Table.sql) - link the taxa of one year in ```taxonomy_node```, to the taxa of the next year, annotate what changed and why
+  * [taxonomy_node_merge_split](dbo.taxonomy_node_merge_split.Table.sql) - link each taxa in ```taxonomy_node``` to all previous and future versions of that taxon. This is essentially a transitive closure of the ```taxonomy_node_delta```.
 
 ##  Virus isolate tables - these are additional data linked to the species described in taxonomy_node, but not linked to the specific year. 
 
