@@ -56,7 +56,7 @@
 | filename | varchar | | document this record was loaded from, usually proposal .xlsx file, or merge thereof |
 | row_num | int | | row number in ```filename``` original document |
 | xref | varchar | | used in ICTVdb taxonomy (tree_id=10090000) to store accession string for ICTVdb database (obsolete) |
-| **>>>>>>>** | **>>>** | **>>>>>** | **following columns are cached values set by a trigger**<BR>[TR_taxonomy_node_UPDATE_indexes](dbo.TR_taxonomy_node_UPDATE_indexes.StoredProcedure.sql),<BR> which in turn calls the stored procedure [taxonomy_node_compute_indexes](dbo.taxonomy_node_compute_indexes.StoredProcedure.sql) to do the actual update**. |
+| **>>>>>>>** | **>>>** | **>>>>>** | **following columns are cached values set by a trigger**<BR>[TR_taxonomy_node_UPDATE_indexes](dbo.TR_taxonomy_node_UPDATE_indexes.Trigger.sql),<BR> which in turn calls the stored procedure [taxonomy_node_compute_indexes](dbo.taxonomy_node_compute_indexes.StoredProcedure.sql) to do the actual update**. |
 | left_idx,right_idx,node_depth | int | | ordering in a depth-first traversal of the MSL taxonomy for that year. Used for parent-of/child-of queries |
 | lineage | varchar | | ";"-separated list of names based on parent_id | 
 | inher_molecule_id | int | FK taxonomy_molecule.id | molecule ID of closest ancestor with a molecule_id setting |
