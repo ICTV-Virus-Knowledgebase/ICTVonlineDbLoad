@@ -1,10 +1,4 @@
-# ICTVonlineDbLoad
-
-ICTVonline - Database Loading "ETL" scripts and database schema
-
-## Schema
-
-Create scripts for the current schema are found in [./schema/](schema/)
+# ICTVonline SCHEMA
 
 Tables form several major groups:
 
@@ -96,11 +90,5 @@ schema/dbo.ictvdb_genus.View.sql
 schema/dbo.ictvdb_order.View.sql
 schema/dbo.ictvdb_species.View.sql
 schema/dbo.ictvdb_subfamily.View.sql
-
-
-
-## Load Scripts
-
-The current approach for loading 
 
 
