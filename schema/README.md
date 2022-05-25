@@ -105,13 +105,13 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ## Supporting VIEWS that simplify access
 
-  * [MSL_export_fast](dbo.MSL_export_fast.View.sql)
+  * [MSL_export_fast](dbo.MSL_export_fast.View.sql) - quickly export the MSL for a year. For full MSL metadata, use the StoredProcedure [MSL_export_official](dbo.MSL_export_official.StoredProcedure.sql)
   * [taxonomy_node_dx](dbo.taxonomy_node_dx.View.sql) - join of taxonomy_node through taxonomy_node_delta (twice) with previous and next year's taxonomies.
   * [taxonomy_node_names](dbo.taxonomy_node_names.View.sql) - join of taxonomy_node with controlled vocabulary tables, so in addition to "genus_id" actually has "genus" with the actual name of the genus.
   * [taxonomy_node_x](dbo.taxonomy_node_x.View.sql) - join of taxonom_node thorugh ```taxonomy_node_merge_split```, to list all previous and future versions of this taxon
   * [taxonomy_toc_dx](dbo.taxonomy_toc_dx.View.sql) - join of taxonomy_toc with itself to link current year to previous year, used for lookup of previous year's tree_id
-  * [view_taxa_level_counts_by_release](dbo.view_taxa_level_counts_by_release.View.sql)
-  * [view_taxonomy_stats](dbo.view_taxonomy_stats.View.sql)
+  * [view_taxa_level_counts_by_release](dbo.view_taxa_level_counts_by_release.View.sql) - per-MSL (year) counts of all ranks: realms through species. 
+  * [view_taxonomy_stats](dbo.view_taxonomy_stats.View.sql) - (no longer used after MSL32, when realm and sub{ranks} were added) per-MSL counts for orders, familes, subfamilies, genera, species
 
 ##  Virus isolate tables - these are additional data linked to the species described in taxonomy_node, but not linked to the specific year. 
 
