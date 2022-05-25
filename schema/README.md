@@ -4,7 +4,7 @@
 
 ## Overview
 
- 1. taxonomy - stores multiple taxonomy trees, linked across years
+ 1. taxonomy - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
  1. virus properties - additional info about species, not linked to a specific year
  1. membership (obsolete) - used to store ICTV membership info and committee assignments
  1. ETL tables - tables used for loading and transforming data.
@@ -21,7 +21,7 @@
 | -----  | ---- | --- | ----------- |
 | **>>>>>>>** | **>>>** | **>>>>>** | **primary taxonomy tree columns**  |
 | taxnode_id | int | PK | uniquely identifies a taxon in a year |
-| parent_id  | int | FK taxonomy_node.taxnode_id | defines the intra-year taxonomy heirarchy, must point to a taxon of a higher rank |
+| parent_id  | int | FK taxonomy_node.taxnode_id | defines the intra-year taxonomy heirarchy, must point to a taxon of a higher rank, the root node, "year", points to itself |
 | tree_id    | int | FK taxonomy_toc.tree_id | defines the year (should match 1-1 with msl_release_num) |
 | msl_release_num | int | FK taxonomy_toc.tree_id | defines the MSL (Master Species List), if this is an ICTV taxonomy (should match 1-1 with tree_id) |
 | level_id   | int | FK taxonomy_level.id | defines rank taxa (Order, Family, Genus, ...) |
@@ -57,7 +57,7 @@
 | row_num | int | | row number in ```filename``` original document |
 | xref | varchar | | used in ICTVdb taxonomy (tree_id=10090000) to store accession string for ICTVdb database (obsolete) |
 | **>>>>>>>** | **>>>** | **>>>>>** | **following columns are cached values set by a trigger**<BR>[TR_taxonomy_node_UPDATE_indexes](dbo.TR_taxonomy_node_UPDATE_indexes.Trigger.sql),<BR> which in turn calls the stored procedure [taxonomy_node_compute_indexes](dbo.taxonomy_node_compute_indexes.StoredProcedure.sql) to do the actual update**. |
-| left_idx,right_idx,node_depth | int | | ordering in a depth-first traversal of the MSL taxonomy for that year. Used for parent-of/child-of queries |
+| left_idx,right_idx,node_depth | int | | "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)" indicies: ordering in a depth-first traversal of the MSL taxonomy for each year. Used for parent-of/child-of queries |
 | lineage | varchar | | ";"-separated list of names based on parent_id | 
 | inher_molecule_id | int | FK taxonomy_molecule.id | molecule ID of closest ancestor with a molecule_id setting |
 | {rank}_id | int | FK taxonomy_node.taxnode_id | based on parent_id & level_id, ids of higher-ranked taxa in which this taxon is contained
