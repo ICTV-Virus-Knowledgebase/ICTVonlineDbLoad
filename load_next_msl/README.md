@@ -1,13 +1,6 @@
 # ICTVonlineDbLoad
 
-ICTVonline - Database Loading "ETL" scripts and database schema
-
-## Schema
-
-Create scripts for the current schema are found in [./schema/](schema/)
-
-See schema documentation: [./schema/README.md](schema/README.md)
-
+ICTVonline - Database Loading "ETL" scripts
 
 ## Load Scripts
 
