@@ -1,7 +1,5 @@
 # ICTVonline SCHEMA
 
-[[_TOC_]]
-
 ## Overview
 
 These tables support the taxonomy database found at 
