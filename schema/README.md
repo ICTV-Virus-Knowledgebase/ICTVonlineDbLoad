@@ -1,8 +1,9 @@
 # ICTVonline SCHEMA
 
-[[_TOC_]]
-
 ## Overview
+
+These tables support the taxonomy database found at 
+  * https://ictvonline.org/taxonomy/
 
  1. taxonomy - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
  1. virus properties - additional info about species, not linked to a specific year
@@ -115,10 +116,22 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ##  Virus isolate tables - these are additional data linked to the species described in taxonomy_node, but not linked to the specific year. 
 
+There are fields in the main ```taxonomy_node``` table for many of these attributes. 
+When new taxa are loaded from ICTV proposals, the information is loaded into ```load_next_msl``` and from there into ```taxonomy_node```, and from there into these tables. It is then maintained in these tables, without going back to update the version in ```taxonomy_node```. 
+
 ### Current active table
+
   * [virus_isolates](dbo.virus_isolates.Table.sql)
+        * generates the "member species" table on the web page for each genus
+	   * eg [hepacivirus](https://talk.ictvonline.org/ictv-reports/ictv_online_report/positive-sense-rna-viruses/w/flaviviridae/362/genus-hepacivirus)
+        * lists exemplar & additional species
+        * updated by study groups, posted immediately
+        * lists additional isolates
   * [virus_prop](dbo.virus_prop.Table.sql)
+        * Additional metadata on viruses, not currently up to date, but will be updated again in the future
   * [VMR-new](dbo.VMR-new.Table.sql)
+        * This documents the various isolates and clades that are found under the species level. 
+
 ### older versions and ETL tables
   * [virus_isolates_051420](dbo.virus_isolates_051420.Table.sql)
   * [virus_isolates_051821](dbo.virus_isolates_051821.Table.sql)
