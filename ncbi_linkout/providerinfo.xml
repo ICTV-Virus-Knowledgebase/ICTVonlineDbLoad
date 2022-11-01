@@ -1,0 +1,11 @@
+<?xml version="1.0"?> 
+<!DOCTYPE Provider PUBLIC "-//NLM//DTD LinkOut 1.0//EN" "https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd"> 
+<Provider> 
+    <ProviderId>7640</ProviderId>
+    <Name>International Committee on Taxonomy of Viruses</Name> 
+    <NameAbbr>ICTV</NameAbbr> 
+    <Url>https://ictv.global/</Url> 
+    <Brief>Approved nomenclature and classification of viruses.</Brief> 
+</Provider> 
+
+

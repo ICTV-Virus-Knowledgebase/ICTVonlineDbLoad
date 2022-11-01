@@ -1,5 +1,7 @@
 # WORD backups
 \~*
+# VI backups
+*~
 # db backups
 backups/
 .Rproj.user
