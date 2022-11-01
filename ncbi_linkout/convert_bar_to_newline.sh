@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 #
 # cleanup linkout file downloaded from WINDOWS MSSQL 
 # 
