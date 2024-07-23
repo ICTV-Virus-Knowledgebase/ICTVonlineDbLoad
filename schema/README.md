@@ -3,16 +3,17 @@
 ## Overview
 
   1. [taxonomy_node](README.md#taxonomy-trees-primary-data--supporting-controlled-vocabularies) (SQL table) - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
-      * https://ictv.global/taxonomy/history
-      * https://ictv.global/taxonomy
-      * https://ictv.global/taxonomy/visual-browser
+      * Page: [Taxonomy Release History](https://ictv.global/taxonomy/history)
+      * Page: [Taxonomy Browser/Search](https://ictv.global/taxonomy)
+      * Page: [Visual Taxonomy Browser/Search](https://ictv.global/taxonomy/visual-browser)
+      * Page: Taxon History [Human Poliovirus 1](https://ictv.global/taxonomy/taxondetails?taxnode_id=19971699&taxon_name=Human%20poliovirus%201)
   1. [species_isolates](README.md#dataset-species_isolates) (SQL table) - important isolates in each species, not linked to a specific taxonomy release
       * Report Chapter: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae) Member Species Table
       * Report Chapter: [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus) Member Species
 1. [virus_properties](README.md#dataset-virus_properties) (Drupal WebForm) - additional info about physical attributes of species, not linked to a specific year (TBA)
   1. [demarcation_criteria](README.md#dataset-demarcation_criteria)  (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
   1. [taxon_etymology](README.md#dataset-taxon_etymology) (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
-      * https://ictv.global/taxonomy/etymology
+      * Page: [Etymology of Taxon Names](https://ictv.global/taxonomy/etymology)
 
 ## Taxonomy Trees: Primary Data & supporting controlled vocabularies
 
