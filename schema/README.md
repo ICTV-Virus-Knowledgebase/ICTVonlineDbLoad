@@ -1,4 +1,6 @@
-# ICTVonline SCHEMA
+# ICTV.global SCHEMA
+
+[[_TOC_]]
 
 ## Overview
 
@@ -6,13 +8,14 @@ These tables support the taxonomy database found at
   * https://ictv.global/taxonomy/history
   * https://ictv.global/taxonomy
   * https://ictv.global/taxonomy/visual-browser
-  
+  * https://ictv.global/taxonomy/etymology
 
- 1. taxonomy_node - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
- 1. [species_isolates - important isolates in each species, not linked to a specific taxonomy release
- 1. virus_properties - additional info about physical attributes of species, not linked to a specific year (TBA)
- 1. demarcation_criteria  - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
-
+### Core datasets
+  1. taxonomy_node (SQL table) - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
+  1. species_isolates (SQL table) - important isolates in each species, not linked to a specific taxonomy release
+  1. virus_properties (Drupal WebForm) - additional info about physical attributes of species, not linked to a specific year (TBA)
+  1. demarcation_criteria  (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
+  1. taxon_etymology (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
 
 ## Taxonomy Trees: Primary Data & supporting controlled vocabularies
 
@@ -130,40 +133,72 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
      * When new taxa are loaded from ICTV proposals, the information is loaded into ```taxonomy_node```, and from there get copied into these tables.
   * The updated version of thse fields are then maintained in these associated data tables, without going back to update the version in ```taxonomy_node```. 
 
-### Associatd Data Tables
+## Associatd Data Sets
 
-#### Table: [species_isolates](dbo.species_isolates.Table.sql)    
-        * generates the "member species" table on the web page for each chapter of the ICTV Report.  
-	   * Page: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
-	     * Page: [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
+### species_isolates
 
-	* includes GenBank (and RefSeq, if available) accession numebers
-	   * accession numbers will be provided by segment, if applicable, including segment names, when available.
-	   * each isolate has a unique "isolate_id" that links all the segments of that isolate. 
-	   * example: ```DNA-A: MK430076; DNA-B: MK430077; DNA-C: MK430078```
-	        * these lists are "packed" into a single database column
-		* Segment accession numbers are separated by a semi-colon (;)
-		* Optional segment names prefix the accession number, and are separated from it by a colon (:)
-		* all spaces are ignored. 
-        * lists exemplar & additional species  
-        * updated by study groups, posted immediately  
-        * lists additional isolates
-	* TBA: NCBI taxids
+Format: [species_isolates](dbo.species_isolates.Table.sql)
+   * data dump: data/[species_isolates.utf8.txt](../data/species_isolates.utf8.txt)
 
-#### virus_properties (in development)
-        * Additional metadata on physical attributes of viruses.
-#### demarcation_criteria (in developement)
-        * Additional metadata on how taxa are delineated.
-#### taxon_etemology (in developement)
-        * Additional metadata on the derrivation of the taxon names.
-	* Page: https://ictv.global/taxonomy/etymology
+Web Pages: generates the "member species" table on the web page for each chapter of the ICTV Report.  
+   * Page: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
+   * Page: [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
 
-### ICTVdb Linkage (obsolete)
+Contents:
+   * each isolate has a unique "isolate_id" that links all the segments of that isolate.
+   * links back to taxonomy_node table via taxnode_id (many-to-one: isolate_id:taxnode_id = N:1)
+   * includes GenBank (and RefSeq, if available) accession numebers
+   * accession numbers will be provided by segment, if applicable, including segment names, when available.
+       * these lists are "packed" into a single database column
+           * example: ```DNA-A: MK430076; DNA-B: MK430077; DNA-C: MK430078```
+       * Segment accession numbers are separated by a semi-colon (;)
+       * Optional segment names prefix the accession number, and are separated from it by a colon (:)
+       * all spaces are ignored. 
+   * lists exemplar & additional virus isolates
+   * updated by study groups, posted immediately
+       * releases numbered by when an updated xlsx file is posted (frequently)
+   * TBA: NCBI taxids and other metadata
 
-#### Tables
+### virus_properties 
+
+Format: 
+   * Drupal WebForm; in development
+
+Web Pages: 
+   * TBD
+
+Contents:
+   * Additional metadata on physical attributes of viruses.
+
+### demarcation_criteria
+
+Format: 
+   * Drupal WebForm; in development
+
+Web Pages: 
+   * TBD
+
+Contents:
+   * Additional metadata on how taxa are delineated.
+
+### taxon_etymology
+
+
+Format: 
+   * Drupal WebForm; in development
+
+Web Pages: 
+   * Page: https://ictv.global/taxonomy/etymology
+
+Contents:
+    * Additional metadata on the derrivation of the taxon names.
+
+## ICTVdb Linkage (obsolete)
+
+### Tables
   * [ictvdb_index](dbo.ictvdb_index.Table.sql)
   * [ictvdb_sun_ah](dbo.ictvdb_sun_ah.Table.sql)
-#### Views
+### Views
   * [ictvdb_family](dbo.ictvdb_family.View.sql)
   * [ictvdb_genus](dbo.ictvdb_genus.View.sql)
   * [ictvdb_order](dbo.ictvdb_order.View.sql)
