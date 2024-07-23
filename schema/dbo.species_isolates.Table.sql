@@ -1,4 +1,3 @@
-USE [ICTVonline39]
 GO
 
 /****** Object:  Table [dbo].[species_isolates]    Script Date: 7/23/2024 7:57:46 AM ******/

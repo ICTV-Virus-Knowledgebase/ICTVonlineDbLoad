@@ -1,4 +1,3 @@
-USE [ICTVonline39]
 GO
 
 /****** Object:  Table [dbo].[taxonomy_host_source]    Script Date: 7/23/2024 8:34:05 AM ******/

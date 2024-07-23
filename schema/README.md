@@ -5,14 +5,14 @@
 These tables support the taxonomy database found at 
   * https://ictv.global/taxonomy/history
   * https://ictv.global/taxonomy
-  * https://ictv.global/visual-browser
+  * https://ictv.global/taxonomy/visual-browser
   
 
- 1. taxonomy - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
- 1. virus properties - additional info about species, not linked to a specific year
- 1. membership (obsolete) - used to store ICTV membership info and committee assignments
- 1. ETL tables - tables used for loading and transforming data.
- 1. Admin tables (obsolete)
+ 1. taxonomy_node - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
+ 1. [species_isolates - important isolates in each species, not linked to a specific taxonomy release
+ 1. virus_properties - additional info about physical attributes of species, not linked to a specific year (TBA)
+ 1. demarcation_criteria  - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
+
 
 ## Taxonomy Trees: Primary Data & supporting controlled vocabularies
 
@@ -122,26 +122,34 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
   * [view_taxa_level_counts_by_release](dbo.view_taxa_level_counts_by_release.View.sql) - per-MSL (year) counts of all ranks: realms through species. 
   * [view_taxonomy_stats](dbo.view_taxonomy_stats.View.sql) - (no longer used after MSL32, when realm and sub{ranks} were added) per-MSL counts for orders, familes, subfamilies, genera, species
 
-##  Virus isolate tables - these are additional data linked to the species described in taxonomy_node, but not linked to the specific year. 
+## Associated Data about Taxa
 
-There are fields in the main ```taxonomy_node``` table for many of these attributes. 
-When new taxa are loaded from ICTV proposals, the information is loaded into ```load_next_msl``` and from there into ```taxonomy_node```, and from there into these tables. It is then maintained in these tables, without going back to update the version in ```taxonomy_node```. 
 
-### Associated Data about Taxa
+  * These are additional data linked to the species (or other rank taxa) described in taxonomy_node, but not linked to the specific year.
+  * There are fields in the main ```taxonomy_node``` table for many of these attributes. 
+     * When new taxa are loaded from ICTV proposals, the information is loaded into ```taxonomy_node```, and from there get copied into these tables.
+  * The updated version of thse fields are then maintained in these associated data tables, without going back to update the version in ```taxonomy_node```. 
 
-  * [species_isolates](dbo.species_isolates.Table.sql)
-        * generates the "member species" table on the web page for each chapter of the ICTV Report.
-	   * [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)
-	     * [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)
-        * lists exemplar & additional species
-        * updated by study groups, posted immediately
+### Associatd Data Tables
+
+  * [species_isolates](dbo.species_isolates.Table.sql)  
+        * generates the "member species" table on the web page for each chapter of the ICTV Report.  
+	   * [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
+	     * [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
+	* includes GenBank (and RefSeq, if available) accession numebers
+	  * accession numbers will be provided by segment, if applicable, including segment names, when available. 
+        * lists exemplar & additional species  
+        * updated by study groups, posted immediately  
         * lists additional isolates
-  * virus_properties
-        * Additional metadata on physical attributes of viruses: TBA
-  * demarcation_criteria
-        * Additional metadata on how taxa are delineated: TBA
+	* TBA: NCBI taxids
+
+  * virus_properties (in development)
+        * Additional metadata on physical attributes of viruses.
+  * demarcation_criteria (in developement)
+        * Additional metadata on how taxa are delineated.
 
 ### ICTVdb Linkage (obsolete)
+
 #### Tables
   * [ictvdb_index](dbo.ictvdb_index.Table.sql)
   * [ictvdb_sun_ah](dbo.ictvdb_sun_ah.Table.sql)
