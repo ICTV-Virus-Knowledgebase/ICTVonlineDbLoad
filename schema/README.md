@@ -132,7 +132,7 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ### Associatd Data Tables
 
-  * Table: [species_isolates](dbo.species_isolates.Table.sql)    
+#### Table: [species_isolates](dbo.species_isolates.Table.sql)    
         * generates the "member species" table on the web page for each chapter of the ICTV Report.  
 	   * Page: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
 	     * Page: [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
@@ -150,10 +150,13 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
         * lists additional isolates
 	* TBA: NCBI taxids
 
-  * virus_properties (in development)
+#### virus_properties (in development)
         * Additional metadata on physical attributes of viruses.
-  * demarcation_criteria (in developement)
+#### demarcation_criteria (in developement)
         * Additional metadata on how taxa are delineated.
+#### taxon_etemology (in developement)
+        * Additional metadata on the derrivation of the taxon names.
+	* Page: https://ictv.global/taxonomy/etymology
 
 ### ICTVdb Linkage (obsolete)
 
