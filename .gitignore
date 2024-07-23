@@ -5,3 +5,6 @@
 # db backups
 backups/
 .Rproj.user
+.Rhistory
+# mac osx
+.DS_Store

@@ -3,7 +3,10 @@
 ## Overview
 
 These tables support the taxonomy database found at 
-  * https://ictvonline.org/taxonomy/
+  * https://ictv.global/taxonomy/history
+  * https://ictv.global/taxonomy
+  * https://ictv.global/visual-browser
+  
 
  1. taxonomy - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
  1. virus properties - additional info about species, not linked to a specific year
@@ -91,6 +94,11 @@ These tables support the taxonomy database found at
     * defines values for ```taxonomy_node.molecule_id```. 
     * data glympse ![taxonomy_molecule.png](img/taxonomy_molecule.png)
     * Also defines a hierarchy for molecule types using : ![taxonomy_molecule.design_nested_sets.png](img/taxonomy_molecule.design_nested_sets.png)
+  * [taxonomy_host_source](dbo.taxonomy_host_source.Table.sql) 
+    * defines values for ```taxonomy_node.host_source```. 
+  * [taxonomy_genome_coverage](dbo.taxonomy_genome_coverage.Table.sql) 
+    * defines values for ```taxonomy_node.genome_coverage```. 
+
 
 ##  Cache Tables
 
@@ -119,73 +127,19 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 There are fields in the main ```taxonomy_node``` table for many of these attributes. 
 When new taxa are loaded from ICTV proposals, the information is loaded into ```load_next_msl``` and from there into ```taxonomy_node```, and from there into these tables. It is then maintained in these tables, without going back to update the version in ```taxonomy_node```. 
 
-### Current active table
+### Associated Data about Taxa
 
-  * [virus_isolates](dbo.virus_isolates.Table.sql)
-        * generates the "member species" table on the web page for each genus
-	   * eg [hepacivirus](https://talk.ictvonline.org/ictv-reports/ictv_online_report/positive-sense-rna-viruses/w/flaviviridae/362/genus-hepacivirus)
+  * [species_isolates](dbo.species_isolates.Table.sql)
+        * generates the "member species" table on the web page for each chapter of the ICTV Report.
+	   * [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)
+	     * [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)
         * lists exemplar & additional species
         * updated by study groups, posted immediately
         * lists additional isolates
-  * [virus_prop](dbo.virus_prop.Table.sql)
-        * Additional metadata on viruses, not currently up to date, but will be updated again in the future
-  * [VMR-new](dbo.VMR-new.Table.sql)
-        * This documents the various isolates and clades that are found under the species level. 
-
-### older versions and ETL tables
-  * [virus_isolates_051420](dbo.virus_isolates_051420.Table.sql)
-  * [virus_isolates_051821](dbo.virus_isolates_051821.Table.sql)
-  * [virus_isolates_072021](dbo.virus_isolates_072021.Table.sql)
-  * [virus_isolates_080120](dbo.virus_isolates_080120.Table.sql)
-  * [virus_isolates_093019](dbo.virus_isolates_093019.Table.sql)
-  * [virus_isolates_112321](dbo.virus_isolates_112321.Table.sql)
-  * [virus_isolates_120219](dbo.virus_isolates_120219.Table.sql)
-  * [virus_isolates_220319](dbo.virus_isolates_220319.Table.sql)
-  * [virus_isolates_load](dbo.virus_isolates_load.Table.sql)
-  * [vmr_load](dbo.vmr_load.Table.sql)
-
-## ETL/Load tables & Views
-
-### Current year/MSL/taxonomy
-  * [load_next_msl](dbo.load_next_msl.Table.sql) - most recent/active load. Contains the list of changes between previous and current MSL, as loaded from the merged proposal spreadsheets
-  * [load_next_msl_isOk](dbo.load_next_msl_isOk.View.sql) (View) - filters out any rows of ```[load_next_msl]``` with ```WHERE isOK IS NOT NULL```
-### Previous years
-  * [load_next_msl_28](dbo.load_next_msl_28.Table.sql)
-  * [load_next_msl_29](dbo.load_next_msl_29.Table.sql)
-  * [load_next_msl_30](dbo.load_next_msl_30.Table.sql)
-  * [load_next_msl_31](dbo.load_next_msl_31.Table.sql)
-  * [load_next_msl_32](dbo.load_next_msl_32.Table.sql)
-  * [load_next_msl_33](dbo.load_next_msl_33.Table.sql)
-  * [load_next_msl_34a](dbo.load_next_msl_34a.Table.sql)
-  * [load_next_msl_34b](dbo.load_next_msl_34b.Table.sql)
-  * [load_next_msl_35](dbo.load_next_msl_35.Table.sql)
-  * [load_next_msl_36](dbo.load_next_msl_36.Table.sql)
-  * [load_next_msl_scList](dbo.load_next_msl_scList.Table.sql) 
-  * [load_next_msl_taxonomy_31](dbo.load_next_msl_taxonomy_31.Table.sql)
-  * [load_next_msl_tpList](dbo.load_next_msl_tpList.Table.sql)
-  * [load_next_msl_unicode](dbo.load_next_msl_unicode.Table.sql)
-
-
-## Obsolete
-### Load/ETL (obsolete)
-  * [queue_delta](dbo.queue_delta.Table.sql)
-  * [queue_patch](dbo.queue_patch.Table.sql)
-  * [log_change](dbo.log_change.Table.sql)
-
-### Membership (obsolete)
-
-![membership_diagram.png](img/membership_diagram.png)
-
-#### Tables
-  * [committee](dbo.committee.Table.sql)
-  * [committee_type_cv](dbo.committee_type_cv.Table.sql)
-  * [membership](dbo.membership.Table.sql)
-  * [member](dbo.member.Table.sql)
-  * [position](dbo.position.Table.sql)
-#### Views
-  * [view_membership_committee_with_subchairs](dbo.view_membership_committee_with_subchairs.View.sql)
-  * [view_membership_committee_with_submembers](dbo.view_membership_committee_with_submembers.View.sql)
-  * [view_membership_x](dbo.view_membership_x.View.sql)
+  * virus_properties
+        * Additional metadata on physical attributes of viruses: TBA
+  * demarcation_criteria
+        * Additional metadata on how taxa are delineated: TBA
 
 ### ICTVdb Linkage (obsolete)
 #### Tables
