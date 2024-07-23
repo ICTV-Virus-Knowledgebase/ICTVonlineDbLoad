@@ -1,6 +1,6 @@
-# ICTV.global SCHEMA
+[TOC]
 
-[[_TOC_]]
+# ICTV.global SCHEMA
 
 ## Overview
 
@@ -137,8 +137,9 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ### species_isolates
 
-Format: [species_isolates](dbo.species_isolates.Table.sql)
-   * data dump: data/[species_isolates.utf8.txt](../data/species_isolates.utf8.txt)
+Format: MSSQL Table
+   * Schema: create [species_isolates](dbo.species_isolates.Table.sql) table SQL 
+   * data: data/[species_isolates.utf8.txt](../data/species_isolates.utf8.txt)
 
 Web Pages: generates the "member species" table on the web page for each chapter of the ICTV Report.  
    * Page: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
@@ -159,7 +160,7 @@ Contents:
        * releases numbered by when an updated xlsx file is posted (frequently)
    * TBA: NCBI taxids and other metadata
 
-### virus_properties 
+### Dataset: virus_properties 
 
 Format: 
    * Drupal WebForm; in development
@@ -170,7 +171,7 @@ Web Pages:
 Contents:
    * Additional metadata on physical attributes of viruses.
 
-### demarcation_criteria
+### Dataset: demarcation_criteria
 
 Format: 
    * Drupal WebForm; in development
@@ -181,7 +182,7 @@ Web Pages:
 Contents:
    * Additional metadata on how taxa are delineated.
 
-### taxon_etymology
+### Dataset: taxon_etymology
 
 
 Format: 
