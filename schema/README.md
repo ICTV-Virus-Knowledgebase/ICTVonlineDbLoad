@@ -132,12 +132,19 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ### Associatd Data Tables
 
-  * [species_isolates](dbo.species_isolates.Table.sql)  
+  * Table: [species_isolates](dbo.species_isolates.Table.sql)    
         * generates the "member species" table on the web page for each chapter of the ICTV Report.  
-	   * [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
-	     * [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
+	   * Page: [Hepadnaviridae](https://ictv.global/report/chapter/hepadnaviridae/taxonomy/hepadnaviridae)  
+	     * Page: [Avihepadnavirus](https://ictv.global/report/chapter/hepadnaviridae/hepadnaviridae/avihepadnavirus)  
+
 	* includes GenBank (and RefSeq, if available) accession numebers
-	  * accession numbers will be provided by segment, if applicable, including segment names, when available. 
+	   * accession numbers will be provided by segment, if applicable, including segment names, when available.
+	   * each isolate has a unique "isolate_id" that links all the segments of that isolate. 
+	   * example: ```DNA-A: MK430076; DNA-B: MK430077; DNA-C: MK430078```
+	        * these lists are "packed" into a single database column
+		* Segment accession numbers are separated by a semi-colon (;)
+		* Optional segment names prefix the accession number, and are separated from it by a colon (:)
+		* all spaces are ignored. 
         * lists exemplar & additional species  
         * updated by study groups, posted immediately  
         * lists additional isolates
@@ -161,3 +168,4 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
   * [ictvdb_subfamily](dbo.ictvdb_subfamily.View.sql)
 
 
+π
