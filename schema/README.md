@@ -1,5 +1,3 @@
-[TOC]
-
 # ICTV.global SCHEMA
 
 ## Overview
@@ -11,11 +9,11 @@ These tables support the taxonomy database found at
   * https://ictv.global/taxonomy/etymology
 
 ### Core datasets
-  1. taxonomy_node (SQL table) - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
-  1. species_isolates (SQL table) - important isolates in each species, not linked to a specific taxonomy release
-  1. virus_properties (Drupal WebForm) - additional info about physical attributes of species, not linked to a specific year (TBA)
-  1. demarcation_criteria  (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
-  1. taxon_etymology (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
+  1. [taxonomy_node](README.md#taxonomy-trees-primary-data--supporting-controlled-vocabularies) (SQL table) - stores multiple taxonomy trees, linked across years, trees stored using "[nested set model](https://en.wikipedia.org/wiki/Nested_set_model)"
+  1. [species_isolates](README.md#dataset-species_isolates) (SQL table) - important isolates in each species, not linked to a specific taxonomy release
+  1. [virus_properties](README.md#dataset-virus_properties) (Drupal WebForm) - additional info about physical attributes of species, not linked to a specific year (TBA)
+  1. [demarcation_criteria](README.md#dataset-demarcation_criteria)  (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
+  1. [taxon_etymology](README.md#dataset-taxon_etymology) (Drupal WebForm) - additional info about how taxa are defined and delimited, not linked to a specific year (TBA)
 
 ## Taxonomy Trees: Primary Data & supporting controlled vocabularies
 
@@ -135,7 +133,7 @@ these store data pre-computed from taxonomy_node, which makes the queries that s
 
 ## Associatd Data Sets
 
-### species_isolates
+### Dataset: species_isolates
 
 Format: MSSQL Table
    * Schema: create [species_isolates](dbo.species_isolates.Table.sql) table SQL 
