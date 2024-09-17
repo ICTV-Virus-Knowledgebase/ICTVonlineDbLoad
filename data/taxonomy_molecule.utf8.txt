@@ -14,3 +14,4 @@ id	abbrev	name	balt_group	balt_roman	description	left_idx	right_idx
 12	ssRNA(+/-)	Single-stranded RNA - Ambi-sense	NULL	NULL	NULL	1200	1700
 13	dsDNA; ssDNA	DNA - some taxa double stranded, some taxa single standed	NULL	NULL	NULL	10	900
 14	ssRNA	Single-stranded RNA	NULL	NULL	Introduced in MSL33 for the viroids	1100	1800
+15	ssRNA(-); ssRNA(+/-)	Single-stranded RNA - some Negative-sense segments, some Ambi-sense segments	NULL	NULL	20240912 added for VMR_MSL39_v4 for order Hareavirales in class Bunyaviricetes	1250	1275
