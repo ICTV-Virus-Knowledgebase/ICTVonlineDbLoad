@@ -1,12 +1,12 @@
-CREATE TABLE virus_prop (
-    taxon VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    sub_taxon VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    molecule VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    envelope VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    morphology VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    virion_size VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    genome_segments VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    genome_configuration VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    genome_size VARCHAR(100) CHARACTER SET utf8mb4 NULL,
-    host VARCHAR(100) CHARACTER SET utf8mb4 NULL
-) ENGINE=InnoDB;
+CREATE TABLE `virus_prop`(
+    `taxon` VARCHAR(100),
+    `sub_taxon` VARCHAR(100),
+    `molecule` VARCHAR(100),
+    `envelope` VARCHAR(100),
+    `morphology` VARCHAR(100),
+    `virion_size` VARCHAR(100),
+    `genome_segments` VARCHAR(100),
+    `genome_configuration` VARCHAR(100),
+    `genome_size` VARCHAR(100),
+    `host` VARCHAR(100)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

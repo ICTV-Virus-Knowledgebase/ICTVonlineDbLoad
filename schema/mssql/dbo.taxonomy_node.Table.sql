@@ -1,6 +1,6 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  Table [dbo].[taxonomy_node]    Script Date: 8/20/2024 4:10:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -92,12 +92,15 @@ CREATE TABLE [dbo].[taxonomy_node](
 	[right_idx] [int] NULL,
 	[node_depth] [int] NULL,
 	[lineage] [nvarchar](500) NULL,
-	[cleaned_name]  AS (CONVERT([varchar](100),replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace([name],'í','i'),'é','e'),'ó','o'),'ú','u'),'á','a'),'ì','i'),'è','e'),'ò','o'),'ù','u'),'à','a'),'î','i'),'ê','e'),'ô','o'),'û','u'),'â','a'),'ü','u'),'ö','o'),'ï','i'),'ë','e'),'ä','a'),'ç','c'),'ñ','n'),'‘',''''),'’',''''),'`',' '),'  ',' '),N'a','a'),N'i','i'),N'i','i'),N'a','a'),N'e','e'),N'o','o'),(0))) PERSISTED,
-	[cleaned_problem]  AS (case when charindex('í',[name])>(0) then 'í (accented i)' when charindex('é',[name])>(0) then 'é (accented e)' when charindex('ó',[name])>(0) then 'ó (accented o)' when charindex('ú',[name])>(0) then 'ú (accented u)' when charindex('á',[name])>(0) then 'á (accented a)' when charindex('ì',[name])>(0) then 'ì (accented i)' when charindex('è',[name])>(0) then 'è (accented e)' when charindex('ò',[name])>(0) then 'ò (accented o)' when charindex('ù',[name])>(0) then 'ù (accented u)' when charindex('à',[name])>(0) then 'à (accented a)' when charindex('î',[name])>(0) then 'î (accented i)' when charindex('ê',[name])>(0) then 'ê (accented e)' when charindex('ô',[name])>(0) then 'ô (accented o)' when charindex('û',[name])>(0) then 'û (accented u)' when charindex('â',[name])>(0) then 'â (accented a)' when charindex('ü',[name])>(0) then 'ü (accented u)' when charindex('ö',[name])>(0) then 'ö (accented o)' when charindex('ï',[name])>(0) then 'ï (accented i)' when charindex('ë',[name])>(0) then 'ë (accented e)' when charindex('ä',[name])>(0) then 'ä (accented a)' when charindex('ç',[name])>(0) then 'ç (accented c)' when charindex('ñ',[name])>(0) then 'ñ (accented n)' when charindex('‘',[name])>(0) then '‘ (Microsoft curvy open single-quote)' when charindex('’',[name])>(0) then '’ (Microsoft curvy close single-quote)' when charindex('`',[name])>(0) then '` (ASCII back-quote)' when charindex('  ',[name])>(0) then '(double space)' when charindex(N'a',[name])>(0) then 'a-macron' when charindex(N'i',[name])>(0) then 'i-macron' when charindex(N'i',[name])>(0) then 'i-breve' when charindex(N'a',[name])>(0) then 'a-caron' when charindex(N'e',[name])>(0) then 'e-macron' when charindex(N'o',[name])>(0) then 'o-macron'  end) PERSISTED,
+	[cleaned_name]  AS (CONVERT([varchar](100),replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace([name],'Ã­','i'),'Ã©','e'),'Ã³','o'),'Ãº','u'),'Ã¡','a'),'Ã¬','i'),'Ã¨','e'),'Ã²','o'),'Ã¹','u'),'Ã ','a'),'Ã®','i'),'Ãª','e'),'Ã´','o'),'Ã»','u'),'Ã¢','a'),'Ã¼','u'),'Ã¶','o'),'Ã¯','i'),'Ã«','e'),'Ã¤','a'),'Ã§','c'),'Ã±','n'),'â€˜',''''),'â€™',''''),'`',' '),'  ',' '),N'Ä','a'),N'Ä«','i'),N'Ä­','i'),N'ÇŽ','a'),N'Ä“','e'),N'Å','o'),(0))) PERSISTED,
+	[cleaned_problem]  AS (case when charindex('Ã­',[name])>(0) then 'Ã­ (accented i)' when charindex('Ã©',[name])>(0) then 'Ã© (accented e)' when charindex('Ã³',[name])>(0) then 'Ã³ (accented o)' when charindex('Ãº',[name])>(0) then 'Ãº (accented u)' when charindex('Ã¡',[name])>(0) then 'Ã¡ (accented a)' when charindex('Ã¬',[name])>(0) then 'Ã¬ (accented i)' when charindex('Ã¨',[name])>(0) then 'Ã¨ (accented e)' when charindex('Ã²',[name])>(0) then 'Ã² (accented o)' when charindex('Ã¹',[name])>(0) then 'Ã¹ (accented u)' when charindex('Ã ',[name])>(0) then 'Ã  (accented a)' when charindex('Ã®',[name])>(0) then 'Ã® (accented i)' when charindex('Ãª',[name])>(0) then 'Ãª (accented e)' when charindex('Ã´',[name])>(0) then 'Ã´ (accented o)' when charindex('Ã»',[name])>(0) then 'Ã» (accented u)' when charindex('Ã¢',[name])>(0) then 'Ã¢ (accented a)' when charindex('Ã¼',[name])>(0) then 'Ã¼ (accented u)' when charindex('Ã¶',[name])>(0) then 'Ã¶ (accented o)' when charindex('Ã¯',[name])>(0) then 'Ã¯ (accented i)' when charindex('Ã«',[name])>(0) then 'Ã« (accented e)' when charindex('Ã¤',[name])>(0) then 'Ã¤ (accented a)' when charindex('Ã§',[name])>(0) then 'Ã§ (accented c)' when charindex('Ã±',[name])>(0) then 'Ã± (accented n)' when charindex('â€˜',[name])>(0) then 'â€˜ (Microsoft curvy open single-quote)' when charindex('â€™',[name])>(0) then 'â€™ (Microsoft curvy close single-quote)' when charindex('`',[name])>(0) then '` (ASCII back-quote)' when charindex('  ',[name])>(0) then '(double space)' when charindex(N'Ä',[name])>(0) then 'a-macron' when charindex(N'Ä«',[name])>(0) then 'i-macron' when charindex(N'Ä­',[name])>(0) then 'i-breve' when charindex(N'ÇŽ',[name])>(0) then 'a-caron' when charindex(N'Ä“',[name])>(0) then 'e-macron' when charindex(N'Å',[name])>(0) then 'o-macron'  end) PERSISTED,
 	[flags]  AS ((((((case when [tree_id]=[taxnode_id] then 'root;' else '' end+case when [is_hidden]=(1) then 'hidden;' else '' end)+case when [is_deleted]=(1) then 'deleted;' else '' end)+case when [is_deleted_next_year]=(1) then 'removed_next_year;' else '' end)+case when [is_typo]=(1) then 'typo;' else '' end)+case when [is_renamed_next_year]=(1) then 'renamed_next_year;' else '' end)+case when [is_obsolete]=(1) then 'obsolete;' else '' end),
 	[_numKids]  AS ((([right_idx]-[left_idx])-(1))/(2)) PERSISTED,
 	[_out_target_parent]  AS (rtrim(ltrim(reverse(substring(replace(reverse([out_target]),';',replicate(' ',(1000))),(500),(1500)))))) PERSISTED,
 	[_out_target_name]  AS (rtrim(ltrim(reverse(substring(replace(reverse([out_target]),';',replicate(' ',(1000))),(0),(500)))))) PERSISTED,
+	[exemplar_name] [nvarchar](max) NULL,
+	[genome_coverage] [nvarchar](50) NULL,
+	[host_source] [nvarchar](50) NULL,
  CONSTRAINT [pk_taxonomy_node] PRIMARY KEY CLUSTERED 
 (
 	[taxnode_id] ASC
@@ -131,6 +134,16 @@ ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_
 REFERENCES [dbo].[taxonomy_change_out] ([change])
 GO
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_change_out]
+GO
+ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_genome_coverage] FOREIGN KEY([genome_coverage])
+REFERENCES [dbo].[taxonomy_genome_coverage] ([genome_coverage])
+GO
+ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_genome_coverage]
+GO
+ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_host_source] FOREIGN KEY([host_source])
+REFERENCES [dbo].[taxonomy_host_source] ([host_source])
+GO
+ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_host_source]
 GO
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_level-level_id] FOREIGN KEY([level_id])
 REFERENCES [dbo].[taxonomy_level] ([id])

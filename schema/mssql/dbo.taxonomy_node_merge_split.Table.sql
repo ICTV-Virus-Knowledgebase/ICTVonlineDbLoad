@@ -1,6 +1,6 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  Table [dbo].[taxonomy_node_merge_split]    Script Date: 8/20/2024 4:10:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -11,6 +11,7 @@ CREATE TABLE [dbo].[taxonomy_node_merge_split](
 	[is_merged] [int] NOT NULL,
 	[is_split] [int] NOT NULL,
 	[dist] [int] NOT NULL,
+	[rev_count] [int] NOT NULL,
  CONSTRAINT [PK_taxonomy_node_merge_split] PRIMARY KEY CLUSTERED 
 (
 	[prev_ictv_id] ASC,

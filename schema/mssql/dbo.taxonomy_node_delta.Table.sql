@@ -1,6 +1,6 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  Table [dbo].[taxonomy_node_delta]    Script Date: 8/20/2024 4:10:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19,7 +19,11 @@ CREATE TABLE [dbo].[taxonomy_node_delta](
 	[is_new] [int] NOT NULL,
 	[is_deleted] [int] NOT NULL,
 	[is_now_type] [int] NOT NULL,
-	[tag_csv]  AS ((((((((case when [is_merged]=(1) then 'Merged,' else '' end+case when [is_split]=(1) then 'Split,' else '' end)+case when [is_renamed]=(1) then 'Renamed,' else '' end)+case when [is_new]=(1) then 'New,' else '' end)+case when [is_deleted]=(1) then 'Abolished,' else '' end)+case when [is_moved]=(1) then 'Moved,' else '' end)+case when [is_promoted]=(1) then 'Promoted,' else '' end)+case when [is_demoted]=(1) then 'Demoted,' else '' end)+case when [is_now_type]=(1) then 'Assigned as Type Species,' when [is_now_type]=(-1) then 'Removed as Type Species,' else '' end)
+	[tag_csv]  AS ((((((((case when [is_merged]=(1) then 'Merged,' else '' end+case when [is_split]=(1) then 'Split,' else '' end)+case when [is_renamed]=(1) then 'Renamed,' else '' end)+case when [is_new]=(1) then 'New,' else '' end)+case when [is_deleted]=(1) then 'Abolished,' else '' end)+case when [is_moved]=(1) then 'Moved,' else '' end)+case when [is_promoted]=(1) then 'Promoted,' else '' end)+case when [is_demoted]=(1) then 'Demoted,' else '' end)+case when [is_now_type]=(1) then 'Assigned as Type Species,' when [is_now_type]=(-1) then 'Removed as Type Species,' else '' end),
+	[is_lineage_updated] [int] NOT NULL,
+	[msl] [int] NOT NULL,
+	[tag_csv2]  AS (((((((((case when [is_merged]=(1) then 'Merged,' else '' end+case when [is_split]=(1) then 'Split,' else '' end)+case when [is_renamed]=(1) then 'Renamed,' else '' end)+case when [is_new]=(1) then 'New,' else '' end)+case when [is_deleted]=(1) then 'Abolished,' else '' end)+case when [is_moved]=(1) then 'Moved,' else '' end)+case when [is_promoted]=(1) then 'Promoted,' else '' end)+case when [is_demoted]=(1) then 'Demoted,' else '' end)+case when [is_now_type]=(1) then 'Assigned as Type Species,' when [is_now_type]=(-1) then 'Removed as Type Species,' else '' end)+case when [is_lineage_updated]=(1) then 'LineageUpdated,' else '' end) PERSISTED NOT NULL,
+	[tag_csv_min]  AS (((((((case when [is_merged]=(1) then 'Merged,' else '' end+case when [is_split]=(1) then 'Split,' else '' end)+case when [is_renamed]=(1) then 'Renamed,' else '' end)+case when [is_new]=(1) then 'New,' else '' end)+case when [is_deleted]=(1) then 'Abolished,' else '' end)+case when [is_moved]=(1) then 'Moved,' else '' end)+case when [is_promoted]=(1) then 'Promoted,' else '' end)+case when [is_demoted]=(1) then 'Demoted,' else '' end) PERSISTED NOT NULL
 ) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_prev_taxid]  DEFAULT (NULL) FOR [prev_taxid]
@@ -46,17 +50,7 @@ ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_
 GO
 ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_is_now_type]  DEFAULT ((0)) FOR [is_now_type]
 GO
-ALTER TABLE [dbo].[taxonomy_node_delta]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_delta_taxonomy_node-new_taxid] FOREIGN KEY([new_taxid])
-REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
-ON UPDATE CASCADE
-ON DELETE CASCADE
-GO
-ALTER TABLE [dbo].[taxonomy_node_delta] CHECK CONSTRAINT [FK_taxonomy_node_delta_taxonomy_node-new_taxid]
-GO
-ALTER TABLE [dbo].[taxonomy_node_delta]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_delta_taxonomy_node-prev_taxid] FOREIGN KEY([prev_taxid])
-REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
-GO
-ALTER TABLE [dbo].[taxonomy_node_delta] CHECK CONSTRAINT [FK_taxonomy_node_delta_taxonomy_node-prev_taxid]
+ALTER TABLE [dbo].[taxonomy_node_delta] ADD  CONSTRAINT [DF_taxonomy_node_delta_is_lineage_updated]  DEFAULT ((0)) FOR [is_lineage_updated]
 GO
 ALTER TABLE [dbo].[taxonomy_node_delta]  WITH CHECK ADD  CONSTRAINT [CK_taxonomy_node_delta-is_deleted] CHECK  (([is_deleted]=(1) OR [is_deleted]=(0)))
 GO
