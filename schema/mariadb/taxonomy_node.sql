@@ -151,7 +151,7 @@ CREATE TABLE `taxonomy_node` (
   `_out_target_name` VARCHAR(255) GENERATED ALWAYS AS (
     RTRIM(LTRIM(REVERSE(SUBSTRING(REPLACE(REVERSE(`out_target`), ';', REPEAT(' ', 1000)), 0, 500))))
   ) PERSISTENT,
-  `exemplar_name` VARCHAR(255),
+  `exemplar_name` LONGTEXT,
   `genome_coverage` VARCHAR(50),
   `host_source` VARCHAR(50),
   PRIMARY KEY (`taxnode_id`)

@@ -20,7 +20,7 @@ CREATE TABLE `species_isolates` (
   `update_prev_taxnode_id` INT,
   `update_change_proposal` VARCHAR(512),
   PRIMARY KEY (`isolate_id`),
-  `isolate_name` VARCHAR(500) GENERATED ALWAYS AS (
+  `_isolate_name` VARCHAR(500) GENERATED ALWAYS AS (
     CASE 
       WHEN `isolate_names` LIKE '%;%' 
       THEN LEFT(`isolate_names`, LOCATE(';', `isolate_names`) - 1) 
