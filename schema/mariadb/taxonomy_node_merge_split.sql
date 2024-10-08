@@ -9,4 +9,8 @@ CREATE TABLE `taxonomy_node_merge_split`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `taxonomy_node_merge_split`
-    ADD CONSTRAINT `FK_taxonomy_node_merge_split_taxonomy_node1` FOREIGN KEY (`next_ictv_id`) REFERENCES `taxonomy_node` (`taxnode_id`) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT `FK_taxonomy_node_merge_split_taxonomy_node1` 
+    FOREIGN KEY (`next_ictv_id`) 
+    REFERENCES `taxonomy_node` (`taxnode_id`) 
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;

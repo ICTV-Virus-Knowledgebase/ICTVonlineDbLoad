@@ -1,7 +1,7 @@
 CREATE TABLE `taxonomy_node_delta`(
-    `prev_taxid` INT NULL,
-    `new_taxid` INT NULL,
-    `proposal` VARCHAR(255) NULL,
+    `prev_taxid` INT NULL DEFAULT NULL,
+    `new_taxid` INT NULL DEFAULT NULL,
+    `proposal` VARCHAR(255) NULL DEFAULT NULL,
     `notes` VARCHAR(255) NULL,
     `is_merged` INT NOT NULL DEFAULT 0,
     `is_split` INT NOT NULL DEFAULT 0,
@@ -49,4 +49,11 @@ CREATE TABLE `taxonomy_node_delta`(
     )) PERSISTENT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- add foriegn key constraints
+-- Adding CHECK constraints (to enforce valid values)
+ALTER TABLE `taxonomy_node_delta`
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_deleted` CHECK (`is_deleted` IN (0,1)),
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_merged` CHECK (`is_merged` IN (0,1)),
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_moved` CHECK (`is_moved` IN (0,1)),
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_new` CHECK (`is_new` IN (0,1)),
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_now_type` CHECK (`is_now_type` IN (1, 0, -1)),
+    ADD CONSTRAINT `CK_taxonomy_node_delta_is_renamed` CHECK (`is_renamed` IN (0,1));
