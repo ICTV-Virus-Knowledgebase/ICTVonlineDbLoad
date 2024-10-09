@@ -1,6 +1,6 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  View [dbo].[taxonomy_node_names]    Script Date: 10/8/2024 4:19:50 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,10 +12,15 @@ GO
 
 
 
+
+
+
 CREATE view [dbo].[taxonomy_node_names] as
 select 
 	-- the underlying table
 	 tn.* 
+	-- msl shortcut
+	,[msl] = tn.msl_release_num
 	-- ranks
 	,[rank]   = isnull([rank].name, '')
 	,[tree]   = isnull([tree].name,'')
@@ -36,6 +41,7 @@ select
 	,[species]   = isnull([species].name,'')
 	,molecule = isnull(mol.abbrev,'')
 	,inher_molecule = isnull(imol.abbrev,'')
+	,genome_coverage_name = isnull(gcov.name,'')
 from taxonomy_node tn
 -- join all ranks
 left outer join taxonomy_level [rank] on [rank].id=tn.level_id
@@ -58,6 +64,7 @@ left outer join taxonomy_node [species] on [species].taxnode_id=tn.species_id
 -- other controlled vocabularies
 left outer join taxonomy_molecule mol on mol.id = tn.molecule_id
 left outer join taxonomy_molecule imol on imol.id = tn.inher_molecule_id
+left outer join taxonomy_genome_coverage gcov on gcov.genome_coverage = tn.genome_coverage
 -- filter out historical junk
 where tn.is_deleted = 0 and tn.is_hidden = 0 and tn.is_obsolete=0
 
