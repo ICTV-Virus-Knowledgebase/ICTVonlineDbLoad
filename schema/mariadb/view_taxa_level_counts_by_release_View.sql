@@ -1,10 +1,10 @@
 CREATE VIEW `view_taxa_level_counts_by_release` AS
 -- by Don Dempsey
 SELECT 
-    release.tree_id, 
-    release.notes,
-    release.msl_release_num,
-    release.name AS `year`,
+    `release`.tree_id, 
+    `release`.notes,
+    `release`.msl_release_num,
+    `release`.name AS `year`,
 
     IFNULL(realm, 0) AS realms, 
     IFNULL(subrealm, 0) AS subrealms,
@@ -54,6 +54,6 @@ FROM (
     ) AS levelCounts
     GROUP BY tree_id
 ) AS pivotedData
-JOIN taxonomy_node release ON (release.tree_id = pivotedData.tree_id AND release.level_id = 100)
-WHERE release.msl_release_num IS NOT NULL
-AND release.name NOT LIKE 'unassigned';
+JOIN taxonomy_node `release` ON (`release`.tree_id = pivotedData.tree_id AND `release`.level_id = 100)
+WHERE `release`.msl_release_num IS NOT NULL
+AND `release`.name NOT LIKE 'unassigned';
