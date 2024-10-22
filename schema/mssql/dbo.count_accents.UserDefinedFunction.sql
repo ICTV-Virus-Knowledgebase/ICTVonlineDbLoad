@@ -1,6 +1,6 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  UserDefinedFunction [dbo].[count_accents]    Script Date: 10/8/2024 4:24:40 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -35,8 +35,8 @@ BEGIN
 END
 /*
 print 'testing...'
-print '1 = '+rtrim(dbo.count_accents('Wadell, Göran'))
-print '2 = '+rtrim(dbo.count_accents('Wadell, Göran & Harrach, Balázs''s'))
+print '1 = '+rtrim(dbo.count_accents('Wadell, GÃ¶ran'))
+print '2 = '+rtrim(dbo.count_accents('Wadell, GÃ¶ran & Harrach, BalÃ¡zs''s'))
 */
 
 GO
