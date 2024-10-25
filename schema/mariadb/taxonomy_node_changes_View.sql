@@ -76,3 +76,12 @@ LEFT JOIN (
     GROUP BY sub.new_taxid
 ) AS pt ON pt.taxnode_id = n.taxnode_id;
 
+-- Query the view in SQL Server the same way as it is shown by defualt in MariaDB:
+
+-- SELECT TOP 1000 *
+-- FROM taxonomy_node_changes
+-- ORDER BY ictv_id, msl;
+
+
+
+
