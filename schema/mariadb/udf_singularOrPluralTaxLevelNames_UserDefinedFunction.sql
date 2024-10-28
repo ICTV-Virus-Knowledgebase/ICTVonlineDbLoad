@@ -9,8 +9,8 @@ CREATE FUNCTION udf_singularOrPluralTaxLevelNames(
 RETURNS VARCHAR(128)
 DETERMINISTIC
 BEGIN
-    DECLARE level_label VARCHAR(128);
-    DECLARE result VARCHAR(200);
+    DECLARE level_label VARCHAR(128) DEFAULT '';
+    DECLARE result VARCHAR(200) DEFAULT '';
 
     -- Assign level_label based on level_id and level_count
     SET level_label = CASE
@@ -28,22 +28,22 @@ BEGIN
 
         WHEN level_id = 600 THEN 'Species'
 
-        ELSE NULL
+        ELSE ''
     END;
 
-    -- Initialize result
-    SET result = '';
+    -- Ensure level_label is not NULL
+    SET level_label = IFNULL(level_label, '');
 
     -- Build the result string if level_label is not empty
-    IF level_label IS NOT NULL AND level_label <> '' THEN
+    IF level_label <> '' THEN
         SET result = CONCAT(CAST(level_count AS CHAR(3)), ' ', level_label);
     END IF;
 
     -- Return the result
     RETURN result;
 END $$
-
 DELIMITER ;
+
 
 -- Test
 
