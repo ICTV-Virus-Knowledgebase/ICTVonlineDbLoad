@@ -12,6 +12,24 @@ BEGIN
     DECLARE id INT;
     DECLARE rankIndex INT;
     DECLARE taxNodeID INT;
+    DECLARE done BOOL DEFAULT FALSE;
+
+    -- Declare the cursor
+    DECLARE taxon_cursor CURSOR FOR
+        SELECT
+            child_counts,
+            id,
+            rank_index,
+            taxnode_id
+        FROM taxonomy_json tj
+        WHERE tj.tree_id = treeID
+            AND tj.is_ghost_node = 0
+            AND tj.rank_index < speciesRankIndex
+            AND tj.taxnode_id <> treeID
+        ORDER BY tj.rank_index ASC;
+
+    -- Declare cursor not found handler
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
     -- Error handling
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -30,26 +48,6 @@ BEGIN
 
     -- Call createParentGhostNodes
     CALL createParentGhostNodes(treeID);
-
-    -- Declare the cursor
-    DECLARE taxon_cursor CURSOR FOR
-        SELECT
-            child_counts,
-            id,
-            rank_index,
-            taxnode_id
-        FROM taxonomy_json_v2 tj
-        WHERE tj.tree_id = treeID
-            AND tj.is_ghost_node = 0
-            AND tj.rank_index < speciesRankIndex
-            AND tj.taxnode_id <> treeID
-        ORDER BY tj.rank_index ASC;
-
-    -- Declare cursor not found handler
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-    -- Variable to control the cursor loop
-    DECLARE done BOOL DEFAULT FALSE;
 
     -- Open the cursor
     OPEN taxon_cursor;
