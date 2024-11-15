@@ -9,7 +9,7 @@ CREATE PROCEDURE createGhostNodes(
 BEGIN
     -- Variable declarations
     DECLARE childCounts VARCHAR(1000);
-    DECLARE id INT;
+    DECLARE tj_id INT;         -- Renamed from 'id' to 'tj_id'
     DECLARE rankIndex INT;
     DECLARE taxNodeID INT;
     DECLARE done BOOL DEFAULT FALSE;
@@ -54,7 +54,7 @@ BEGIN
 
     -- Cursor loop
     read_loop: LOOP
-        FETCH taxon_cursor INTO childCounts, id, rankIndex, taxNodeID;
+        FETCH taxon_cursor INTO childCounts, tj_id, rankIndex, taxNodeID;  -- Changed 'id' to 'tj_id'
         IF done THEN
             LEAVE read_loop;
         END IF;
@@ -62,7 +62,7 @@ BEGIN
         -- Call createIntermediateGhostNodes
         CALL createIntermediateGhostNodes(
             childCounts,
-            id,
+            tj_id,            -- Use 'tj_id' variable
             rankIndex,
             taxNodeID,
             speciesRankIndex,
@@ -74,5 +74,4 @@ BEGIN
     CLOSE taxon_cursor;
 
 END $$
-
 DELIMITER ;

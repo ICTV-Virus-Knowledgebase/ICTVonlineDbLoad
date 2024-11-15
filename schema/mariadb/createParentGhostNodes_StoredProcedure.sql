@@ -12,7 +12,7 @@ BEGIN
     DECLARE lowestRankToCreate INT;
     DECLARE currentRankIndex INT DEFAULT 1;
     DECLARE previousID INT;
-    DECLARE id INT;
+    DECLARE tj_id INT;         -- Renamed from 'id' to 'tj_id'
     DECLARE parentID INT;
     DECLARE done INT DEFAULT 0;
 
@@ -123,13 +123,12 @@ BEGIN
     -- ==========================================================================================================
     -- Update top-level nodes to connect them to their parent ghost nodes
     -- ==========================================================================================================
-
     -- Open the cursor
     OPEN top_level_cursor;
 
     -- Cursor loop
     read_loop: LOOP
-        FETCH top_level_cursor INTO id, parentID;
+        FETCH top_level_cursor INTO tj_id, parentID;  -- Changed 'id' to 'tj_id'
         IF done = 1 THEN
             LEAVE read_loop;
         END IF;
@@ -137,7 +136,7 @@ BEGIN
         -- Connect the "top-level" node to its parent ghost node.
         UPDATE taxonomy_json
         SET parent_id = parentID
-        WHERE `id` = id;  -- Use backticks for column name and variable for variable name
+        WHERE `id` = tj_id;  -- Use 'tj_id' variable
 
     END LOOP;
 
