@@ -4,6 +4,7 @@ DELIMITER $$
 
 CREATE PROCEDURE initializeJsonColumn(IN treeID INT)
 BEGIN
+
     -- Variable declarations
     DECLARE current_id INT;
     DECLARE rankIndex INT;
@@ -25,11 +26,15 @@ BEGIN
     -- Handler for cursor
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
+    -- Set group_concat_max_len unconditionally at the start
+    SET SESSION group_concat_max_len = 10000000;
+
+    -- LRM 11-18-2024: Setting this at the beginning to avoid a row being truncated when populateTaxonomyJsonForAllReleases is
     -- Increase group_concat_max_len if necessary
-    SELECT @@group_concat_max_len INTO group_concat_max_len_value;
-    IF group_concat_max_len_value < 1000000 THEN
-        SET SESSION group_concat_max_len = 1000000;
-    END IF;
+    -- SELECT @@group_concat_max_len INTO group_concat_max_len_value;
+    -- IF group_concat_max_len_value < 1000000 THEN
+    --     SET SESSION group_concat_max_len = 1000000;
+    -- END IF;
 
     -- ==========================================================================================================
     -- Populate the JSON column of every taxonomy_json record.
