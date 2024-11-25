@@ -1,25 +1,17 @@
-USE [ICTVonline]
+USE [ICTVonline39]
 GO
-
+/****** Object:  StoredProcedure [dbo].[MSL_export_official]    Script Date: 10/8/2024 4:22:48 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
-
-
-
 
 CREATE procedure [dbo].[MSL_export_official]
 	@msl_or_tree int = NULL,
 	@taxnode_id int = NULL
 as
 -- DEBUG - uncomment to replace procedure definition for testing.
---declare @msl_or_tree int; set @msl_or_tree=34--170000 ; declare @taxnode_id int; set @taxnode_id = 201856595 -- DEBUG
+--declare @msl_or_tree int; set @msl_or_tree=38 /*170000*/ ; declare @taxnode_id int; set @taxnode_id = 202201547 -- DEBUG
  -- -------------------------------------------------------------------------
 -- EXPORT FULL OFFICIAL MSL *with* extended fields for inclusion in MSL
 -- 		ncbi, isoalte, molecule, last_change, last_change_msl, history_url
@@ -30,6 +22,7 @@ as
 -- Run time 
 --	~ 15 minutes (full)
 -- -------------------------------------------------------------------------
+-- 20230504 MSL38 add URL for proposal zip filename
 -- 20210510 MSL36 remove is_ref, remove column giving rank where molecule_id is set
 -- 20181018 changed from msl_release_num based joins to tree_id for better index usage
 --          time 70min >> 14 min
@@ -70,7 +63,7 @@ select REPORT='rank stats',  *,
 from taxonomy_level l
 order by id
 
-select 
+select
 	-- basic MSL - one line per species
 	--TN.msl_release_num, -- debugging
 	[sort]          = ROW_NUMBER() OVER(ORDER BY tn.left_idx ASC)
@@ -196,7 +189,13 @@ select
 	)
 	, last_change_proposal=isnull((
 		-- PROPOSAL of most recent change tag of node or ancestor WITH PROPOSAL
-		select top(1) dx.prev_proposal 
+		select top(1) 
+			prev_proposal = (case
+				when dx.prev_proposal is null then ''
+				when dx.prev_proposal not like '%;%' then '=HYPERLINK("https://ictv.global/ictv/proposals/'+dx.prev_proposal+'","'+dx.prev_proposal+'")'
+				-- if multiple proposals in a ;-sep list, link them all to the first one (Excel only allows one link per cell)
+				when dx.prev_proposal     like '%;%' then '=HYPERLINK("https://ictv.global/ictv/proposals/'+left(dx.prev_proposal,charindex(';',dx.prev_proposal)-1)+'","'+dx.prev_proposal+'")'
+				end)
 		from taxonomy_node_merge_split tms
 		join taxonomy_node t on 
 			-- historic across merge/splits
@@ -227,7 +226,7 @@ select
 		)
 		order by tn.tree_id-dx.tree_id, dx.node_depth desc	
 	),'')
-	, history_url = '=HYPERLINK("http://ictvonline.org/taxonomy/p/taxonomy-history?taxnode_id='+rtrim(tn.taxnode_id)+'","ICTVonline='+rtrim(tn.taxnode_id)+'")'
+	, history_url = '=HYPERLINK("https://ictv.global/taxonomy/taxondetails?taxnode_id='+rtrim(tn.taxnode_id)+'","ictv.global='+rtrim(tn.taxnode_id)+'")'
 	-- these columns are not currently released in the official MSL
 	-- ICTV does not OFFICIALLY track abbreviations 
 	/*, FYI_last_abbrev=isnull((
