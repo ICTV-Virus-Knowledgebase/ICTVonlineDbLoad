@@ -5,9 +5,9 @@ DELIMITER $$
 CREATE PROCEDURE QC_module_taxonomy_node_suffixes(IN filter VARCHAR(1000))
 BEGIN
     -- If no filter is provided or it's NULL/empty, set it to 'ERROR%'
-    IF filter IS NULL OR filter = '' THEN
-        SET filter = 'ERROR%';
-    END IF;
+--     IF filter IS NULL OR filter = '' THEN
+--         SET filter = 'ERROR%';
+--     END IF;
 
     SELECT
         'QC_module_taxonomy_node_suffixes' AS qc_module,

@@ -18,8 +18,6 @@ BEGIN
           AND ROUTINE_SCHEMA = DATABASE()
           AND ROUTINE_NAME NOT LIKE 'dt_%'
           AND ROUTINE_NAME NOT LIKE 'sp_%diagram%'
-          -- If module_filter is NULL or '', we still want to find all QC_module_*
-          -- by using '%' in the LIKE pattern. If not null or '', use it as given.
           AND ROUTINE_NAME LIKE CONCAT('QC_module_',
               CASE
                   WHEN module_filter IS NULL OR module_filter = '' THEN '%'
@@ -38,14 +36,8 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        -- Now decide what argument to pass to the submodule:
-        -- If module_filter is NULL or '', we call submodule with NULL 
-        -- This should trigger its own default logic (like 'ERROR%').
-        -- If module_filter is '%', submodule gets '%', returning "OK" records.
-        -- If module_filter is something else (e.g. 'taxonomy_node'), submodule gets that.
-
         IF module_filter IS NULL OR module_filter = '' THEN
-            SET sql_statement = CONCAT('CALL ', sp_name, '(NULL)');
+            SET sql_statement = CONCAT('CALL ', sp_name, '("ERROR%")');
         ELSE
             SET sql_statement = CONCAT('CALL ', sp_name, '("', module_filter, '")');
         END IF;
