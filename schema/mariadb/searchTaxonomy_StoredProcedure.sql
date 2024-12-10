@@ -39,12 +39,22 @@ BEGIN
         SET selectedMslRelease = currentMslRelease;
     END IF;
 
-    -- Search the taxonomy_node table
+    -- We need to replicate the logic for display_order. In SQL Server, it uses a subquery with DENSE_RANK
+    -- on siblings, then picks the corresponding taxnode_id.
+    -- In MariaDB, we can use a CTE or derived table. We'll use a CTE here.
+
+    WITH sibling_ranks AS (
+        SELECT 
+            s.taxnode_id,
+            s.parent_id,
+            s.level_id,
+            DENSE_RANK() OVER (PARTITION BY s.parent_id, s.level_id ORDER BY s.left_idx ASC) AS display_order
+        FROM taxonomy_node s
+        WHERE s.taxnode_id <> s.tree_id  -- exclude the tree node itself as in SQL Server logic
+    )
+
     SELECT
-        CAST(DENSE_RANK() OVER (
-            PARTITION BY tn.parent_id, tn.level_id
-            ORDER BY tn.left_idx ASC
-        ) AS SIGNED) AS display_order,
+        sr.display_order,
         tn.ictv_id AS ictv_id,
         REPLACE(IFNULL(tn.lineage, ''), ';', '>') AS lineage,
         tn.parent_id AS parent_taxnode_id,
@@ -75,12 +85,14 @@ BEGIN
     FROM taxonomy_node tn
     JOIN taxonomy_level tl ON tl.id = tn.level_id
     JOIN taxonomy_node tree ON tree.taxnode_id = tn.tree_id AND tree.msl_release_num IS NOT NULL
+    LEFT JOIN sibling_ranks sr ON sr.taxnode_id = tn.taxnode_id
+        AND sr.parent_id = tn.parent_id
+        AND sr.level_id = tn.level_id
     WHERE tn.cleaned_name LIKE CONCAT('%', filteredSearchText, '%')
       AND tn.is_hidden = 0
       AND tn.is_deleted = 0
       AND (includeAllReleases = TRUE OR tn.msl_release_num = selectedMslRelease)
       AND tn.msl_release_num <= currentMslRelease
-      AND tn.taxnode_id <> tn.tree_id  -- Exclude root nodes if necessary
     ORDER BY tn.tree_id DESC, tn.left_idx;
 
 END $$

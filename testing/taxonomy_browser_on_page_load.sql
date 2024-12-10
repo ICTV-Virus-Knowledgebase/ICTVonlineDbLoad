@@ -1,9 +1,7 @@
 USE ICTVonline39;
 
 --------------------------------------------------------------------------------------
--- lrm 12-4-2024
--- This query was captured on sql server profiler when the app was first opened.
--- It was then converted to mariadb. The original sql server version is at the bottom.
+-- This query was captured when Taxonomy Browser first loads.
 --------------------------------------------------------------------------------------
 
 -- Set parameters

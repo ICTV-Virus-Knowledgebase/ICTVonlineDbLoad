@@ -1,0 +1,10 @@
+USE ICTVonline39;
+
+-------------------------------------------------------------------------------------------
+-- These calls were captured by navigating to the Report Chapter page, navigating to
+-- whichever family you want, then selecting a virus under that.
+-------------------------------------------------------------------------------------------
+
+call getVirusIsolates(39, 0, 'aviadenovirus');
+
+call getVirusIsolates(39, 0, 'avipoxvirus');
