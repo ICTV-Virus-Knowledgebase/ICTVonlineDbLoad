@@ -5,7 +5,6 @@ MSSQL ICTVOnline: EXPORT PROTOCOL
 3. Use RDC mounting of MacOSX directory to copy *.utf8.txt back to
        Mac:Documents/ICTV/xfer/prod/export_msl/
 4. run push_to_box_rclone.sh
-   (which will run convert_terminators_msdos2osx.sh)
-5. run push_to_github.sh
-   (which copies to Mac:Documents/ICTV/ICTVonlineDbLoad/data/)
-6. go do git add/commit/push by hand
+   (which will run convert_terminators_msdos2osx.sh before hand)
+   (which will run push_to_git_repo.sh afterwards)
+5. go do git add/commit/push by hand

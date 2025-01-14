@@ -23,4 +23,4 @@ cp -a \
 #
 # copy to github, too
 #
-source ./push_to_github.sh
+source ./push_to_git_repo.sh
