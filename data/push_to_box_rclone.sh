@@ -20,3 +20,8 @@ rclone copy \
        --include "push_to_box_rclone.sh" \
        . \
        "box:/$TARGET"
+
+#
+# copy to github, too
+#
+source ./push_to_github.sh

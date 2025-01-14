@@ -20,3 +20,7 @@ cp -a \
    push_to_box_cp.sh \
    "/Users/curtish/box/$TARGET"
 
+#
+# copy to github, too
+#
+source ./push_to_github.sh
