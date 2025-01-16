@@ -1,4 +1,44 @@
--- taxonomy_node Foreign Keys
+
+-- taxonomy_level
+ALTER TABLE `taxonomy_level`
+  ADD CONSTRAINT `FK_taxonomy_level_taxonomy_level` 
+  FOREIGN KEY (`parent_id`) REFERENCES `taxonomy_level` (`id`);
+
+-- taxonomy_node_merge_split
+ALTER TABLE `taxonomy_node_merge_split`
+    ADD CONSTRAINT `FK_taxonomy_node_merge_split_taxonomy_node1` 
+    FOREIGN KEY (`next_ictv_id`) 
+    REFERENCES `taxonomy_node` (`taxnode_id`) 
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE;
+
+-- species_isolates
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_genome_coverage` 
+FOREIGN KEY (`genome_coverage`) 
+REFERENCES `taxonomy_genome_coverage` (`name`);
+
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_host_source` 
+FOREIGN KEY (`host_source`) 
+REFERENCES `taxonomy_host_source` (`host_source`);
+
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_molecule` 
+FOREIGN KEY (`molecule`) 
+REFERENCES `taxonomy_molecule` (`abbrev`);
+
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_node` 
+FOREIGN KEY (`taxnode_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`);
+
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_update_prev_taxnode_id` 
+FOREIGN KEY (`update_prev_taxnode_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`);
+
+-- taxonomy_node
 ALTER TABLE `taxonomy_node`
 ADD CONSTRAINT `FK_taxonomy_node_taxonomy_change_in`
 FOREIGN KEY (`in_change`)

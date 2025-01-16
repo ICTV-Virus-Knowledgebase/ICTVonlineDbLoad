@@ -1,2 +1,1 @@
-select count(*),should_be='154166' from taxonomy_node;
-
+SELECT COUNT(*) AS total_count, '154166' AS should_be FROM taxonomy_node;
