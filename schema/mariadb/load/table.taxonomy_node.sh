@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 #
-# run throught the steps to drop, create, load and QC taxonomy_node table
+# run through the steps to drop, create, load and QC
 #
-TDB="ICTVonline39_forProd"
 
-# mariadb -D $TDB -vvv --show-warnings < table.taxonomy_node.1.drop_create.sql
-# mariadb -D $TDB -vvv --show-warnings < table.taxonomy_node.2.load_data.sql
-# mariadb -D $TDB -vvv --show-warnings < table.taxonomy_node.3.add_fks.sql
-#
-# mariadb -D $TDB -vvv --show-warnings < table.taxonomy_node.5.qc_load.sql
+# store time it takes script to execute
+# SECONDS=0
+
+START_TIME=$(date +%s)
+
+# test database name on test.ictv.global
+ TDB="ICTVonline39_forProd"
+
+# new database name for ICTVonline39
+# TDB="ICTV_taxonomy"
+
+# temp database for ICTV_taxonomy for update
+# TDB="ICTV_taxonomy_temp"
 
 # drop tables
 mariadb -D $TDB -vvv --show-warnings < drop_tables.sql
@@ -45,3 +52,14 @@ mariadb -D $TDB -vvv --show-warnings < add_indexes.sql
 
 # add foreign keys to tables
 mariadb -D $TDB -vvv --show-warnings < add_foreign_keys.sql
+
+# Execution time:
+# echo "Total execution time: $SECONDS seconds"
+
+END_TIME=$(date +%s)
+ELAPSED_TIME=$((END_TIME - START_TIME))
+
+MINUTES=$((ELAPSED_TIME / 60))
+SECONDS=$((ELAPSED_TIME % 60))
+
+echo "Total execution time: ${MINUTES} minutes and ${SECONDS} seconds"

@@ -12,3 +12,7 @@ CREATE INDEX abbrev ON taxonomy_molecule (abbrev);
 
 -- taxonomy_genome_coverage
 CREATE INDEX name ON taxonomy_genome_coverage (name);
+
+-- taxonomy_node_merge_split
+CREATE INDEX taxonomy_node_merge_split_next_ictv_id_IDX ON taxonomy_node_merge_split (next_ictv_id);
+CREATE INDEX taxonomy_node_merge_split_prev_ictv_id_IDX ON taxonomy_node_merge_split (prev_ictv_id);
