@@ -26,7 +26,8 @@ CREATE TABLE `species_isolates` (
       THEN LEFT(`isolate_names`, LOCATE(';', `isolate_names`) - 1) 
       ELSE `isolate_names` 
     END
-  ) PERSISTENT
+  ) PERSISTENT,
+  `notes` TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Adding Foreign Key Constraints
