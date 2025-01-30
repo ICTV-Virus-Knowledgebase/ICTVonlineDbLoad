@@ -12,8 +12,6 @@ CREATE TABLE `taxonomy_node_delta`(
     `is_new` INT NOT NULL DEFAULT 0,
     `is_deleted` INT NOT NULL DEFAULT 0,
     `is_now_type` INT NOT NULL DEFAULT 0,
-    `is_lineage_updated` INT NOT NULL DEFAULT 0,
-    `msl` INT NOT NULL,
     `tag_csv` TEXT AS (CONCAT(
         IF(`is_merged`=1, 'Merged,', ''),
         IF(`is_split`=1, 'Split,', ''),
@@ -25,6 +23,8 @@ CREATE TABLE `taxonomy_node_delta`(
         IF(`is_demoted`=1, 'Demoted,', ''),
         IF(`is_now_type`=1, 'Assigned as Type Species,', IF(`is_now_type`=-1, 'Removed as Type Species,', ''))
     )),
+    `is_lineage_updated` INT NOT NULL DEFAULT 0,
+    `msl` INT NOT NULL,
     `tag_csv2` TEXT AS (CONCAT(
         IF(`is_merged`=1, 'Merged,', ''),
         IF(`is_split`=1, 'Split,', ''),

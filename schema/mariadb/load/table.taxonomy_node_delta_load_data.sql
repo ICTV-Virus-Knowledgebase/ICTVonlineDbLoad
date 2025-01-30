@@ -19,6 +19,15 @@ IGNORE 1 ROWS
   is_new,
   is_deleted,
   is_now_type,
+  @dummy_tag_csv,          
   is_lineage_updated,
-  msl
-);
+  msl,
+  @dummy_tag_csv2,         
+  @dummy_tag_csv_min
+)
+SET 
+  tag_csv = NULL,
+  tag_csv2 = NULL,
+  tag_csv_min = NULL;
+
+SELECT COUNT(*) AS total_count, '153849' AS should_be FROM taxonomy_node_delta;

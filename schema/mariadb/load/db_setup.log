@@ -1,0 +1,5766 @@
+--------------
+SET foreign_key_checks = 0
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+DROP TABLE IF EXISTS `species_isolates`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.species_isolates'
+--------------
+DROP TABLE IF EXISTS `taxonomy_change_in`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_change_in'
+--------------
+DROP TABLE IF EXISTS `taxonomy_change_out`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_change_out'
+--------------
+DROP TABLE IF EXISTS `taxonomy_genome_coverage`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_genome_coverage'
+--------------
+DROP TABLE IF EXISTS `taxonomy_host_source`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_host_source'
+--------------
+DROP TABLE IF EXISTS `taxonomy_json`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_json'
+--------------
+DROP TABLE IF EXISTS `taxonomy_json_rank`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_json_rank'
+--------------
+DROP TABLE IF EXISTS `taxonomy_level`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_level'
+--------------
+DROP TABLE IF EXISTS `taxonomy_molecule`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_molecule'
+--------------
+DROP TABLE IF EXISTS `taxonomy_node`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_node'
+--------------
+DROP TABLE IF EXISTS `taxonomy_node_delta`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_node_delta'
+--------------
+DROP TABLE IF EXISTS `taxonomy_node_merge_split`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_node_merge_split'
+--------------
+DROP TABLE IF EXISTS `taxonomy_toc`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.006 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.taxonomy_toc'
+--------------
+DROP TABLE IF EXISTS `virus_prop`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.005 sec)
+
+Note (Code 1051): Unknown table 'ictv_taxonomy.virus_prop'
+--------------
+SET foreign_key_checks = 1
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_change_in` (
+  `change` VARCHAR(10) NOT NULL,
+  `notes` TEXT,
+  PRIMARY KEY (`change`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.012 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_change_out` (
+  `change` VARCHAR(10) NOT NULL,
+  `notes` TEXT,
+  PRIMARY KEY (`change`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_genome_coverage` (
+  `genome_coverage` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(50),
+  `priority` INT,
+  PRIMARY KEY (`genome_coverage`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_host_source` (
+  `host_source` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`host_source`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_level` (
+  `id` INT NOT NULL,
+  `parent_id` INT,
+  `name` VARCHAR(255) NOT NULL,
+  `plural` VARCHAR(50),
+  `suffix` VARCHAR(50),
+  `suffix_viroid` VARCHAR(50),
+  `suffix_nuc_acid` VARCHAR(50),
+  `suffix_viriform` VARCHAR(50),
+  `notes` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_molecule` (
+  `id` INT NOT NULL,
+  `abbrev` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `balt_group` INT,
+  `balt_roman` VARCHAR(5),
+  `description` TEXT,
+  `left_idx` INT,
+  `right_idx` INT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_toc`(
+    `tree_id` INT NOT NULL,
+    `msl_release_num` INT,
+    `comments` TEXT,
+    UNIQUE INDEX `IX_taxonomy_toc_tree_id` (`tree_id`),
+    UNIQUE INDEX `PK_taxonomy_toc` (`tree_id`, `msl_release_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.011 sec)
+
+Bye
+--------------
+CREATE TABLE `species_isolates` (
+  `isolate_id` INT AUTO_INCREMENT NOT NULL,
+  `taxnode_id` INT,
+  `species_sort` INT,
+  `isolate_sort` INT NOT NULL DEFAULT 1,
+  `species_name` VARCHAR(100) NOT NULL,
+  `isolate_type` CHAR(1) NOT NULL,
+  `isolate_names` VARCHAR(500),
+  `isolate_abbrevs` VARCHAR(255),
+  `isolate_designation` VARCHAR(500),
+  `genbank_accessions` VARCHAR(4000),
+  `refseq_accessions` VARCHAR(4000),
+  `genome_coverage` VARCHAR(50),
+  `molecule` VARCHAR(50),
+  `host_source` VARCHAR(50),
+  `refseq_organism` VARCHAR(255),
+  `refseq_taxids` VARCHAR(4000),
+  `update_change` VARCHAR(50),
+  `update_prev_species` VARCHAR(100),
+  `update_prev_taxnode_id` INT,
+  `update_change_proposal` VARCHAR(512),
+  PRIMARY KEY (`isolate_id`),
+  `_isolate_name` VARCHAR(500) GENERATED ALWAYS AS (
+    CASE 
+      WHEN `isolate_names` LIKE '%;%' 
+      THEN LEFT(`isolate_names`, LOCATE(';', `isolate_names`) - 1) 
+      ELSE `isolate_names` 
+    END
+  ) PERSISTENT,
+  `notes` TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_node` (
+  `taxnode_id` INT NOT NULL,
+  `parent_id` INT,
+  `tree_id` INT NOT NULL,
+  `msl_release_num` INT,
+  `level_id` INT,
+  `name` VARCHAR(100),
+  `ictv_id` INT,
+  `molecule_id` INT,
+  `abbrev_csv` LONGTEXT,
+  `genbank_accession_csv` LONGTEXT,
+  `genbank_refseq_accession_csv` LONGTEXT,
+  `refseq_accession_csv` LONGTEXT,
+  `isolate_csv` LONGTEXT,
+  `notes` LONGTEXT,
+  `is_ref` INT NOT NULL,
+  `is_official` INT NOT NULL,
+  `is_hidden` INT NOT NULL,
+  `is_deleted` INT NOT NULL,
+  `is_deleted_next_year` INT NOT NULL,
+  `is_typo` INT NOT NULL,
+  `is_renamed_next_year` INT NOT NULL,
+  `is_obsolete` INT NOT NULL,
+  `in_change` VARCHAR(10),
+  `in_target` VARCHAR(255),
+  `in_filename` VARCHAR(255),
+  `in_notes` LONGTEXT,
+  `out_change` VARCHAR(10),
+  `out_target` VARCHAR(255),
+  `out_filename` VARCHAR(255),
+  `out_notes` LONGTEXT,
+  `start_num_sort` INT,
+  `row_num` VARCHAR(25),
+  `filename` VARCHAR(255),
+  `xref` VARCHAR(255),
+  `realm_id` INT,
+  `realm_kid_ct` INT,
+  `realm_desc_ct` INT,
+  `subrealm_id` INT,
+  `subrealm_kid_ct` INT,
+  `subrealm_desc_ct` INT,
+  `kingdom_id` INT,
+  `kingdom_kid_ct` INT,
+  `kingdom_desc_ct` INT,
+  `subkingdom_id` INT,
+  `subkingdom_kid_ct` INT,
+  `subkingdom_desc_ct` INT,
+  `phylum_id` INT,
+  `phylum_kid_ct` INT,
+  `phylum_desc_ct` INT,
+  `subphylum_id` INT,
+  `subphylum_kid_ct` INT,
+  `subphylum_desc_ct` INT,
+  `class_id` INT,
+  `class_kid_ct` INT,
+  `class_desc_ct` INT,
+  `subclass_id` INT,
+  `subclass_kid_ct` INT,
+  `subclass_desc_ct` INT,
+  `order_id` INT,
+  `order_kid_ct` INT,
+  `order_desc_ct` INT,
+  `suborder_id` INT,
+  `suborder_kid_ct` INT,
+  `suborder_desc_ct` INT,
+  `family_id` INT,
+  `family_kid_ct` INT,
+  `family_desc_ct` INT,
+  `subfamily_id` INT,
+  `subfamily_kid_ct` INT,
+  `subfamily_desc_ct` INT,
+  `genus_id` INT,
+  `genus_kid_ct` INT,
+  `genus_desc_ct` INT,
+  `subgenus_id` INT,
+  `subgenus_kid_ct` INT,
+  `subgenus_desc_ct` INT,
+  `species_id` INT,
+  `species_kid_ct` INT,
+  `species_desc_ct` INT,
+  `taxa_kid_cts` VARCHAR(200),
+  `taxa_desc_cts` VARCHAR(200),
+  `inher_molecule_id` INT,
+  `left_idx` INT,
+  `right_idx` INT,
+  `node_depth` INT,
+  `lineage` VARCHAR(500),
+  `cleaned_name` VARCHAR(100) GENERATED ALWAYS AS (
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    REPLACE(REPLACE(`name`, 'í', 'i'), 'é', 'e'), 'ó', 'o'), 'ú', 'u'), 'á', 'a'),
+    'ì', 'i'), 'è', 'e'), 'ò', 'o'), 'ù', 'u'), 'à', 'a'), 'î', 'i'), 'ê', 'e'),
+    'ô', 'o'), 'û', 'u'), 'â', 'a'), 'ü', 'u'), 'ö', 'o'), 'ï', 'i'), 'ë', 'e'),
+    'ä', 'a'), 'ç', 'c'), 'ñ', 'n'), '‘', ''''), '’', ''''), '`', ' '), '  ', ' '),
+    'ā', 'a'), 'ī', 'i'), 'ĭ', 'i'), 'ǎ', 'a'), 'ē', 'e'), 'ō', 'o')
+  ) PERSISTENT,
+  `cleaned_problem` VARCHAR(100) GENERATED ALWAYS AS (
+    CASE 
+      WHEN INSTR(`name`, 'í') > 0 THEN 'í (accented i)'
+      WHEN INSTR(`name`, 'é') > 0 THEN 'é (accented e)'
+      WHEN INSTR(`name`, 'ó') > 0 THEN 'ó (accented o)'
+      WHEN INSTR(`name`, 'ú') > 0 THEN 'ú (accented u)'
+      WHEN INSTR(`name`, 'á') > 0 THEN 'á (accented a)'
+      WHEN INSTR(`name`, 'ì') > 0 THEN 'ì (accented i)'
+      WHEN INSTR(`name`, 'è') > 0 THEN 'è (accented e)'
+      WHEN INSTR(`name`, 'ò') > 0 THEN 'ò (accented o)'
+      WHEN INSTR(`name`, 'ù') > 0 THEN 'ù (accented u)'
+      WHEN INSTR(`name`, 'à') > 0 THEN 'à (accented a)'
+      WHEN INSTR(`name`, 'î') > 0 THEN 'î (accented i)'
+      WHEN INSTR(`name`, 'ê') > 0 THEN 'ê (accented e)'
+      WHEN INSTR(`name`, 'ô') > 0 THEN 'ô (accented o)'
+      WHEN INSTR(`name`, 'û') > 0 THEN 'û (accented u)'
+      WHEN INSTR(`name`, 'â') > 0 THEN 'â (accented a)'
+      WHEN INSTR(`name`, 'ü') > 0 THEN 'ü (accented u)'
+      WHEN INSTR(`name`, 'ö') > 0 THEN 'ö (accented o)'
+      WHEN INSTR(`name`, 'ï') > 0 THEN 'ï (accented i)'
+      WHEN INSTR(`name`, 'ë') > 0 THEN 'ë (accented e)'
+      WHEN INSTR(`name`, 'ä') > 0 THEN 'ä (accented a)'
+      WHEN INSTR(`name`, 'ç') > 0 THEN 'ç (accented c)'
+      WHEN INSTR(`name`, 'ñ') > 0 THEN 'ñ (accented n)'
+      WHEN INSTR(`name`, '‘') > 0 THEN '‘ (Microsoft curvy open single-quote)'
+      WHEN INSTR(`name`, '’') > 0 THEN '’ (Microsoft curvy close single-quote)'
+      WHEN INSTR(`name`, '`') > 0 THEN '` (ASCII back-quote)'
+      WHEN INSTR(`name`, '  ') > 0 THEN '(double space)'
+      WHEN INSTR(`name`, 'ā') > 0 THEN 'a-macron'
+      WHEN INSTR(`name`, 'ī') > 0 THEN 'i-macron'
+      WHEN INSTR(`name`, 'ĭ') > 0 THEN 'i-breve'
+      WHEN INSTR(`name`, 'ǎ') > 0 THEN 'a-caron'
+      WHEN INSTR(`name`, 'ē') > 0 THEN 'e-macron'
+      WHEN INSTR(`name`, 'ō') > 0 THEN 'o-macron'
+    END
+  ) PERSISTENT,
+  `flags` VARCHAR(255) GENERATED ALWAYS AS (
+    CONCAT(
+      CASE WHEN `tree_id` = `taxnode_id` THEN 'root;' ELSE '' END,
+      CASE WHEN `is_hidden` = 1 THEN 'hidden;' ELSE '' END,
+      CASE WHEN `is_deleted` = 1 THEN 'deleted;' ELSE '' END,
+      CASE WHEN `is_deleted_next_year` = 1 THEN 'removed_next_year;' ELSE '' END,
+      CASE WHEN `is_typo` = 1 THEN 'typo;' ELSE '' END,
+      CASE WHEN `is_renamed_next_year` = 1 THEN 'renamed_next_year;' ELSE '' END,
+      CASE WHEN `is_obsolete` = 1 THEN 'obsolete;' ELSE '' END
+    )
+  ) PERSISTENT,
+  `_numKids` INT GENERATED ALWAYS AS (
+    ((`right_idx` - `left_idx`) - 1) / 2
+  ) PERSISTENT,
+  `_out_target_parent` VARCHAR(255) GENERATED ALWAYS AS (
+    RTRIM(LTRIM(REVERSE(SUBSTRING(REPLACE(REVERSE(`out_target`), ';', REPEAT(' ', 1000)), 500, 1500))))
+  ) PERSISTENT,
+  `_out_target_name` VARCHAR(255) GENERATED ALWAYS AS (
+    RTRIM(LTRIM(REVERSE(SUBSTRING(REPLACE(REVERSE(`out_target`), ';', REPEAT(' ', 1000)), 0, 500))))
+  ) PERSISTENT,
+  `exemplar_name` LONGTEXT,
+  `genome_coverage` VARCHAR(50),
+  `host_source` VARCHAR(50),
+  PRIMARY KEY (`taxnode_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.011 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_node_merge_split`(
+    `prev_ictv_id` INT NOT NULL,
+    `next_ictv_id` INT NOT NULL,
+    `is_merged` INT NOT NULL,
+    `is_split` INT NOT NULL,
+    `dist` INT NOT NULL,
+    `rev_count` INT NOT NULL,
+    PRIMARY KEY (`prev_ictv_id`, `next_ictv_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_node_delta`(
+    `prev_taxid` INT NULL DEFAULT NULL,
+    `new_taxid` INT NULL DEFAULT NULL,
+    `proposal` VARCHAR(255) NULL DEFAULT NULL,
+    `notes` VARCHAR(255) NULL,
+    `is_merged` INT NOT NULL DEFAULT 0,
+    `is_split` INT NOT NULL DEFAULT 0,
+    `is_moved` INT NOT NULL DEFAULT 0,
+    `is_promoted` INT NOT NULL DEFAULT 0,
+    `is_demoted` INT NOT NULL DEFAULT 0,
+    `is_renamed` INT NOT NULL DEFAULT 0,
+    `is_new` INT NOT NULL DEFAULT 0,
+    `is_deleted` INT NOT NULL DEFAULT 0,
+    `is_now_type` INT NOT NULL DEFAULT 0,
+    `tag_csv` TEXT AS (CONCAT(
+        IF(`is_merged`=1, 'Merged,', ''),
+        IF(`is_split`=1, 'Split,', ''),
+        IF(`is_renamed`=1, 'Renamed,', ''),
+        IF(`is_new`=1, 'New,', ''),
+        IF(`is_deleted`=1, 'Abolished,', ''),
+        IF(`is_moved`=1, 'Moved,', ''),
+        IF(`is_promoted`=1, 'Promoted,', ''),
+        IF(`is_demoted`=1, 'Demoted,', ''),
+        IF(`is_now_type`=1, 'Assigned as Type Species,', IF(`is_now_type`=-1, 'Removed as Type Species,', ''))
+    )),
+    `is_lineage_updated` INT NOT NULL DEFAULT 0,
+    `msl` INT NOT NULL,
+    `tag_csv2` TEXT AS (CONCAT(
+        IF(`is_merged`=1, 'Merged,', ''),
+        IF(`is_split`=1, 'Split,', ''),
+        IF(`is_renamed`=1, 'Renamed,', ''),
+        IF(`is_new`=1, 'New,', ''),
+        IF(`is_deleted`=1, 'Abolished,', ''),
+        IF(`is_moved`=1, 'Moved,', ''),
+        IF(`is_promoted`=1, 'Promoted,', ''),
+        IF(`is_demoted`=1, 'Demoted,', ''),
+        IF(`is_now_type`=1, 'Assigned as Type Species,', IF(`is_now_type`=-1, 'Removed as Type Species,', '')),
+        IF(`is_lineage_updated`=1, 'LineageUpdated,', '')
+    )) PERSISTENT,
+    `tag_csv_min` TEXT AS (CONCAT(
+        IF(`is_merged`=1, 'Merged,', ''),
+        IF(`is_split`=1, 'Split,', ''),
+        IF(`is_renamed`=1, 'Renamed,', ''),
+        IF(`is_new`=1, 'New,', ''),
+        IF(`is_deleted`=1, 'Abolished,', ''),
+        IF(`is_moved`=1, 'Moved,', ''),
+        IF(`is_promoted`=1, 'Promoted,', ''),
+        IF(`is_demoted`=1, 'Demoted,', '')
+    )) PERSISTENT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.010 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_json_rank` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `level_id` INT NOT NULL,
+  `rank_index` INT NOT NULL,
+  `rank_name` VARCHAR(50) NOT NULL,
+  `tree_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE `UK_taxonomy_json_rank` (`level_id`, `tree_id`),
+  UNIQUE `UK_taxonomy_json_rank_rank_tree` (`rank_index`, `tree_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.013 sec)
+
+Bye
+--------------
+CREATE TABLE `taxonomy_json` (
+  `id` INT AUTO_INCREMENT NOT NULL,
+  `taxnode_id` INT,
+  `child_counts` VARCHAR(1000),
+  `child_json` LONGTEXT,
+  `has_assigned_siblings` TINYINT(1),
+  `has_species` TINYINT(1),
+  `has_unassigned_siblings` CHAR(10),
+  `is_ghost_node` TINYINT(1) NOT NULL,
+  `json` LONGTEXT,
+  `json_lineage` LONGTEXT,
+  `parent_distance` INT,
+  `parent_id` INT,
+  `parent_taxnode_id` INT,
+  `rank_index` INT NOT NULL,
+  `source` CHAR(1),
+  `species_json` LONGTEXT,
+  `tree_id` INT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_change_in.utf8.osx.txt'
+INTO TABLE taxonomy_change_in
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+`change`,
+notes
+)
+--------------
+
+Query OK, 2 rows affected (0.001 sec)
+Records: 2  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '2' AS should_be FROM taxonomy_change_in
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|           2 | 2         |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_change_out.utf8.osx.txt'
+INTO TABLE taxonomy_change_out
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+`change`,
+notes
+)
+--------------
+
+Query OK, 7 rows affected (0.001 sec)
+Records: 7  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '7' AS should_be FROM taxonomy_change_out
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|           7 | 7         |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_genome_coverage.utf8.osx.txt'
+INTO TABLE taxonomy_genome_coverage
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+genome_coverage,
+name,
+priority
+)
+--------------
+
+Query OK, 4 rows affected (0.001 sec)
+Records: 4  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '4' AS should_be FROM taxonomy_genome_coverage
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|           4 | 4         |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_host_source.utf8.osx.txt'
+INTO TABLE taxonomy_host_source
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+host_source
+)
+--------------
+
+Query OK, 26 rows affected (0.001 sec)
+Records: 26  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '26' AS should_be FROM taxonomy_host_source
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|          26 | 26        |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_level.utf8.osx.txt'
+INTO TABLE taxonomy_level
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  id,
+  parent_id,
+  `name`,
+  plural,
+  suffix,
+  suffix_viroid,
+  suffix_nuc_acid,
+  suffix_viriform,
+  notes
+)
+--------------
+
+Query OK, 16 rows affected (0.001 sec)
+Records: 16  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '16' AS should_be FROM taxonomy_level
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|          16 | 16        |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_molecule.utf8.osx.txt'
+INTO TABLE taxonomy_molecule
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  id,
+  abbrev,
+  `name`,
+  balt_group,
+  balt_roman,
+  `description`,
+  left_idx,
+  right_idx
+)
+--------------
+
+Query OK, 16 rows affected (0.001 sec)
+Records: 16  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '16' AS should_be FROM taxonomy_molecule
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|          16 | 16        |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_toc.utf8.osx.txt'
+INTO TABLE taxonomy_toc
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  tree_id,
+  msl_release_num,
+  comments
+)
+--------------
+
+Query OK, 41 rows affected (0.001 sec)
+Records: 41  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '41' AS should_be FROM taxonomy_toc
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|          41 | 41        |
++-------------+-----------+
+1 row in set (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_node_mariadb_etl.utf8.osx.txt'
+INTO TABLE taxonomy_node
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  taxnode_id,
+  parent_id,
+  tree_id,
+  msl_release_num,
+  level_id,
+  name,
+  ictv_id,
+  molecule_id,
+  abbrev_csv,
+  genbank_accession_csv,
+  genbank_refseq_accession_csv,
+  refseq_accession_csv,
+  isolate_csv,
+  notes,
+  is_ref,
+  is_official,
+  is_hidden,
+  is_deleted,
+  is_deleted_next_year,
+  is_typo,
+  is_renamed_next_year,
+  is_obsolete,
+  in_change,
+  in_target,
+  in_filename,
+  in_notes,
+  out_change,
+  out_target,
+  out_filename,
+  out_notes,
+  start_num_sort,
+  row_num,
+  filename,
+  xref,
+  realm_id,
+  realm_kid_ct,
+  realm_desc_ct,
+  subrealm_id,
+  subrealm_kid_ct,
+  subrealm_desc_ct,
+  kingdom_id,
+  kingdom_kid_ct,
+  kingdom_desc_ct,
+  subkingdom_id,
+  subkingdom_kid_ct,
+  subkingdom_desc_ct,
+  phylum_id,
+  phylum_kid_ct,
+  phylum_desc_ct,
+  subphylum_id,
+  subphylum_kid_ct,
+  subphylum_desc_ct,
+  class_id,
+  class_kid_ct,
+  class_desc_ct,
+  subclass_id,
+  subclass_kid_ct,
+  subclass_desc_ct,
+  order_id,
+  order_kid_ct,
+  order_desc_ct,
+  suborder_id,
+  suborder_kid_ct,
+  suborder_desc_ct,
+  family_id,
+  family_kid_ct,
+  family_desc_ct,
+  subfamily_id,
+  subfamily_kid_ct,
+  subfamily_desc_ct,
+  genus_id,
+  genus_kid_ct,
+  genus_desc_ct,
+  subgenus_id,
+  subgenus_kid_ct,
+  subgenus_desc_ct,
+  species_id,
+  species_kid_ct,
+  species_desc_ct,
+  taxa_kid_cts,
+  taxa_desc_cts,
+  inher_molecule_id,
+  left_idx,
+  right_idx,
+  node_depth,
+  lineage,
+  exemplar_name,
+  genome_coverage,
+  host_source
+)
+--------------
+
+Query OK, 154166 rows affected (4.969 sec)
+Records: 154166  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '154166' AS should_be FROM taxonomy_node
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|      154166 | 154166    |
++-------------+-----------+
+1 row in set (0.074 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//species_isolates.utf8.osx.txt'
+INTO TABLE species_isolates
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  isolate_id,
+  taxnode_id,
+  species_sort,
+  isolate_sort,
+  species_name,
+  isolate_type,
+  isolate_names,
+  @computed_col,               
+  isolate_abbrevs,
+  isolate_designation,
+  genbank_accessions,
+  refseq_accessions,
+  genome_coverage,
+  molecule,
+  host_source,
+  refseq_organism,
+  refseq_taxids,
+  update_change,
+  update_prev_species,
+  update_prev_taxnode_id,
+  update_change_proposal,
+  notes
+)
+--------------
+
+Query OK, 16521 rows affected (0.251 sec)
+Records: 16521  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '16521' AS should_be FROM species_isolates
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|       16521 | 16521     |
++-------------+-----------+
+1 row in set (0.004 sec)
+
+--------------
+SET @autoIncVal := (
+  SELECT COALESCE(MAX(isolate_id), 0) + 1
+  FROM species_isolates
+)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+SET @sql = CONCAT('ALTER TABLE species_isolates AUTO_INCREMENT = ', @autoIncVal)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+PREPARE st FROM @sql
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+Statement prepared
+
+--------------
+EXECUTE st
+--------------
+
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+DEALLOCATE PREPARE st
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_node_merge_split.utf8.osx.txt'
+INTO TABLE taxonomy_node_merge_split
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  prev_ictv_id,
+  next_ictv_id,
+  is_merged,
+  is_split,
+  dist,
+  rev_count
+)
+--------------
+
+Query OK, 37475 rows affected (0.168 sec)
+Records: 37475  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '37475' AS should_be FROM taxonomy_node_merge_split
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|       37475 | 37475     |
++-------------+-----------+
+1 row in set (0.005 sec)
+
+Bye
+--------------
+LOAD DATA LOCAL INFILE '../../../data//taxonomy_node_delta.utf8.osx.txt'
+INTO TABLE taxonomy_node_delta
+FIELDS TERMINATED BY '\t'
+OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(
+  prev_taxid,
+  new_taxid,
+  proposal,
+  notes,
+  is_merged,
+  is_split,
+  is_moved,
+  is_promoted,
+  is_demoted,
+  is_renamed,
+  is_new,
+  is_deleted,
+  is_now_type,
+  @dummy_tag_csv,          
+  is_lineage_updated,
+  msl,
+  @dummy_tag_csv2,         
+  @dummy_tag_csv_min
+)
+SET 
+  tag_csv = NULL,
+  tag_csv2 = NULL,
+  tag_csv_min = NULL
+--------------
+
+Query OK, 153849 rows affected (1.138 sec)
+Records: 153849  Deleted: 0  Skipped: 0  Warnings: 0
+
+--------------
+SELECT COUNT(*) AS total_count, '153849' AS should_be FROM taxonomy_node_delta
+--------------
+
++-------------+-----------+
+| total_count | should_be |
++-------------+-----------+
+|      153849 | 153849    |
++-------------+-----------+
+1 row in set (0.054 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_node_names`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_node_names'
+--------------
+CREATE VIEW `taxonomy_node_names` AS
+SELECT 
+    
+    tn.*,
+    
+    tn.`msl_release_num` AS `msl`,
+    
+    COALESCE(`rank`.`name`, '') AS `rank`,
+    COALESCE(`tree`.`name`, '') AS `tree`,
+    COALESCE(`realm`.`name`, '') AS `realm`,
+    COALESCE(`subrealm`.`name`, '') AS `subrealm`,
+    COALESCE(`kingdom`.`name`, '') AS `kingdom`,
+    COALESCE(`subkingdom`.`name`, '') AS `subkingdom`,
+    COALESCE(`phylum`.`name`, '') AS `phylum`,
+    COALESCE(`subphylum`.`name`, '') AS `subphylum`,
+    COALESCE(`class`.`name`, '') AS `class`,
+    COALESCE(`subclass`.`name`, '') AS `subclass`,
+    COALESCE(`order`.`name`, '') AS `order`,
+    COALESCE(`suborder`.`name`, '') AS `suborder`,
+    COALESCE(`family`.`name`, '') AS `family`,
+    COALESCE(`subfamily`.`name`, '') AS `subfamily`,
+    COALESCE(`genus`.`name`, '') AS `genus`,
+    COALESCE(`subgenus`.`name`, '') AS `subgenus`,
+    COALESCE(`species`.`name`, '') AS `species`,
+    COALESCE(mol.`abbrev`, '') AS `molecule`,
+    COALESCE(imol.`abbrev`, '') AS `inher_molecule`,
+    COALESCE(gcov.`name`, '') AS `genome_coverage_name`
+FROM 
+    taxonomy_node tn
+
+LEFT OUTER JOIN taxonomy_level `rank` ON `rank`.`id` = tn.`level_id`
+LEFT OUTER JOIN taxonomy_node `tree` ON `tree`.`taxnode_id` = tn.`tree_id`
+LEFT OUTER JOIN taxonomy_node `realm` ON `realm`.`taxnode_id` = tn.`realm_id`
+LEFT OUTER JOIN taxonomy_node `subrealm` ON `subrealm`.`taxnode_id` = tn.`subrealm_id`
+LEFT OUTER JOIN taxonomy_node `kingdom` ON `kingdom`.`taxnode_id` = tn.`kingdom_id`
+LEFT OUTER JOIN taxonomy_node `subkingdom` ON `subkingdom`.`taxnode_id` = tn.`subkingdom_id`
+LEFT OUTER JOIN taxonomy_node `phylum` ON `phylum`.`taxnode_id` = tn.`phylum_id`
+LEFT OUTER JOIN taxonomy_node `subphylum` ON `subphylum`.`taxnode_id` = tn.`subphylum_id`
+LEFT OUTER JOIN taxonomy_node `class` ON `class`.`taxnode_id` = tn.`class_id`
+LEFT OUTER JOIN taxonomy_node `subclass` ON `subclass`.`taxnode_id` = tn.`subclass_id`
+LEFT OUTER JOIN taxonomy_node `order` ON `order`.`taxnode_id` = tn.`order_id`
+LEFT OUTER JOIN taxonomy_node `suborder` ON `suborder`.`taxnode_id` = tn.`suborder_id`
+LEFT OUTER JOIN taxonomy_node `family` ON `family`.`taxnode_id` = tn.`family_id`
+LEFT OUTER JOIN taxonomy_node `subfamily` ON `subfamily`.`taxnode_id` = tn.`subfamily_id`
+LEFT OUTER JOIN taxonomy_node `genus` ON `genus`.`taxnode_id` = tn.`genus_id`
+LEFT OUTER JOIN taxonomy_node `subgenus` ON `subgenus`.`taxnode_id` = tn.`subgenus_id`
+LEFT OUTER JOIN taxonomy_node `species` ON `species`.`taxnode_id` = tn.`species_id`
+
+LEFT OUTER JOIN taxonomy_molecule mol ON mol.`id` = tn.`molecule_id`
+LEFT OUTER JOIN taxonomy_molecule imol ON imol.`id` = tn.`inher_molecule_id`
+LEFT OUTER JOIN taxonomy_genome_coverage gcov ON gcov.`genome_coverage` = tn.`genome_coverage`
+
+WHERE 
+    tn.`is_deleted` = 0 
+    AND tn.`is_hidden` = 0 
+    AND tn.`is_obsolete` = 0
+--------------
+
+Query OK, 0 rows affected (0.008 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_node_changes`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_node_changes'
+--------------
+CREATE VIEW `taxonomy_node_changes` AS
+SELECT
+    bone.ictv_id,
+    bone.msl,
+    nt.next_tag,
+    nt.next_tag_ct,
+    n.left_idx,
+    n.taxnode_id,
+    n.rank,
+    n.name,
+    pt.prev_tag,
+    pt.prev_tag_ct
+FROM
+    (
+        SELECT 
+            ids.ictv_id,
+            msl.msl
+        FROM (
+            SELECT ictv_id
+            FROM taxonomy_node_names
+            WHERE msl IS NOT NULL
+            GROUP BY ictv_id
+        ) AS ids
+        CROSS JOIN (
+            SELECT msl_release_num AS msl
+            FROM taxonomy_toc
+            WHERE msl_release_num IS NOT NULL
+            GROUP BY msl_release_num
+        ) AS msl
+    ) AS bone
+LEFT OUTER JOIN taxonomy_node_names n 
+    ON n.msl_release_num = bone.msl 
+    AND n.ictv_id = bone.ictv_id
+LEFT JOIN (
+    SELECT
+        sub.prev_taxid AS taxnode_id,
+        GROUP_CONCAT(sub.ct_tag ORDER BY sub.tag_csv_min SEPARATOR '|') AS next_tag,
+        SUM(sub.cnt) AS next_tag_ct
+    FROM (
+        SELECT
+            d.prev_taxid,
+            d.tag_csv_min,
+            COUNT(*) AS cnt,
+            CONCAT(
+                LEFT(d.tag_csv_min, CASE WHEN d.tag_csv_min = '' THEN 1 ELSE LENGTH(d.tag_csv_min) - 1 END),
+                CASE WHEN COUNT(*) > 1 THEN CONCAT('(N=', COUNT(*), ')') ELSE '' END
+            ) AS ct_tag
+        FROM taxonomy_node_delta d
+        GROUP BY d.prev_taxid, d.tag_csv_min
+    ) sub
+    GROUP BY sub.prev_taxid
+) AS nt ON nt.taxnode_id = n.taxnode_id
+LEFT JOIN (
+    SELECT
+        sub.new_taxid AS taxnode_id,
+        REPLACE(
+            GROUP_CONCAT(sub.ct_tag ORDER BY sub.tag_csv_min SEPARATOR '|'),
+            ',(',
+            '('
+        ) AS prev_tag,
+        SUM(sub.cnt) AS prev_tag_ct
+    FROM (
+        SELECT
+            d.new_taxid,
+            d.tag_csv_min,
+            COUNT(*) AS cnt,
+            CONCAT(
+                LEFT(d.tag_csv_min, CASE WHEN d.tag_csv_min = '' THEN 1 ELSE LENGTH(d.tag_csv_min) - 1 END),
+                CASE WHEN COUNT(*) > 1 THEN CONCAT('(N=', COUNT(*), ')') ELSE '' END
+            ) AS ct_tag
+        FROM taxonomy_node_delta d
+        GROUP BY d.new_taxid, d.tag_csv_min
+    ) sub
+    GROUP BY sub.new_taxid
+) AS pt ON pt.taxnode_id = n.taxnode_id
+--------------
+
+Query OK, 0 rows affected (0.009 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `MSL_export_fast`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.MSL_export_fast'
+--------------
+CREATE VIEW `MSL_export_fast` AS
+SELECT 
+    
+    
+    tn.left_idx,
+    
+    
+    IFNULL(`realm`.name, '') AS `realm`,
+    IFNULL(`subrealm`.name, '') AS `subrealm`,
+    IFNULL(`kingdom`.name, '') AS `kingdom`,
+    IFNULL(`subkingdom`.name, '') AS `subkingdom`,
+    IFNULL(`phylum`.name, '') AS `phylum`,
+    IFNULL(`subphylum`.name, '') AS `subphylum`,
+    IFNULL(`class`.name, '') AS `class`,
+    IFNULL(`subclass`.name, '') AS `subclass`,
+    IFNULL(`order`.name, '') AS `order`,
+    IFNULL(`suborder`.name, '') AS `suborder`,
+    IFNULL(`family`.name, '') AS `family`,
+    IFNULL(`subfamily`.name, '') AS `subfamily`,
+    IFNULL(`genus`.name, '') AS `genus`,
+    IFNULL(`subgenus`.name, '') AS `subgenus`,
+    IFNULL(`species`.name, '') AS `species`,
+    tn.is_ref AS is_type_species,
+    
+    
+    IFNULL(imol.abbrev, '') AS inher_molecule,
+    
+    
+    (SELECT `rank` FROM taxonomy_node_names tns 
+     WHERE tns.tree_id = tn.tree_id 
+       AND tn.left_idx BETWEEN tns.left_idx AND tns.right_idx 
+       AND tns.molecule_id = tn.inher_molecule_id 
+     ORDER BY tns.node_depth DESC LIMIT 1) AS inher_molecule_src,
+
+    
+    IFNULL((SELECT tag_csv FROM taxonomy_node_delta WHERE new_taxid = tn.taxnode_id LIMIT 1), '') AS last_change,
+
+    
+    CASE 
+        WHEN (SELECT tag_csv FROM taxonomy_node_delta WHERE new_taxid = tn.taxnode_id LIMIT 1) <> '' 
+        THEN RTRIM(tn.msl_release_num)
+        ELSE ''
+    END AS last_change_msl,
+
+    
+    IFNULL((SELECT proposal FROM taxonomy_node_delta WHERE new_taxid = tn.taxnode_id LIMIT 1), '') AS last_change_proposal,
+
+    
+    CONCAT('=HYPERLINK("http://ictvonline.org/taxonomy/p/taxonomy-history?taxnode_id=', RTRIM(tn.taxnode_id), '","ICTVonline=', RTRIM(tn.taxnode_id), '")') AS history_url,
+
+    
+    IFNULL(tn.abbrev_csv, '') AS FYI_last_abbrev,
+    IFNULL(tn.genbank_accession_csv, '') AS last_ncbi,
+    IFNULL(tn.isolate_csv, '') AS last_isolates,
+
+    
+    tn.tree_id,
+    tn.msl_release_num
+
+FROM taxonomy_node tn
+
+
+LEFT JOIN taxonomy_node `tree` ON `tree`.taxnode_id = tn.tree_id
+LEFT JOIN taxonomy_node `realm` ON `realm`.taxnode_id = tn.realm_id
+LEFT JOIN taxonomy_node `subrealm` ON `subrealm`.taxnode_id = tn.subrealm_id
+LEFT JOIN taxonomy_node `kingdom` ON `kingdom`.taxnode_id = tn.kingdom_id
+LEFT JOIN taxonomy_node `subkingdom` ON `subkingdom`.taxnode_id = tn.subkingdom_id
+LEFT JOIN taxonomy_node `phylum` ON `phylum`.taxnode_id = tn.phylum_id
+LEFT JOIN taxonomy_node `subphylum` ON `subphylum`.taxnode_id = tn.subphylum_id
+LEFT JOIN taxonomy_node `class` ON `class`.taxnode_id = tn.class_id
+LEFT JOIN taxonomy_node `subclass` ON `subclass`.taxnode_id = tn.subclass_id
+LEFT JOIN taxonomy_node `order` ON `order`.taxnode_id = tn.order_id
+LEFT JOIN taxonomy_node `suborder` ON `suborder`.taxnode_id = tn.suborder_id
+LEFT JOIN taxonomy_node `family` ON `family`.taxnode_id = tn.family_id
+LEFT JOIN taxonomy_node `subfamily` ON `subfamily`.taxnode_id = tn.subfamily_id
+LEFT JOIN taxonomy_node `genus` ON `genus`.taxnode_id = tn.genus_id
+LEFT JOIN taxonomy_node `subgenus` ON `subgenus`.taxnode_id = tn.subgenus_id
+LEFT JOIN taxonomy_node `species` ON `species`.taxnode_id = tn.species_id
+LEFT JOIN taxonomy_molecule mol ON mol.id = tn.molecule_id
+LEFT JOIN taxonomy_molecule imol ON imol.id = tn.inher_molecule_id
+
+WHERE tn.is_deleted = 0 
+  AND tn.is_hidden = 0 
+  AND tn.is_obsolete = 0
+  AND tn.level_id = 600
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `species_historic_name_lut`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.species_historic_name_lut'
+--------------
+CREATE VIEW `species_historic_name_lut` AS
+SELECT
+    MIN(old.msl_release_num) AS first_msl,
+    MAX(old.msl_release_num) AS last_msl,
+    old.name AS old_name,
+    old.ictv_id AS old_ictv_id,
+    CASE 
+        WHEN MAX(new.taxnode_id) IS NULL THEN 'abolished'
+        WHEN old.name = MAX(new.name) AND old.name = MIN(new.name) THEN 'same'
+        WHEN old.name <> MAX(new.name) AND MAX(new.name) = MIN(new.name) AND MAX(is_merged) = 1 THEN 'renamed/merged'
+        WHEN old.name <> MAX(new.name) AND MAX(new.name) = MIN(new.name) AND MAX(is_merged) = 0 THEN 'renamed'
+        WHEN MAX(new.name) <> MIN(new.name) THEN 'split'
+        ELSE 'error'
+    END AS action,
+    MAX(new.msl_release_num) AS new_msl,
+    MAX(new.name) AS new_name,
+    MAX(new.taxnode_id) AS new_taxnode_id,
+    CASE 
+        WHEN MAX(new.name) = MIN(new.name) THEN '===='
+        ELSE CONCAT('<', RTRIM(COUNT(DISTINCT new.name)), '>')
+    END AS sep2,
+    MAX(ms.is_merged) AS is_merge,
+    MAX(ms.is_split) AS is_split,
+    MIN(new.name) AS new_name2,
+    MIN(new.taxnode_id) AS new_taxnode_id2,
+    MAX(new.left_idx) AS new_sort
+FROM taxonomy_node_names old
+LEFT OUTER JOIN taxonomy_node_merge_split ms 
+    ON ms.prev_ictv_id = old.ictv_id 
+    AND ms.rev_count = 0
+LEFT OUTER JOIN taxonomy_node_names new 
+    ON ms.next_ictv_id = new.ictv_id 
+    AND new.msl_release_num = (SELECT MAX(msl_release_num) FROM taxonomy_toc)
+    AND new.rank = 'species'
+WHERE old.msl_release_num IS NOT NULL 
+AND old.level_id = 600
+GROUP BY old.name, old.ictv_id
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `species_isolates_alpha_num1_num2`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.species_isolates_alpha_num1_num2'
+--------------
+CREATE VIEW `species_isolates_alpha_num1_num2` AS
+
+
+SELECT src3.*
+FROM (
+    SELECT
+        src2.*,
+        CASE 
+            WHEN _isolate_name_num1_str REGEXP '^[0-9]+$' THEN CAST(_isolate_name_num1_str AS DECIMAL(10,2)) 
+        END AS _isolate_name_num1,
+        CASE 
+            WHEN _isolate_name_num2_str REGEXP '^[0-9]+$' THEN CAST(_isolate_name_num2_str AS DECIMAL(10,2)) 
+        END AS _isolate_name_num2
+    FROM (
+        SELECT  
+            src.*,
+            COALESCE(LEFT(_isolate_name, COALESCE(isolate_start_num1_sort, isolate_start_num2_sort)), _isolate_name) AS _isolate_name_alpha,
+            CASE
+                WHEN LOCATE(SUBSTRING(_isolate_name, isolate_start_num1_sort + 1, 1), '._-') > 0 
+                     AND isolate_start_num2_sort > isolate_start_num1_sort + 1 THEN
+                    SUBSTRING(_isolate_name, isolate_start_num1_sort + 2, isolate_start_num2_sort - isolate_start_num1_sort - 2)
+                WHEN LOCATE(SUBSTRING(_isolate_name, isolate_start_num1_sort + 1, 1), '._-') = 0 
+                     AND isolate_start_num2_sort > isolate_start_num1_sort THEN
+                    SUBSTRING(_isolate_name, isolate_start_num1_sort + 1, isolate_start_num2_sort - isolate_start_num1_sort - 1)
+            END AS _isolate_name_num1_str,
+            CASE
+                WHEN LOCATE(SUBSTRING(_isolate_name, isolate_start_num2_sort + 1, 1), '._') > 0 
+                     AND isolate_start_num2_sort + 1 < CHAR_LENGTH(_isolate_name) THEN
+                    SUBSTRING(_isolate_name, isolate_start_num2_sort + 2, 100)
+                WHEN LOCATE(SUBSTRING(_isolate_name, isolate_start_num2_sort + 1, 1), '._') = 0 
+                     AND isolate_start_num2_sort < CHAR_LENGTH(_isolate_name) THEN
+                    SUBSTRING(_isolate_name, isolate_start_num2_sort + 1, 100)
+            END AS _isolate_name_num2_str
+        FROM (
+            SELECT species_isolates.*,
+                CHAR_LENGTH(_isolate_name) - 
+                CASE
+                    WHEN LOCATE(RIGHT(_isolate_name, 1), '1234567890._-') > 0
+                         AND LOCATE(SUBSTRING(RIGHT(_isolate_name, 2), 1, 1), '1234567890._-') > 0 
+                         AND LOCATE(SUBSTRING(RIGHT(_isolate_name, 3), 1, 1), '1234567890._-') > 0 THEN 3
+                    
+                    ELSE NULL
+                END AS isolate_start_num1_sort,
+                CHAR_LENGTH(_isolate_name) - 
+                CASE
+                    WHEN LOCATE(RIGHT(_isolate_name, 1), '1234567890.') > 0
+                         AND LOCATE(SUBSTRING(RIGHT(_isolate_name, 2), 1, 1), '1234567890.') > 0 THEN 2
+                    ELSE NULL
+                END AS isolate_start_num2_sort
+            FROM species_isolates
+        ) AS src
+    ) AS src2
+) AS src3
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `species_latest`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.species_latest'
+--------------
+CREATE VIEW `species_latest` AS
+
+
+SELECT 
+    tn.taxnode_id AS taxnode_id,
+    tn.msl_release_num AS msl_release_num,
+    tn.name AS name,
+    tn.rank AS `rank`,
+    
+    tn.molecule AS molecule,
+    
+    
+    (SELECT genome_coverage
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.genome_coverage IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS genome_coverage,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.genome_coverage IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS genome_coverage_msl,
+    
+    
+    (SELECT host_source
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.host_source IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS host_source,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.host_source IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS host_source_msl,
+    
+    
+    (SELECT exemplar_name
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.exemplar_name IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS exemplar_name,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.exemplar_name IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS exemplar_name_msl,
+    
+    
+    (SELECT abbrev_csv
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.abbrev_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS abbrev_csv,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.abbrev_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS abbrev_csv_msl,
+    
+    
+    (SELECT isolate_csv
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.isolate_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS isolate_csv,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.isolate_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS isolate_csv_msl,
+    
+    
+    (SELECT genbank_accession_csv
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.genbank_accession_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS genbank_accession_csv,
+    
+    (SELECT msl_release_num
+     FROM taxonomy_node prev 
+     WHERE prev.ictv_id = tn.ictv_id
+     AND prev.genbank_accession_csv IS NOT NULL
+     ORDER BY prev.msl_release_num DESC
+     LIMIT 1) AS genbank_accession_csv_msl
+     
+FROM taxonomy_node_names tn
+WHERE tn.msl_release_num = (SELECT MAX(msl_release_num) FROM taxonomy_toc)
+AND `rank` = 'species'
+--------------
+
+Query OK, 0 rows affected (0.005 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_node_dx`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_node_dx'
+--------------
+CREATE VIEW `taxonomy_node_dx` AS
+SELECT 
+    pt.level_id AS prev_level, 
+    pd.prev_taxid AS prev_id, 
+    pt.ictv_id AS prev_ictv_id, 
+    pd.tag_csv AS prev_tags, 
+    pt.name AS prev_name, 
+    pt.lineage AS prev_lineage, 
+    pd.proposal AS prev_proposal,
+    
+    nt.level_id AS next_level, 
+    nd.new_taxid AS next_id, 
+    nt.ictv_id AS next_ictv_id, 
+    nd.tag_csv AS next_tags, 
+    nt.name AS next_name, 
+    nt.lineage AS next_lineage, 
+    nd.proposal AS next_proposal,
+    
+    t.*
+FROM taxonomy_node t
+LEFT OUTER JOIN taxonomy_node_delta pd 
+    ON pd.new_taxid = t.taxnode_id
+LEFT OUTER JOIN taxonomy_node pt 
+    ON pt.taxnode_id = pd.prev_taxid
+LEFT OUTER JOIN taxonomy_node_delta nd 
+    ON nd.prev_taxid = t.taxnode_id
+LEFT OUTER JOIN taxonomy_node nt 
+    ON nt.taxnode_id = nd.new_taxid
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_node_export`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_node_export'
+--------------
+CREATE VIEW `taxonomy_node_export` AS
+
+
+
+
+
+
+SELECT 
+    tn.`taxnode_id`,
+    tn.`parent_id`,
+    tn.`tree_id`,
+    tn.`msl_release_num`,
+    tn.`level_id`,
+    tn.`name`,
+    tn.`ictv_id`,
+    tn.`molecule_id`,
+    tn.`abbrev_csv`,
+    tn.`genbank_accession_csv`,
+    tn.`genbank_refseq_accession_csv`,
+    tn.`refseq_accession_csv`,
+    tn.`isolate_csv`,
+    REPLACE(tn.`notes`, '\r', '') AS notes, 
+    tn.`is_ref`,
+    tn.`is_official`,
+    tn.`is_hidden`,
+    tn.`is_deleted`,
+    tn.`is_deleted_next_year`,
+    tn.`is_typo`,
+    tn.`is_renamed_next_year`,
+    tn.`is_obsolete`,
+    tn.`in_change`,
+    tn.`in_target`,
+    tn.`in_filename`,
+    tn.`in_notes`,
+    tn.`out_change`,
+    tn.`out_target`,
+    tn.`out_filename`,
+    tn.`out_notes`,
+    tn.`lineage`,
+    tn.`cleaned_name`,
+    COALESCE(`rank`.`name`, '') AS `rank`, 
+    COALESCE(mol.`abbrev`, '') AS `molecule` 
+FROM 
+    taxonomy_node tn
+LEFT OUTER JOIN taxonomy_level `rank` ON `rank`.`id` = tn.`level_id`
+LEFT OUTER JOIN taxonomy_molecule mol ON mol.`id` = tn.`molecule_id`
+WHERE 
+    tn.`msl_release_num` IS NOT NULL
+    AND tn.`is_deleted` = 0
+    AND (tn.`level_id` = 100 OR tn.`is_hidden` = 0)
+    AND tn.`is_obsolete` = 0
+ORDER BY 
+    tn.`msl_release_num`, 
+    tn.`left_idx`
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_node_x`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_node_x'
+--------------
+CREATE VIEW `taxonomy_node_x` AS
+
+
+
+
+SELECT 
+    node.*, 
+    target.`taxnode_id` AS target_taxnode_id,
+    target.`name` AS target_name,
+    target.`lineage` AS target_lineage
+FROM 
+    `taxonomy_node` target
+JOIN 
+    `taxonomy_node_merge_split` ms 
+    ON target.`ictv_id` IN (ms.`prev_ictv_id`)
+JOIN 
+    `taxonomy_node` node 
+    ON node.`ictv_id` IN (ms.`next_ictv_id`)
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `taxonomy_toc_dx`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.taxonomy_toc_dx'
+--------------
+CREATE VIEW `taxonomy_toc_dx` AS
+SELECT 
+    t1.*, 
+    (t1.`tree_id` - t2.`tree_id`) AS tree_id_delta,
+    t2.`tree_id` AS prev_tree_id,
+    t2.`msl_release_num` AS prev_msl
+FROM 
+    `taxonomy_toc` t1
+JOIN 
+    `taxonomy_toc` t2 
+    ON t2.`msl_release_num` = t1.`msl_release_num` - 1
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `view_taxa_level_counts_by_release`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.view_taxa_level_counts_by_release'
+--------------
+CREATE VIEW `view_taxa_level_counts_by_release` AS
+
+SELECT 
+    `release`.tree_id, 
+    `release`.notes,
+    `release`.msl_release_num,
+    `release`.name AS `year`,
+
+    IFNULL(realm, 0) AS realms, 
+    IFNULL(subrealm, 0) AS subrealms,
+    IFNULL(kingdom, 0) AS kingdoms,
+    IFNULL(subkingdom, 0) AS subkingdoms,
+    IFNULL(phylum, 0) AS phyla,
+    IFNULL(subphylum, 0) AS subphyla, 
+    IFNULL(class, 0) AS classes,
+    IFNULL(subclass, 0) AS subclasses,
+    IFNULL(`order`, 0) AS orders,  
+    IFNULL(suborder, 0) AS suborders,  
+    IFNULL(family, 0) AS families,  
+    IFNULL(subfamily, 0) AS subfamilies,  
+    IFNULL(genus, 0) AS genera,  
+    IFNULL(subgenus, 0) AS subgenera,  
+    IFNULL(species, 0) AS species
+
+FROM (
+    SELECT 
+        tree_id, 
+        MAX(CASE WHEN name = 'realm' THEN count_by_level END) AS realm,
+        MAX(CASE WHEN name = 'subrealm' THEN count_by_level END) AS subrealm,
+        MAX(CASE WHEN name = 'kingdom' THEN count_by_level END) AS kingdom,
+        MAX(CASE WHEN name = 'subkingdom' THEN count_by_level END) AS subkingdom,
+        MAX(CASE WHEN name = 'phylum' THEN count_by_level END) AS phylum,
+        MAX(CASE WHEN name = 'subphylum' THEN count_by_level END) AS subphylum,
+        MAX(CASE WHEN name = 'class' THEN count_by_level END) AS class,
+        MAX(CASE WHEN name = 'subclass' THEN count_by_level END) AS subclass,
+        MAX(CASE WHEN name = 'order' THEN count_by_level END) AS `order`,
+        MAX(CASE WHEN name = 'suborder' THEN count_by_level END) AS suborder,
+        MAX(CASE WHEN name = 'family' THEN count_by_level END) AS family,
+        MAX(CASE WHEN name = 'subfamily' THEN count_by_level END) AS subfamily,
+        MAX(CASE WHEN name = 'genus' THEN count_by_level END) AS genus,
+        MAX(CASE WHEN name = 'subgenus' THEN count_by_level END) AS subgenus,
+        MAX(CASE WHEN name = 'species' THEN count_by_level END) AS species
+    FROM (
+        SELECT 
+            COUNT(tn.level_id) AS count_by_level,
+            tl.name,
+            tn.tree_id
+        FROM taxonomy_node tn
+        JOIN taxonomy_level tl ON tl.id = tn.level_id
+        WHERE tn.is_hidden = 0
+        AND tn.msl_release_num IS NOT NULL
+        AND tn.name NOT LIKE 'unassigned'
+        GROUP BY tn.tree_id, tl.name
+    ) AS levelCounts
+    GROUP BY tree_id
+) AS pivotedData
+JOIN taxonomy_node `release` ON (`release`.tree_id = pivotedData.tree_id AND `release`.level_id = 100)
+WHERE `release`.msl_release_num IS NOT NULL
+AND `release`.name NOT LIKE 'unassigned'
+--------------
+
+Query OK, 0 rows affected (0.008 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `view_taxonomy_stats`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.view_taxonomy_stats'
+--------------
+CREATE VIEW `view_taxonomy_stats` AS
+SELECT 
+    (SELECT notes
+     FROM taxonomy_node AS t
+     WHERE t.level_id = 100 AND t.taxnode_id = n.tree_id) AS notes, 
+    n.msl_release_num,
+    (SELECT name
+     FROM taxonomy_node AS t
+     WHERE t.level_id = 100 AND t.taxnode_id = n.tree_id) AS year, 
+    COUNT(order_level.id) AS orders, 
+    COUNT(family_level.id) AS families, 
+    COUNT(subfamily_level.id) AS subfamilies, 
+    COUNT(genus_level.id) AS genera, 
+    COUNT(species_level.id) AS species
+FROM 
+    taxonomy_node AS n 
+    LEFT JOIN taxonomy_level AS order_level ON order_level.id = n.level_id AND order_level.id = 200 
+    LEFT JOIN taxonomy_level AS family_level ON family_level.id = n.level_id AND family_level.id = 300 
+    LEFT JOIN taxonomy_level AS subfamily_level ON subfamily_level.id = n.level_id AND subfamily_level.id = 400 
+    LEFT JOIN taxonomy_level AS genus_level ON genus_level.id = n.level_id AND genus_level.id = 500 
+    LEFT JOIN taxonomy_level AS species_level ON species_level.id = n.level_id AND species_level.id = 600
+WHERE 
+    n.is_hidden = 0 
+    AND n.msl_release_num IS NOT NULL 
+    AND n.name NOT LIKE 'unassigned' 
+    AND n.tree_id > 10090000
+GROUP BY 
+    n.tree_id, 
+    n.msl_release_num
+--------------
+
+Query OK, 0 rows affected (0.007 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `virus_isolates`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.virus_isolates'
+--------------
+CREATE VIEW `virus_isolates` AS
+SELECT 
+    si.species_name AS species, 
+    si.isolate_type AS exemplar, 
+    CASE WHEN isolate_type = 'E' THEN si.isolate_designation END AS exemplar_isolate, 
+    CASE WHEN isolate_type = 'E' THEN si.genbank_accessions END AS exemplar_genbank_accession, 
+    CASE WHEN isolate_type = 'E' THEN si.refseq_accessions END AS exemplar_refseq_accession, 
+    CASE WHEN isolate_type = 'E' THEN si.genome_coverage END AS exemplar_seq_complete, 
+    CASE WHEN isolate_type = 'A' THEN si.isolate_designation END AS isolate_csv, 
+    CASE WHEN isolate_type = 'A' THEN si.genbank_accessions END AS isolate_genbank_accession_csv, 
+    CASE WHEN isolate_type = 'A' THEN si.refseq_accessions END AS isolate_refseq_accession, 
+    CASE WHEN isolate_type = 'A' THEN si.genome_coverage END AS isolate_seq_complete_csv, 
+    si.isolate_names AS alternative_name_csv, 
+    si.isolate_abbrevs AS abbrev_csv, 
+    NULL AS isolate_abbrev, 
+    si.species_sort AS sort_species, 
+    si.isolate_sort AS sort, 
+    si.taxnode_id AS taxnode_id, 
+    si.host_source AS host, 
+    si.molecule AS molecule, 
+    tn.realm AS realm, 
+    tn.subrealm AS subrealm, 
+    tn.kingdom AS kingdom, 
+    tn.subkingdom AS subkingdom, 
+    tn.phylum AS phylum, 
+    tn.subphylum AS subphylum, 
+    tn.class AS class, 
+    tn.subclass AS subclass, 
+    tn.`order` AS `order`, 
+    tn.suborder AS suborder, 
+    tn.family AS family, 
+    tn.subfamily AS subfamily, 
+    tn.genus AS genus, 
+    tn.subgenus AS subgenus, 
+    tn.left_idx AS left_idx, 
+    CASE WHEN si.molecule <> tn.inher_molecule THEN 'ERROR:molecule ' ELSE '' END AS qc_status, 
+    tn.inher_molecule AS qc_taxon_inher_molecule, 
+    si.update_change AS qc_taxon_change, 
+    si.update_change_proposal AS qc_taxon_proposal
+FROM species_isolates si
+JOIN taxonomy_node_names tn ON tn.taxnode_id = si.taxnode_id
+WHERE si.species_name <> 'abolished'
+--------------
+
+Query OK, 0 rows affected (0.008 sec)
+
+Bye
+--------------
+DROP VIEW IF EXISTS `vmr_export`
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 4092): Unknown VIEW: 'ictv_taxonomy.vmr_export'
+--------------
+CREATE VIEW `vmr_export` AS 
+SELECT
+    si.isolate_id AS `Isolate ID`,
+    si.species_sort AS `Species Sort`,
+    si.isolate_sort AS `Isolate Sort`,
+    tn.realm AS `Realm`,
+    tn.subrealm AS `Subrealm`,
+    tn.kingdom AS `Kingdom`,
+    tn.subkingdom AS `Subkingdom`,
+    tn.phylum AS `Phylum`,
+    tn.subphylum AS `Subphylum`,
+    tn.class AS `Class`,
+    tn.subclass AS `Subclass`,
+    tn.`order` AS `Order`,
+    tn.suborder AS `Suborder`,
+    tn.family AS `Family`,
+    tn.subfamily AS `Subfamily`,
+    tn.genus AS `Genus`,
+    tn.subgenus AS `Subgenus`,
+    tn.species AS `Species`,
+    CONCAT(si.isolate_type, '') AS `Exemplar or additional isolate`,
+    CONCAT(si.isolate_names, '') AS `Virus name(s)`,
+    CONCAT(si.isolate_abbrevs, '') AS `Virus name abbreviation(s)`,
+    CONCAT(si.isolate_designation, '') AS `Virus isolate designation`,
+    CONCAT(si.genbank_accessions, '') AS `Virus GENBANK accession`,
+    CONCAT(si.refseq_accessions, '') AS `Virus REFSEQ accession`,
+    CONCAT(si.refseq_taxids, '') AS `Virus REFSEQ NCBI taxid`,
+    CONCAT(si.genome_coverage, '') AS `Genome coverage`,
+    CONCAT(si.molecule, '') AS `Genome composition`,
+    CONCAT(si.host_source, '') AS `Host source`,
+    
+    CASE WHEN si.molecule <> tn.inher_molecule THEN 'ERROR:molecule ' ELSE '' END AS `QC_status`,
+    tn.inher_molecule AS `QC_taxon_inher_molecule`,
+    si.update_change AS `QC_taxon_change`,
+    IF(si.update_change_proposal IS NOT NULL,
+       CONCAT('=HYPERLINK("https://ictv.global/ictv/proposals/', si.update_change_proposal, '","', si.update_change_proposal, '")'),
+       '') AS `QC_taxon_proposal`
+FROM species_isolates si
+JOIN taxonomy_node_names tn ON tn.taxnode_id = si.taxnode_id
+WHERE si.species_name <> 'abolished'
+ORDER BY si.species_sort, si.isolate_sort
+LIMIT 1000000
+--------------
+
+Query OK, 0 rows affected (0.008 sec)
+
+Bye
+--------------
+CREATE INDEX idx_taxonomy_node_parent_level_tree ON taxonomy_node (parent_id, level_id, tree_id)
+--------------
+
+Query OK, 0 rows affected (3.625 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_node_taxnode_tree ON taxonomy_node (taxnode_id, tree_id)
+--------------
+
+Query OK, 0 rows affected (1.271 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_node_tree_level ON taxonomy_node (tree_id, level_id)
+--------------
+
+Query OK, 0 rows affected (0.666 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_node_hidden_msl_name_treelevel ON taxonomy_node (is_hidden, msl_release_num, name, tree_id, level_id)
+--------------
+
+Query OK, 0 rows affected (0.897 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tn_name ON taxonomy_node (name)
+--------------
+
+Query OK, 0 rows affected (1.107 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tn_name_mslrelease ON taxonomy_node (name, msl_release_num)
+--------------
+
+Query OK, 0 rows affected (1.258 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tn_tree_id ON taxonomy_node (tree_id)
+--------------
+
+Query OK, 0 rows affected (1.117 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX abbrev ON taxonomy_molecule (abbrev)
+--------------
+
+Query OK, 0 rows affected (0.020 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX name ON taxonomy_genome_coverage (name)
+--------------
+
+Query OK, 0 rows affected (0.020 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX taxonomy_node_merge_split_next_ictv_id_IDX ON taxonomy_node_merge_split (next_ictv_id)
+--------------
+
+Query OK, 0 rows affected (0.114 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX taxonomy_node_merge_split_prev_ictv_id_IDX ON taxonomy_node_merge_split (prev_ictv_id)
+--------------
+
+Query OK, 0 rows affected (0.043 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_node_delta_prev_taxid ON taxonomy_node_delta (prev_taxid)
+--------------
+
+Query OK, 0 rows affected (0.808 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_node_delta_new_taxid ON taxonomy_node_delta (new_taxid)
+--------------
+
+Query OK, 0 rows affected (0.188 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_json_taxnode_tree_ghost ON taxonomy_json (taxnode_id, tree_id, is_ghost_node)
+--------------
+
+Query OK, 0 rows affected (0.012 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_json_parent_taxnode_tree_ghost ON taxonomy_json (parent_taxnode_id, tree_id, is_ghost_node)
+--------------
+
+Query OK, 0 rows affected (0.013 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_json_id ON taxonomy_json (id)
+--------------
+
+Query OK, 0 rows affected (0.016 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tj_tree_rank ON taxonomy_json (tree_id, rank_index)
+--------------
+
+Query OK, 0 rows affected (0.017 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tj_tree_parent ON taxonomy_json (tree_id, parent_id)
+--------------
+
+Query OK, 0 rows affected (0.017 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_taxonomy_json_rank_level_tree ON taxonomy_json_rank (level_id, tree_id)
+--------------
+
+Query OK, 0 rows affected (0.019 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+CREATE INDEX idx_tjr_tree_rank ON taxonomy_json_rank (tree_id, rank_index)
+--------------
+
+Query OK, 0 rows affected (0.017 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+Bye
+--------------
+ALTER TABLE `taxonomy_level`
+  ADD CONSTRAINT `FK_taxonomy_level_taxonomy_level` 
+  FOREIGN KEY (`parent_id`) REFERENCES `taxonomy_level` (`id`)
+--------------
+
+Query OK, 16 rows affected (0.025 sec)
+Records: 16  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node_merge_split`
+    ADD CONSTRAINT `FK_taxonomy_node_merge_split_taxonomy_node1` 
+    FOREIGN KEY (`next_ictv_id`) 
+    REFERENCES `taxonomy_node` (`taxnode_id`) 
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE
+--------------
+
+Query OK, 37475 rows affected (0.881 sec)
+Records: 37475  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_genome_coverage` 
+FOREIGN KEY (`genome_coverage`) 
+REFERENCES `taxonomy_genome_coverage` (`name`)
+--------------
+
+Query OK, 16521 rows affected (0.311 sec)
+Records: 16521  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_host_source` 
+FOREIGN KEY (`host_source`) 
+REFERENCES `taxonomy_host_source` (`host_source`)
+--------------
+
+Query OK, 16521 rows affected (0.274 sec)
+Records: 16521  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_molecule` 
+FOREIGN KEY (`molecule`) 
+REFERENCES `taxonomy_molecule` (`abbrev`)
+--------------
+
+Query OK, 16521 rows affected (0.295 sec)
+Records: 16521  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_node` 
+FOREIGN KEY (`taxnode_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 16521 rows affected (0.351 sec)
+Records: 16521  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `species_isolates` 
+ADD CONSTRAINT `FK_species_isolates_taxonomy_update_prev_taxnode_id` 
+FOREIGN KEY (`update_prev_taxnode_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 16521 rows affected (0.612 sec)
+Records: 16521  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_change_in`
+FOREIGN KEY (`in_change`)
+REFERENCES `taxonomy_change_in` (`change`)
+--------------
+
+Query OK, 154166 rows affected (10.617 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_change_out` 
+FOREIGN KEY (`out_change`) 
+REFERENCES `taxonomy_change_out` (`change`)
+--------------
+
+Query OK, 154166 rows affected (8.769 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_genome_coverage` 
+FOREIGN KEY (`genome_coverage`) 
+REFERENCES `taxonomy_genome_coverage` (`genome_coverage`)
+--------------
+
+Query OK, 154166 rows affected (8.812 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_host_source` 
+FOREIGN KEY (`host_source`) 
+REFERENCES `taxonomy_host_source` (`host_source`)
+--------------
+
+Query OK, 154166 rows affected (9.237 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_level_level_id`
+FOREIGN KEY (`level_id`)
+REFERENCES `taxonomy_level` (`id`)
+ON DELETE CASCADE
+--------------
+
+Query OK, 154166 rows affected (9.668 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_molecule_inher_molecule_id`
+FOREIGN KEY (`inher_molecule_id`)
+REFERENCES `taxonomy_molecule` (`id`)
+--------------
+
+Query OK, 154166 rows affected (9.686 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_molecule_molecule_id` 
+FOREIGN KEY (`molecule_id`) 
+REFERENCES `taxonomy_molecule` (`id`)
+--------------
+
+Query OK, 154166 rows affected (10.516 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_family_id` 
+FOREIGN KEY (`family_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (10.816 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node` 
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_genus_id` 
+FOREIGN KEY (`genus_id`) 
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (11.561 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_ictv_id`
+FOREIGN KEY (`ictv_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (11.365 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_order_id`
+FOREIGN KEY (`order_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (11.593 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_species_id`
+FOREIGN KEY (`species_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.034 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subfamily_id`
+FOREIGN KEY (`subfamily_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.000 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_tree_id`
+FOREIGN KEY (`tree_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.070 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_class_id`
+FOREIGN KEY (`class_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.650 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_kingdom_id`
+FOREIGN KEY (`kingdom_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.668 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_phylum_id`
+FOREIGN KEY (`phylum_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.817 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_realm_id`
+FOREIGN KEY (`realm_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (12.919 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subclass_id`
+FOREIGN KEY (`subclass_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (13.569 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subgenus_id`
+FOREIGN KEY (`subgenus_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (13.787 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subkingdom_id`
+FOREIGN KEY (`subkingdom_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (13.596 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_suborder_id`
+FOREIGN KEY (`suborder_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (14.300 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subphylum_id`
+FOREIGN KEY (`subphylum_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (14.304 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_node_subrealm_id`
+FOREIGN KEY (`subrealm_id`)
+REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 154166 rows affected (14.280 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_node`
+ADD CONSTRAINT `FK_taxonomy_node_taxonomy_toc`
+FOREIGN KEY (`tree_id`, `msl_release_num`)
+REFERENCES `taxonomy_toc` (`tree_id`, `msl_release_num`)
+--------------
+
+Query OK, 154166 rows affected (14.464 sec)
+Records: 154166  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_json_rank`
+  ADD CONSTRAINT `FK_taxonomy_json_rank_taxonomy_level` 
+  FOREIGN KEY (`level_id`) REFERENCES `taxonomy_level` (`id`)
+--------------
+
+Query OK, 0 rows affected (0.018 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_json_rank`
+  ADD CONSTRAINT `FK_taxonomy_json_rank_tree_id` 
+  FOREIGN KEY (`tree_id`) REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 0 rows affected (0.016 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_parent_taxonomy_node` 
+  FOREIGN KEY (`parent_taxnode_id`) REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 0 rows affected (0.018 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_taxonomy_node` 
+  FOREIGN KEY (`taxnode_id`) REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 0 rows affected (0.018 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_tree_id` 
+  FOREIGN KEY (`tree_id`) REFERENCES `taxonomy_node` (`taxnode_id`)
+--------------
+
+Query OK, 0 rows affected (0.018 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS count_accents
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.count_accents does not exist
+--------------
+CREATE FUNCTION count_accents(in_string VARCHAR(1000) CHARACTER SET utf8mb4)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE cur_pos INT DEFAULT 1;
+    DECLARE char_count INT DEFAULT 0;
+    DECLARE str_length INT;
+
+    SET str_length = CHAR_LENGTH(in_string);
+
+    WHILE cur_pos <= str_length DO
+        IF ORD(SUBSTRING(in_string, cur_pos, 1)) > 127 THEN
+            SET char_count = char_count + 1;
+        END IF;
+        SET cur_pos = cur_pos + 1;
+    END WHILE;
+
+    RETURN char_count;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_getChildTaxaCounts
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_getChildTaxaCounts does not exist
+--------------
+CREATE FUNCTION udf_getChildTaxaCounts(in_taxnode_id INT)
+RETURNS VARCHAR(1000)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE result VARCHAR(1000);
+
+    SELECT
+        SUBSTRING(
+            GROUP_CONCAT(cnt_name ORDER BY level_id SEPARATOR ''),
+            3
+        ) INTO result
+    FROM (
+        SELECT
+            CONCAT(', ', CAST(COUNT(*) AS CHAR(6)), ' ', 
+                   IF(COUNT(*) > 1, tl.plural, tl.name)) AS cnt_name,
+            tn.level_id
+        FROM taxonomy_node sub
+        JOIN taxonomy_node tn ON tn.left_idx BETWEEN sub.left_idx AND sub.right_idx 
+                               AND tn.tree_id = sub.tree_id
+        JOIN taxonomy_level tl ON tl.id = tn.level_id
+        WHERE sub.taxnode_id = in_taxnode_id
+          AND tn.taxnode_id <> sub.taxnode_id
+        GROUP BY tl.plural, tl.name, tn.level_id
+    ) AS derived_table;
+
+    RETURN IFNULL(result, '');
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_getMSL
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_getMSL does not exist
+--------------
+CREATE FUNCTION udf_getMSL(in_tree_id INT)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE msl INT;
+
+    IF in_tree_id IS NULL THEN
+        
+        SELECT MAX(msl_release_num) INTO msl FROM taxonomy_toc;
+        RETURN msl;
+    ELSE
+        
+        SELECT msl_release_num INTO msl
+        FROM taxonomy_toc
+        WHERE tree_id = in_tree_id
+        ORDER BY msl_release_num DESC
+        LIMIT 1;
+
+        RETURN msl;
+    END IF;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_getTaxNodeChildInfo
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_getTaxNodeChildInfo does not exist
+--------------
+CREATE FUNCTION udf_getTaxNodeChildInfo(
+    in_taxnode_id INT
+)
+RETURNS VARCHAR(512)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE child_info_result VARCHAR(512);
+    DECLARE invalid_result_count INT DEFAULT 0;
+
+    
+    SELECT
+        COUNT(*) INTO invalid_result_count
+    FROM (
+        SELECT level_id, level_count,
+               udf_singularOrPluralTaxLevelNames(level_count, level_id) AS result_label
+        FROM (
+            SELECT level_id, COUNT(DISTINCT taxnode_id) AS level_count
+            FROM (
+                
+                SELECT tn3.level_id AS level_id, tn3.taxnode_id
+                FROM taxonomy_node tn2
+                JOIN taxonomy_node tn3 ON tn3.parent_id = tn2.taxnode_id
+                WHERE tn2.parent_id = in_taxnode_id
+                    AND tn2.is_hidden = 1
+                    AND tn2.is_deleted = 0
+                    AND tn3.is_deleted = 0
+                    AND tn3.name <> 'unassigned'
+
+                UNION ALL
+
+                SELECT tn1.level_id AS level_id, tn1.taxnode_id
+                FROM taxonomy_node tn1
+                WHERE tn1.parent_id = in_taxnode_id
+                    AND tn1.parent_id <> tn1.taxnode_id
+                    AND tn1.is_hidden = 0
+                    AND tn1.is_deleted = 0
+            ) AS combined
+            GROUP BY level_id
+        ) AS level_counts
+        WHERE udf_singularOrPluralTaxLevelNames(level_count, level_id) IS NULL
+            OR udf_singularOrPluralTaxLevelNames(level_count, level_id) = ''
+    ) AS invalid_results;
+
+    
+    IF invalid_result_count > 0 THEN
+        RETURN NULL;
+    ELSE
+        
+        SELECT GROUP_CONCAT(result_label ORDER BY level_id ASC SEPARATOR ', ') INTO child_info_result
+        FROM (
+            SELECT level_id, level_count,
+                   udf_singularOrPluralTaxLevelNames(level_count, level_id) AS result_label
+            FROM (
+                SELECT level_id, COUNT(DISTINCT taxnode_id) AS level_count
+                FROM (
+                    
+                    SELECT tn3.level_id AS level_id, tn3.taxnode_id
+                    FROM taxonomy_node tn2
+                    JOIN taxonomy_node tn3 ON tn3.parent_id = tn2.taxnode_id
+                    WHERE tn2.parent_id = in_taxnode_id
+                        AND tn2.is_hidden = 1
+                        AND tn2.is_deleted = 0
+                        AND tn3.is_deleted = 0
+                        AND tn3.name <> 'unassigned'
+
+                    UNION ALL
+
+                    SELECT tn1.level_id AS level_id, tn1.taxnode_id
+                    FROM taxonomy_node tn1
+                    WHERE tn1.parent_id = in_taxnode_id
+                        AND tn1.parent_id <> tn1.taxnode_id
+                        AND tn1.is_hidden = 0
+                        AND tn1.is_deleted = 0
+                ) AS combined
+                GROUP BY level_id
+            ) AS level_counts
+            WHERE udf_singularOrPluralTaxLevelNames(level_count, level_id) IS NOT NULL
+                AND udf_singularOrPluralTaxLevelNames(level_count, level_id) <> ''
+        ) AS valid_results;
+
+        RETURN child_info_result;
+    END IF;
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_getTreeID
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_getTreeID does not exist
+--------------
+CREATE FUNCTION udf_getTreeID(in_msl INT)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_tree_id INT;
+
+    IF in_msl IS NULL THEN
+        
+        SELECT MAX(tree_id) INTO v_tree_id FROM taxonomy_toc;
+        RETURN v_tree_id;
+    ELSE
+        
+        SELECT tree_id INTO v_tree_id
+        FROM taxonomy_toc
+        WHERE msl_release_num IS NOT NULL
+          AND msl_release_num = in_msl
+        ORDER BY msl_release_num
+        LIMIT 1;
+
+        RETURN v_tree_id;
+    END IF;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_rankCountsToStringWithPurals
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_rankCountsToStringWithPurals does not exist
+--------------
+CREATE FUNCTION udf_rankCountsToStringWithPurals(
+    realm_ct INT,
+    subrealm_ct INT,
+    kingdom_ct INT,
+    subkingdom_ct INT,
+
+    phylum_ct INT,
+    subphylum_ct INT,
+    class_ct INT,
+    subclass_ct INT,
+
+    order_ct INT,
+    suborder_ct INT,
+    family_ct INT,
+    subfamily_ct INT,
+
+    genus_ct INT,
+    subgenus_ct INT,
+
+    species_ct INT
+)
+RETURNS VARCHAR(1000)
+DETERMINISTIC
+BEGIN
+    DECLARE csv VARCHAR(1000);
+    DECLARE str VARCHAR(100);
+
+    
+    SET str = CASE realm_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 realm'
+        ELSE CONCAT(realm_ct, ' realms')
+    END;
+
+    IF str IS NOT NULL THEN
+        SET csv = str;
+    ELSE
+        SET csv = NULL;
+    END IF;
+
+    
+    SET str = CASE subrealm_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subrealm'
+        ELSE CONCAT(subrealm_ct, ' subrealms')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE kingdom_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 kingdom'
+        ELSE CONCAT(kingdom_ct, ' kingdoms')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE subkingdom_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subkingdom'
+        ELSE CONCAT(subkingdom_ct, ' subkingdoms')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE phylum_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 phylum'
+        ELSE CONCAT(phylum_ct, ' phyla')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE subphylum_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subphylum'
+        ELSE CONCAT(subphylum_ct, ' subphyla')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE class_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 class'
+        ELSE CONCAT(class_ct, ' classes')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE subclass_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subclass'
+        ELSE CONCAT(subclass_ct, ' subclasses')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE order_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 order'
+        ELSE CONCAT(order_ct, ' orders')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE suborder_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 suborder'
+        ELSE CONCAT(suborder_ct, ' suborders')
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE family_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 family'
+        ELSE CONCAT(family_ct, ' families')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE subfamily_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subfamily'
+        ELSE CONCAT(subfamily_ct, ' subfamilies')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE genus_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 genus'
+        ELSE CONCAT(genus_ct, ' genera')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE subgenus_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 subgenus'
+        ELSE CONCAT(subgenus_ct, ' subgenera')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    SET str = CASE species_ct
+        WHEN 0 THEN NULL
+        WHEN 1 THEN '1 species'
+        ELSE CONCAT(species_ct, ' species')  
+    END;
+
+    IF str IS NOT NULL THEN
+        IF csv IS NOT NULL THEN
+            SET csv = CONCAT(csv, ', ', str);
+        ELSE
+            SET csv = str;
+        END IF;
+    END IF;
+
+    
+    RETURN IFNULL(csv, '');
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS udf_singularOrPluralTaxLevelNames
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.udf_singularOrPluralTaxLevelNames does not exist
+--------------
+CREATE FUNCTION udf_singularOrPluralTaxLevelNames(
+    level_count INT,
+    level_id INT
+)
+RETURNS VARCHAR(128)
+DETERMINISTIC
+BEGIN
+    DECLARE level_label VARCHAR(128) DEFAULT '';
+    DECLARE result VARCHAR(200) DEFAULT '';
+
+    
+    SET level_label = CASE
+        WHEN level_id = 200 AND level_count = 1 THEN 'Order'
+        WHEN level_id = 200 AND level_count <> 1 THEN 'Orders'
+
+        WHEN level_id = 300 AND level_count = 1 THEN 'Family'
+        WHEN level_id = 300 AND level_count <> 1 THEN 'Families'
+
+        WHEN level_id = 400 AND level_count = 1 THEN 'Subfamily'
+        WHEN level_id = 400 AND level_count <> 1 THEN 'Subfamilies'
+
+        WHEN level_id = 500 AND level_count = 1 THEN 'Genus'
+        WHEN level_id = 500 AND level_count <> 1 THEN 'Genera'
+
+        WHEN level_id = 600 THEN 'Species'
+
+        ELSE ''
+    END;
+
+    
+    SET level_label = IFNULL(level_label, '');
+
+    
+    IF level_label <> '' THEN
+        SET result = CONCAT(CAST(level_count AS CHAR(3)), ' ', level_label);
+    END IF;
+
+    
+    RETURN result;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP FUNCTION IF EXISTS vgd_strrchr
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): FUNCTION ictv_taxonomy.vgd_strrchr does not exist
+--------------
+CREATE FUNCTION vgd_strrchr(
+    targets VARBINARY(255), 
+    str VARBINARY(255)      
+)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE cur_pos INT DEFAULT LENGTH(str);
+    DECLARE c VARBINARY(1);
+    IF str IS NULL OR targets IS NULL THEN
+        RETURN 0;
+    END IF;
+    WHILE cur_pos > 0 DO
+        SET c = SUBSTRING(str, cur_pos, 1);
+        
+        IF LOCATE(c, targets) > 0 THEN
+            RETURN cur_pos;
+        END IF;
+        SET cur_pos = cur_pos - 1;
+    END WHILE;
+    RETURN 0;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS createParentGhostNodes
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.createParentGhostNodes does not exist
+--------------
+CREATE PROCEDURE createParentGhostNodes(
+    IN treeID INT
+)
+BEGIN
+    
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE treeJsonID INT;
+    DECLARE lowestRankToCreate INT;
+    DECLARE currentRankIndex INT DEFAULT 1;
+    DECLARE previousID INT;
+    DECLARE tj_id INT;         
+    DECLARE parentID INT;
+    DECLARE done INT DEFAULT 0;
+
+    
+    DECLARE top_level_cursor CURSOR FOR
+        SELECT
+            notghost.id,
+            (
+                SELECT id
+                FROM taxonomy_json ghost
+                WHERE ghost.is_ghost_node = 1
+                    AND ghost.source = 'P'             
+                    AND ghost.rank_index = notghost.rank_index - 1
+                    AND ghost.parent_taxnode_id = treeID
+                    AND ghost.tree_id = treeID
+                LIMIT 1
+            ) AS parentID
+        FROM taxonomy_json notghost
+        WHERE notghost.parent_taxnode_id = treeID     
+            AND notghost.taxnode_id <> treeID         
+            AND notghost.is_ghost_node = 0            
+            AND notghost.rank_index > 1               
+            AND notghost.tree_id = treeID;
+
+    
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        
+        DECLARE err_msg TEXT;
+        DECLARE err_code INT;
+        GET DIAGNOSTICS CONDITION 1
+            err_code = MYSQL_ERRNO,
+            err_msg = MESSAGE_TEXT;
+        
+        ROLLBACK;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = err_msg;
+    END;
+
+    
+    START TRANSACTION;
+
+    
+    
+    
+    SELECT id INTO treeJsonID
+    FROM taxonomy_json tj
+    WHERE tj.tree_id = treeID
+        AND tj.rank_index = 0
+    LIMIT 1;
+
+    IF treeJsonID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid taxonomy_json.id for tree node';
+    END IF;
+
+    
+    SELECT MAX(rank_index) - 1 INTO lowestRankToCreate
+    FROM taxonomy_json
+    WHERE parent_taxnode_id = treeID      
+        AND taxnode_id <> treeID          
+        AND tree_id = treeID              
+        AND is_ghost_node = 0             
+        AND rank_index > 1                
+        AND rank_index IS NOT NULL;       
+
+    IF lowestRankToCreate IS NULL THEN
+        SET lowestRankToCreate = 0;
+    END IF;
+
+    SET previousID = treeJsonID;
+
+    
+    
+    
+    WHILE currentRankIndex <= lowestRankToCreate DO
+
+        
+        INSERT INTO taxonomy_json (
+            is_ghost_node,
+            parent_distance,
+            parent_taxnode_id,
+            parent_id,
+            rank_index,
+            source,
+            taxnode_id,
+            tree_id
+        ) VALUES (
+            1,              
+            1,              
+            treeID,
+            previousID,
+            currentRankIndex,
+            'P',            
+            NULL,
+            treeID
+        );
+
+        
+        SET previousID = LAST_INSERT_ID();
+
+        SET currentRankIndex = currentRankIndex + 1;
+    END WHILE;
+
+    
+    
+    
+    
+    OPEN top_level_cursor;
+
+    
+    read_loop: LOOP
+        FETCH top_level_cursor INTO tj_id, parentID;  
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        UPDATE taxonomy_json
+        SET parent_id = parentID
+        WHERE `id` = tj_id;  
+
+    END LOOP;
+
+    
+    CLOSE top_level_cursor;
+
+    
+    COMMIT;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS createIntermediateGhostNodes
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.createIntermediateGhostNodes does not exist
+--------------
+CREATE PROCEDURE createIntermediateGhostNodes(
+    IN childCounts VARCHAR(1000),
+    IN parentID INT,
+    IN parentRankIndex INT,
+    IN parentTaxnodeID INT,
+    IN speciesRankIndex INT,
+    IN treeID INT
+)
+BEGIN
+    
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE maxChildRankIndex INT;
+    DECLARE currentRankIndex INT;
+    DECLARE currentID INT;
+    DECLARE previousID INT;
+    DECLARE childID INT;
+    DECLARE childRankIndex INT;
+    DECLARE childTaxnodeID INT;
+    DECLARE done INT DEFAULT 0;
+
+    
+    DECLARE child_cursor CURSOR FOR
+        SELECT 
+            id,
+            rank_index,
+            taxnode_id
+        FROM taxonomy_json tj
+        WHERE tj.parent_taxnode_id = parentTaxnodeID
+            AND tj.is_ghost_node = 0
+            AND tj.rank_index > parentRankIndex + 1
+        ORDER BY tj.rank_index ASC;
+
+    
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        
+        DECLARE err_msg TEXT;
+        DECLARE err_code INT;
+        GET DIAGNOSTICS CONDITION 1
+            err_code = MYSQL_ERRNO,
+            err_msg = MESSAGE_TEXT;
+        
+        ROLLBACK;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = err_msg;
+    END;
+
+    
+    IF childCounts IS NULL THEN
+        SET childCounts = '';
+    END IF;
+
+    
+    START TRANSACTION;
+
+    
+    
+    
+    SELECT MAX(rank_index) INTO maxChildRankIndex
+    FROM taxonomy_json tj
+    WHERE tj.parent_taxnode_id = parentTaxnodeID
+        AND tj.is_ghost_node = 0
+        AND tj.rank_index <= speciesRankIndex
+        AND tj.rank_index > parentRankIndex + 1;
+
+    
+    IF maxChildRankIndex IS NOT NULL THEN
+
+        
+        SET currentRankIndex = parentRankIndex + 1;
+        SET previousID = parentID;
+
+        
+        
+        
+        WHILE currentRankIndex < maxChildRankIndex DO
+
+            INSERT INTO taxonomy_json (
+                child_counts,
+                is_ghost_node,
+                parent_distance,
+                parent_id,
+                parent_taxnode_id,
+                rank_index,
+                source,
+                taxnode_id,
+                tree_id
+            ) VALUES (
+                childCounts,
+                1,              
+                1,              
+                previousID,
+                parentTaxnodeID,
+                currentRankIndex,
+                'I',            
+                NULL,
+                treeID
+            );
+
+            
+            SET currentID = LAST_INSERT_ID();
+            SET previousID = currentID;
+
+            SET currentRankIndex = currentRankIndex + 1;
+        END WHILE;
+
+        
+        OPEN child_cursor;
+
+        
+        read_loop: LOOP
+            FETCH child_cursor INTO childID, childRankIndex, childTaxnodeID;
+            IF done = 1 THEN
+                LEAVE read_loop;
+            END IF;
+
+            
+            
+            
+            UPDATE taxonomy_json
+            SET parent_id = (
+                SELECT id
+                FROM taxonomy_json
+                WHERE parent_taxnode_id = parentTaxnodeID
+                    AND is_ghost_node = 1
+                    AND rank_index = childRankIndex - 1
+                    AND tree_id = treeID
+                LIMIT 1
+            )
+            WHERE id = childID;
+
+        END LOOP;
+
+        
+        CLOSE child_cursor;
+
+    END IF;
+
+    
+    COMMIT;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS createGhostNodes
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.createGhostNodes does not exist
+--------------
+CREATE PROCEDURE createGhostNodes(
+    IN speciesRankIndex INT,
+    IN treeID INT
+)
+BEGIN
+    
+    DECLARE childCounts VARCHAR(1000);
+    DECLARE tj_id INT;         
+    DECLARE rankIndex INT;
+    DECLARE taxNodeID INT;
+    DECLARE done BOOL DEFAULT FALSE;
+
+    
+    DECLARE taxon_cursor CURSOR FOR
+        SELECT
+            child_counts,
+            id,
+            rank_index,
+            taxnode_id
+        FROM taxonomy_json tj
+        WHERE tj.tree_id = treeID
+            AND tj.is_ghost_node = 0
+            AND tj.rank_index < speciesRankIndex
+            AND tj.taxnode_id <> treeID
+        ORDER BY tj.rank_index ASC;
+
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        
+        DECLARE err_msg TEXT;
+        DECLARE err_code INT;
+        GET DIAGNOSTICS CONDITION 1
+            err_code = MYSQL_ERRNO,
+            err_msg = MESSAGE_TEXT;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = err_msg;
+    END;
+
+    
+
+    
+    CALL createParentGhostNodes(treeID);
+
+    
+    OPEN taxon_cursor;
+
+    
+    read_loop: LOOP
+        FETCH taxon_cursor INTO childCounts, tj_id, rankIndex, taxNodeID;  
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        CALL createIntermediateGhostNodes(
+            childCounts,
+            tj_id,            
+            rankIndex,
+            taxNodeID,
+            speciesRankIndex,
+            treeID
+        );
+    END LOOP;
+
+    
+    CLOSE taxon_cursor;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS initializeJsonColumn
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.initializeJsonColumn does not exist
+--------------
+CREATE PROCEDURE initializeJsonColumn(IN treeID INT)
+BEGIN
+
+    
+    DECLARE current_id INT;
+    DECLARE rankIndex INT;
+    DECLARE taxNodeID INT;
+    DECLARE childJSON LONGTEXT;
+    DECLARE done INT DEFAULT 0;
+    DECLARE group_concat_max_len_value INT;
+
+    
+    DECLARE ranked_node_cursor CURSOR FOR
+        SELECT 
+            tj.id,
+            tj.rank_index,
+            tj.taxnode_id
+        FROM taxonomy_json tj
+        WHERE tj.tree_id = treeID
+        ORDER BY tj.rank_index DESC;
+
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    
+    SET SESSION group_concat_max_len = 10000000;
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    UPDATE taxonomy_json tj
+    JOIN taxonomy_json_rank tr ON (
+        tr.rank_index = tj.rank_index
+        AND tr.tree_id = treeID
+    )
+    LEFT JOIN taxonomy_node tn ON tn.taxnode_id = tj.taxnode_id
+    SET tj.json = CONCAT(
+        '"child_counts":', CASE
+            WHEN tj.child_counts IS NULL OR CHAR_LENGTH(tj.child_counts) < 1 THEN 'null' ELSE CONCAT('"', tj.child_counts, '"')
+        END, ',',
+        '"has_assigned_siblings":', CASE
+            WHEN IFNULL(tj.has_assigned_siblings, 0) = 0 THEN 'false' ELSE 'true'
+        END, ',',
+        '"has_species":', CAST(IFNULL(tj.has_species, 0) AS CHAR), ',',
+        '"is_assigned":', CASE
+            WHEN tj.is_ghost_node = 1 THEN 'false' ELSE 'true'
+        END, ',',
+        '"has_unassigned_siblings":', CASE
+            WHEN IFNULL(tj.has_unassigned_siblings, 0) = 0 THEN 'false' ELSE 'true'
+        END, ',',
+        
+        
+        
+        '"name":', CASE
+            WHEN tn.name IS NULL THEN '"Unassigned"' ELSE CONCAT('"', tn.name, '"')
+        END, ',',
+        '"parentDistance":', CAST(IFNULL(tj.parent_distance, 1) AS CHAR), ',',
+        '"parentTaxNodeID":', CASE
+            WHEN tj.parent_taxnode_id IS NULL THEN 'null' ELSE CAST(tj.parent_taxnode_id AS CHAR(12))
+        END, ',',
+        '"rankIndex":', CAST(tj.rank_index AS CHAR), ',',
+        '"rankName":"', tr.rank_name, '",',
+        '"taxNodeID":', CASE
+            WHEN tj.taxnode_id IS NULL THEN 'null' ELSE CAST(tj.taxnode_id AS CHAR(12))
+        END, ','
+    )
+    WHERE tj.tree_id = treeID;
+
+    
+    
+    
+    OPEN ranked_node_cursor;
+    read_loop: LOOP
+        FETCH ranked_node_cursor INTO current_id, rankIndex, taxNodeID;
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        SELECT GROUP_CONCAT(nodeJSON ORDER BY rank_index ASC, is_ghost_node ASC, node_name ASC SEPARATOR ',') INTO childJSON
+        FROM (
+            SELECT 
+                CONCAT(
+                    '{',
+                    tj.json,
+                    '"children":', CASE
+                        WHEN tj.child_json IS NULL OR CHAR_LENGTH(tj.child_json) < 1 THEN 'null' ELSE CONCAT('[', tj.child_json, ']')
+                    END,
+                    '}'
+                ) AS nodeJSON,
+                tj.rank_index,
+                tj.is_ghost_node,
+                tn.name AS node_name
+            FROM taxonomy_json tj
+            LEFT JOIN taxonomy_node tn ON tn.taxnode_id = tj.taxnode_id
+            WHERE tj.parent_id = current_id
+              AND tj.tree_id = treeID
+        ) childJSON_table;
+
+        
+        UPDATE taxonomy_json SET child_json = childJSON WHERE id = current_id;
+
+    END LOOP read_loop;
+
+    CLOSE ranked_node_cursor;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS initializeTaxonomyJsonFromTaxonomyNode
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.initializeTaxonomyJsonFromTaxonomyNode does not exist
+--------------
+CREATE PROCEDURE initializeTaxonomyJsonFromTaxonomyNode(IN treeID INT)
+BEGIN
+    
+    DECLARE speciesLevelID INT;
+    DECLARE errorMsg VARCHAR(200);
+    DECLARE errorCode INT DEFAULT 50000;
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET DIAGNOSTICS CONDITION 1 errorMsg = MESSAGE_TEXT;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMsg;
+    END;
+
+    
+    
+    
+    SELECT id INTO speciesLevelID
+    FROM taxonomy_level
+    WHERE name = 'species'
+    LIMIT 1;
+
+    IF speciesLevelID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid level_id for species';
+    END IF;
+
+    
+    
+    
+    INSERT INTO taxonomy_json (
+        child_counts,
+        child_json,
+        has_species,
+        is_ghost_node,
+        json,
+        parent_distance,
+        parent_id,
+        parent_taxnode_id,
+        rank_index,
+        source,
+        taxnode_id,
+        tree_id
+    )
+    SELECT
+        IFNULL(child_counts, '') AS child_counts,
+        NULL AS child_json,
+        has_species,
+        0 AS is_ghost_node,
+        NULL AS json,
+        rank_index - IFNULL(parent_rank_index, 0) AS parent_distance,
+        NULL AS parent_id,
+        parent_taxnode_id,
+        rank_index,
+        'T' AS source,
+        taxnode_id,
+        tree_id
+    FROM (
+        SELECT
+            tn.taxa_desc_cts AS child_counts,
+            CASE
+                WHEN 0 < (
+                    SELECT COUNT(*)
+                    FROM taxonomy_node species
+                    WHERE species.parent_id = tn.taxnode_id
+                      AND species.level_id = speciesLevelID
+                      AND species.tree_id = treeID
+                ) THEN 1 ELSE 0
+            END AS has_species,
+            parentRank.rank_index AS parent_rank_index,
+            tn.parent_id AS parent_taxnode_id,
+            tr.rank_index AS rank_index,
+            tn.taxnode_id,
+            tn.tree_id
+        FROM taxonomy_node tn
+        JOIN taxonomy_json_rank tr ON (
+            tr.level_id = tn.level_id
+            AND tr.tree_id = treeID
+        )
+        LEFT JOIN taxonomy_node parentTN ON (
+            parentTN.taxnode_id = tn.parent_id
+            AND parentTN.tree_id = treeID
+        )
+        LEFT JOIN taxonomy_json_rank parentRank ON (
+            parentRank.level_id = parentTN.level_id
+            AND parentRank.tree_id = treeID
+        )
+        WHERE tn.tree_id = treeID
+    ) taxa;
+
+    
+    
+    
+    UPDATE taxonomy_json tj
+    JOIN taxonomy_json parent_tj ON parent_tj.taxnode_id = tj.parent_taxnode_id
+    SET tj.parent_id = parent_tj.id
+    WHERE tj.tree_id = treeID
+      AND parent_tj.tree_id = treeID
+      AND tj.is_ghost_node = 0
+      AND parent_tj.is_ghost_node = 0;
+
+    
+    
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS populateTaxonomyJSON
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.populateTaxonomyJSON does not exist
+--------------
+CREATE PROCEDURE populateTaxonomyJSON(IN treeID INT)
+BEGIN
+    
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE speciesRankIndex INT;
+    DECLARE errorMsg VARCHAR(200);
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET DIAGNOSTICS CONDITION 1 errorMsg = MESSAGE_TEXT;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMsg;
+    END;
+
+    
+    
+    
+    DELETE FROM taxonomy_json WHERE tree_id = treeID;
+
+    
+    
+    
+    SELECT rank_index INTO speciesRankIndex
+    FROM taxonomy_json_rank
+    WHERE rank_name = 'species'
+      AND tree_id = treeID
+    LIMIT 1;
+
+    IF speciesRankIndex IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid species rank index';
+    END IF;
+
+    
+    
+    
+    CALL initializeTaxonomyJSONFromTaxonomyNode(treeID);
+
+    
+    
+    
+    CALL createGhostNodes(speciesRankIndex, treeID);
+
+    
+    
+    
+    UPDATE taxonomy_json tj
+    SET 
+        has_assigned_siblings = CASE
+            WHEN (
+                SELECT COUNT(*)
+                FROM taxonomy_json assigned
+                WHERE assigned.tree_id = treeID
+                  AND assigned.parent_id = tj.parent_id
+                  AND assigned.is_ghost_node = 0
+                  AND assigned.id <> tj.id
+                  AND assigned.rank_index = tj.rank_index
+            ) = 0 THEN 0 ELSE 1
+        END,
+        has_unassigned_siblings = CASE
+            WHEN (
+                SELECT COUNT(*)
+                FROM taxonomy_json unassigned
+                WHERE unassigned.tree_id = treeID
+                  AND unassigned.parent_id = tj.parent_id
+                  AND unassigned.is_ghost_node = 1
+                  AND unassigned.id <> tj.id
+                  AND unassigned.rank_index = tj.rank_index
+            ) = 0 THEN 0 ELSE 1
+        END
+    WHERE tj.tree_id = treeID;
+
+    
+    
+    
+    UPDATE taxonomy_json ghostNode
+    SET has_species = CASE
+        WHEN (
+            SELECT COUNT(*)
+            FROM taxonomy_json ctj
+            WHERE ctj.parent_id = ghostNode.id
+              AND ctj.rank_index = speciesRankIndex
+              AND ctj.tree_id = treeID
+        ) > 0 THEN 1 ELSE 0
+    END
+    WHERE ghostNode.tree_id = treeID
+      AND ghostNode.is_ghost_node = 1;
+
+    
+    
+    
+    
+
+    
+    
+    
+    CALL initializeJsonColumn(treeID);
+
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS populateTaxonomyJsonForAllReleases
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.populateTaxonomyJsonForAllReleases does not exist
+--------------
+CREATE PROCEDURE populateTaxonomyJsonForAllReleases()
+BEGIN
+    
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE errorMsg VARCHAR(200);
+    DECLARE treeID INT;
+    DECLARE done INT DEFAULT FALSE;
+
+    
+    DECLARE release_cursor CURSOR FOR
+        SELECT tree_id 
+        FROM taxonomy_toc 
+        WHERE msl_release_num IS NOT NULL
+        ORDER BY tree_id;
+
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET DIAGNOSTICS CONDITION 1 errorMsg = MESSAGE_TEXT;
+        
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = errorMsg;
+    END;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    
+    
+    
+    IF (SELECT COUNT(*) FROM taxonomy_json_rank) < 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No taxonomy JSON ranks exist. Run the stored procedure initializeTaxonomyJsonRanks and try again.';
+    END IF;
+
+    
+    
+    
+    OPEN release_cursor;
+
+    
+    read_loop: LOOP
+        FETCH release_cursor INTO treeID;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        CALL populateTaxonomyJSON(treeID);
+    END LOOP;
+
+    
+    CLOSE release_cursor;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS exportReleasesJSON
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.exportReleasesJSON does not exist
+--------------
+CREATE PROCEDURE exportReleasesJSON()
+BEGIN
+    
+    DECLARE dataJSON LONGTEXT DEFAULT '';
+    DECLARE displayOrderJSON LONGTEXT DEFAULT '';
+    DECLARE finalJSON LONGTEXT DEFAULT '';
+    DECLARE mslReleaseNum INT;
+    DECLARE rankCount INT;
+    DECLARE yearAB VARCHAR(10);
+    DECLARE done INT DEFAULT 0;
+
+    
+    DECLARE releaseCursor CURSOR FOR
+        SELECT
+            toc.msl_release_num,
+            (
+                SELECT COUNT(DISTINCT tnRank.level_id)
+                FROM taxonomy_node tnRank
+                WHERE tnRank.tree_id = toc.tree_id
+                AND tnRank.level_id <> (SELECT id FROM taxonomy_level WHERE name = 'tree' LIMIT 1)
+            ) AS rankCount,
+            tn.name AS yearAB
+        FROM taxonomy_toc toc
+        JOIN taxonomy_node tn ON tn.taxnode_id = toc.tree_id
+        WHERE toc.msl_release_num IS NOT NULL
+        ORDER BY toc.msl_release_num DESC;
+
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    
+
+    
+    OPEN releaseCursor;
+
+    
+    read_loop: LOOP
+        FETCH releaseCursor INTO mslReleaseNum, rankCount, yearAB;
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        SET dataJSON = CONCAT(
+            dataJSON,
+            '"', yearAB, '": { ',
+                '"year": "', yearAB, '", ',
+                '"rankCount": ', rankCount, ', ',
+                '"releaseNum": ', mslReleaseNum, '},'
+        );
+
+        
+        SET displayOrderJSON = CONCAT(displayOrderJSON, '"', yearAB, '",');
+    END LOOP;
+
+    
+    CLOSE releaseCursor;
+
+    
+    IF CHAR_LENGTH(dataJSON) > 0 THEN
+        SET dataJSON = LEFT(dataJSON, CHAR_LENGTH(dataJSON) - 1);
+    END IF;
+
+    IF CHAR_LENGTH(displayOrderJSON) > 0 THEN
+        SET displayOrderJSON = LEFT(displayOrderJSON, CHAR_LENGTH(displayOrderJSON) - 1);
+    END IF;
+
+    
+    SET finalJSON = CONCAT(
+        '{ "data": {',
+        dataJSON,
+        '}, "displayOrder": [',
+        displayOrderJSON,
+        ']}'
+    );
+
+    
+    SELECT finalJSON AS jsonResult;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS exportTaxonomyJSON
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.exportTaxonomyJSON does not exist
+--------------
+CREATE PROCEDURE exportTaxonomyJSON(IN treeID INT)
+BEGIN
+    
+    DECLARE legendJSON LONGTEXT DEFAULT '';
+    DECLARE jsonResult LONGTEXT DEFAULT '';
+    DECLARE tempJSON LONGTEXT DEFAULT '';
+    DECLARE tempEndJSON LONGTEXT DEFAULT '';
+    DECLARE group_concat_max_len_value INT;
+
+    
+    SELECT @@group_concat_max_len INTO group_concat_max_len_value;
+    IF group_concat_max_len_value < 1000000 THEN
+        SET SESSION group_concat_max_len = 1000000;
+    END IF;
+
+    
+    
+    
+    SELECT
+        GROUP_CONCAT(rankJSON ORDER BY rank_index SEPARATOR '') INTO tempJSON
+    FROM (
+        SELECT
+            CONCAT(
+                '{',
+                '"child_counts":null,',
+                '"has_assigned_siblings":false,',
+                '"has_species":false,',
+                '"is_assigned":false,',
+                '"has_unassigned_siblings":false,',
+                '"name":"Unassigned",',
+                '"parentDistance":1,',
+                '"parentTaxNodeID":null,',
+                '"rankIndex":', CAST(tr.rank_index AS CHAR), ',',
+                '"rankName":"', tr.rank_name, '",',
+                '"taxNodeID":"legend",',
+                '"children":['
+            ) AS rankJSON,
+            tr.rank_index
+        FROM taxonomy_json_rank tr
+        WHERE tr.tree_id = treeID
+          AND tr.rank_index > 0
+        ORDER BY tr.rank_index
+        LIMIT 100
+    ) ranksJSON;
+
+    
+    SELECT
+        GROUP_CONCAT(']}' ORDER BY rank_index SEPARATOR '') INTO tempEndJSON
+    FROM (
+        SELECT tr.rank_index
+        FROM taxonomy_json_rank tr
+        WHERE tr.tree_id = treeID
+          AND tr.rank_index > 0
+        ORDER BY tr.rank_index
+    ) rankEnds;
+
+    
+    SET legendJSON = CONCAT(tempJSON, tempEndJSON);
+
+    
+    
+    
+    SELECT CONCAT(
+        '{',
+        tj.json,
+        '"children":[',
+        legendJSON,
+        IF(CHAR_LENGTH(legendJSON) > 0 AND tj.child_json IS NOT NULL, ',', ''),
+        IFNULL(tj.child_json, ''),
+        ']}'
+    ) INTO jsonResult
+    FROM taxonomy_json tj
+    WHERE tj.tree_id = treeID
+      AND tj.taxnode_id = treeID
+    LIMIT 1;
+
+    
+    SELECT jsonResult;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS get_taxon_names_in_msl
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.get_taxon_names_in_msl does not exist
+--------------
+CREATE PROCEDURE get_taxon_names_in_msl(IN name_param VARCHAR(250), IN msl_param INT)
+BEGIN
+    SELECT sd.old_msl, sd.old_name, sd.new_count, dest.name
+    FROM (
+        SELECT 
+            *
+        FROM (
+            SELECT 
+                src.msl_release_num AS old_msl,
+                src.name AS old_name,
+                src.ictv_id AS old_ictv_id,
+                dest.msl_release_num AS new_msl,
+                COUNT(DISTINCT dest.name) AS new_count,
+                CASE WHEN COUNT(DISTINCT dest.name) > 1 THEN 'multiple' ELSE MAX(dest.name) END AS new_name
+            FROM taxonomy_node src
+            JOIN taxonomy_node_merge_split ms ON ms.prev_ictv_id = src.ictv_id
+            JOIN taxonomy_node dest ON dest.ictv_id = ms.next_ictv_id
+            WHERE src.name = name_param
+                AND dest.msl_release_num = msl_param
+                AND ms.rev_count = 0
+            GROUP BY src.msl_release_num, src.name, src.ictv_id, dest.msl_release_num
+        ) AS grouped_sd
+        ORDER BY new_msl DESC, old_msl DESC
+        LIMIT 1
+    ) AS sd
+    JOIN taxonomy_node_merge_split ms ON ms.prev_ictv_id = sd.old_ictv_id
+    JOIN taxonomy_node dest ON dest.ictv_id = ms.next_ictv_id
+        AND ms.rev_count = 0
+        AND dest.msl_release_num = sd.new_msl;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS getTaxonReleaseHistory
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.getTaxonReleaseHistory does not exist
+--------------
+CREATE PROCEDURE getTaxonReleaseHistory(
+    IN currentMSL INT,
+    IN taxNodeID INT
+)
+BEGIN
+    
+    DECLARE currentTreeID INT;
+    DECLARE abolishedTreeID INT DEFAULT NULL;
+    DECLARE lastTreeID INT DEFAULT NULL;
+    
+    
+    DROP TEMPORARY TABLE IF EXISTS treeIDs;
+    CREATE TEMPORARY TABLE treeIDs (id INT);
+
+    
+    SELECT tree_id INTO currentTreeID
+    FROM taxonomy_toc
+    WHERE msl_release_num = currentMSL
+    ORDER BY tree_id
+    LIMIT 1;
+
+    
+    SELECT 
+        tn_selected.lineage,
+        tn_selected.msl_release_num,
+        tl_selected.name AS rank_name, 
+        CONCAT(
+            CASE WHEN tn_selected.realm_id IS NOT NULL THEN 'Realm;' ELSE '' END,
+            CASE WHEN tn_selected.subrealm_id IS NOT NULL THEN 'Subrealm;' ELSE '' END,
+            CASE WHEN tn_selected.kingdom_id IS NOT NULL THEN 'Kingdom;' ELSE '' END,
+            CASE WHEN tn_selected.subkingdom_id IS NOT NULL THEN 'Subkingdom;' ELSE '' END,
+            CASE WHEN tn_selected.phylum_id IS NOT NULL THEN 'Phylum;' ELSE '' END,
+            CASE WHEN tn_selected.subphylum_id IS NOT NULL THEN 'Subphylum;' ELSE '' END, 
+            CASE WHEN tn_selected.class_id IS NOT NULL THEN 'Class;' ELSE '' END, 
+            CASE WHEN tn_selected.subclass_id IS NOT NULL THEN 'Subclass;' ELSE '' END, 
+            CASE WHEN tn_selected.order_id IS NOT NULL THEN 'Order;' ELSE '' END,
+            CASE WHEN tn_selected.suborder_id IS NOT NULL THEN 'Suborder;' ELSE '' END, 
+            CASE WHEN tn_selected.family_id IS NOT NULL THEN 'Family;' ELSE '' END, 
+            CASE WHEN tn_selected.subfamily_id IS NOT NULL THEN 'Subfamily;' ELSE '' END, 
+            CASE WHEN tn_selected.genus_id IS NOT NULL THEN 'Genus;' ELSE '' END, 
+            CASE WHEN tn_selected.subgenus_id IS NOT NULL THEN 'Subgenus;' ELSE '' END, 
+            CASE WHEN tn_selected.species_id IS NOT NULL THEN 'Species;' ELSE '' END
+        ) AS rank_names,
+        tn_selected.taxnode_id, 
+        tn_selected.name AS taxon_name,
+        tn_selected.tree_id
+    FROM taxonomy_node tn_selected 
+    JOIN taxonomy_level tl_selected ON tl_selected.id = tn_selected.level_id 
+    WHERE tn_selected.taxnode_id = taxNodeID
+    LIMIT 1;
+
+    
+    SELECT toc.tree_id, node.tree_id
+    INTO abolishedTreeID, lastTreeID
+    FROM taxonomy_node_x AS node
+    JOIN taxonomy_toc toc ON toc.msl_release_num = node.msl_release_num + 1
+    JOIN taxonomy_node_delta next_delta ON next_delta.prev_taxid = node.taxnode_id
+    WHERE node.tree_id >= 19000000
+      AND node.tree_id <= currentTreeID
+      AND node.is_deleted = 0 
+      AND node.is_hidden = 0
+      AND node.target_taxnode_id = taxNodeID
+      AND next_delta.is_deleted = 1
+    LIMIT 1;
+
+    
+    INSERT INTO treeIDs
+    SELECT DISTINCT tree_id
+    FROM (
+        SELECT  
+            SUM(
+                IFNULL(prev_delta.is_deleted,0) +
+                IFNULL(prev_delta.is_demoted,0) +
+                IFNULL(prev_delta.is_lineage_updated,0) +
+                IFNULL(prev_delta.is_merged,0) +
+                IFNULL(prev_delta.is_moved,0) +
+                IFNULL(prev_delta.is_new,0) +
+                ABS(IFNULL(prev_delta.is_now_type,0)) +
+                IFNULL(prev_delta.is_promoted,0) +
+                IFNULL(prev_delta.is_renamed,0) +
+                IFNULL(prev_delta.is_split,0)
+            ) AS modifications,  
+            node.tree_id
+        FROM taxonomy_node_x AS node
+        LEFT JOIN taxonomy_node_delta AS prev_delta ON prev_delta.new_taxid = node.taxnode_id
+        WHERE node.tree_id >= 19000000
+          AND node.tree_id <= currentTreeID
+          AND node.is_deleted = 0 
+          AND node.is_hidden = 0   
+          AND node.target_taxnode_id = taxNodeID
+        GROUP BY node.tree_id
+
+        UNION ALL
+        SELECT
+            CASE 
+              WHEN abolishedTreeID IS NULL THEN 0 ELSE 1 
+            END AS modifications,
+            abolishedTreeID AS tree_id
+        FROM DUAL
+    ) releases
+    WHERE modifications > 0
+    ORDER BY tree_id DESC;
+
+    
+    SELECT 
+        CONCAT(
+            CASE WHEN realms > 0 THEN 'realm,' ELSE '' END,
+            CASE WHEN subrealms > 0 THEN 'subrealm,' ELSE '' END,
+            CASE WHEN kingdoms > 0 THEN 'kingdom,' ELSE '' END,
+            CASE WHEN subkingdoms > 0 THEN 'subkingdom,' ELSE '' END,
+            CASE WHEN phyla > 0 THEN 'phylum,' ELSE '' END,
+            CASE WHEN subphyla > 0 THEN 'subphylum,' ELSE '' END,
+            CASE WHEN classes > 0 THEN 'class,' ELSE '' END,
+            CASE WHEN subclasses > 0 THEN 'subclass,' ELSE '' END,
+            CASE WHEN orders > 0 THEN 'order,' ELSE '' END,
+            CASE WHEN suborders > 0 THEN 'suborder,' ELSE '' END,
+            CASE WHEN families > 0 THEN 'family,' ELSE '' END,
+            CASE WHEN subfamilies > 0 THEN 'subfamily,' ELSE '' END,
+            CASE WHEN genera > 0 THEN 'genus,' ELSE '' END,
+            CASE WHEN subgenera > 0 THEN 'subgenus,' ELSE '' END,
+            CASE WHEN species > 0 THEN 'species' ELSE '' END
+        ) AS rank_names,
+        msl.msl_release_num AS release_number,
+        SUBSTRING(msl.notes,1,255) AS release_title,
+        tree_id,
+        msl.year
+    FROM view_taxa_level_counts_by_release msl
+    WHERE tree_id IN (SELECT id FROM treeIDs)
+    ORDER BY tree_id DESC;
+
+    
+    SELECT 
+        current_lineage,
+        current_is_type,
+        ictv_id,
+        prev_notes,
+        prev_proposal,
+        prev_tag_csv,
+        (
+          SELECT CONCAT(
+            CASE WHEN ranks_tn.realm_id IS NOT NULL THEN 'Realm;' ELSE '' END,
+            CASE WHEN ranks_tn.subrealm_id IS NOT NULL THEN 'Subrealm;' ELSE '' END,
+            CASE WHEN ranks_tn.kingdom_id IS NOT NULL THEN 'Kingdom;' ELSE '' END,
+            CASE WHEN ranks_tn.subkingdom_id IS NOT NULL THEN 'Subkingdom;' ELSE '' END,
+            CASE WHEN ranks_tn.phylum_id IS NOT NULL THEN 'Phylum;' ELSE '' END,
+            CASE WHEN ranks_tn.subphylum_id IS NOT NULL THEN 'Subphylum;' ELSE '' END,
+            CASE WHEN ranks_tn.class_id IS NOT NULL THEN 'Class;' ELSE '' END,
+            CASE WHEN ranks_tn.subclass_id IS NOT NULL THEN 'Subclass;' ELSE '' END,
+            CASE WHEN ranks_tn.order_id IS NOT NULL THEN 'Order;' ELSE '' END,
+            CASE WHEN ranks_tn.suborder_id IS NOT NULL THEN 'Suborder;' ELSE '' END,
+            CASE WHEN ranks_tn.family_id IS NOT NULL THEN 'Family;' ELSE '' END,
+            CASE WHEN ranks_tn.subfamily_id IS NOT NULL THEN 'Subfamily;' ELSE '' END,
+            CASE WHEN ranks_tn.genus_id IS NOT NULL THEN 'Genus;' ELSE '' END,
+            CASE WHEN ranks_tn.subgenus_id IS NOT NULL THEN 'Subgenus;' ELSE '' END,
+            CASE WHEN ranks_tn.species_id IS NOT NULL THEN 'Species;' ELSE '' END
+          )
+          FROM taxonomy_node ranks_tn
+          WHERE ranks_tn.taxnode_id = releaseNodes.taxnode_id
+        ) AS rank_names,
+        taxnode_id,
+        tree_id
+    FROM (
+        SELECT
+            node.is_ref AS current_is_type,
+            node.lineage AS current_lineage,
+            node.ictv_id,
+            node.left_idx,
+            MAX(prev_delta.notes) AS prev_notes,
+            (
+                SELECT dx.prev_proposal
+                FROM taxonomy_node_dx dx
+                JOIN taxonomy_node t ON dx.left_idx <= t.left_idx 
+                                    AND dx.right_idx >= t.right_idx 
+                                    AND dx.tree_id = t.tree_id 
+                                    AND dx.level_id > 100
+                WHERE t.taxnode_id = node.taxnode_id
+                  AND dx.prev_proposal IS NOT NULL 
+                  AND dx.prev_proposal <> ''
+                ORDER BY dx.level_id DESC
+                LIMIT 1
+            ) AS prev_proposal,
+            CONCAT(
+                CASE WHEN MAX(prev_delta.is_deleted)=1 THEN 'Abolished,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_demoted)=1 THEN 'Demoted,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_lineage_updated)=1 THEN 'Higher rank lineage updated,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_merged)=1 THEN 'Merged,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_moved)=1 THEN 'Moved,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_new)=1 THEN 'New,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_promoted)=1 THEN 'Promoted,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_renamed)=1 THEN 'Renamed,' ELSE '' END,
+                CASE WHEN MAX(prev_delta.is_split)=1 THEN 'Split,' ELSE '' END,
+                CASE 
+                  WHEN MIN(prev_delta.is_now_type)=1 THEN 'Assigned as Type Species,' 
+                  WHEN MIN(prev_delta.is_now_type)=-1 THEN 'Removed as Type Species,' 
+                  ELSE '' 
+                END
+            ) AS prev_tag_csv,
+            node.taxnode_id,
+            node.tree_id
+        FROM taxonomy_node_x AS node
+        LEFT JOIN taxonomy_node_delta AS prev_delta ON prev_delta.new_taxid = node.taxnode_id
+        WHERE node.tree_id IN (SELECT id FROM treeIDs)
+          AND node.is_deleted = 0 
+          AND node.is_hidden = 0 
+          AND node.target_taxnode_id = taxNodeID
+        GROUP BY node.taxnode_id, node.tree_id, node.ictv_id, node.lineage, node.is_ref, node.left_idx
+
+        UNION ALL
+        SELECT
+            0 AS current_is_type,
+            lastNode.lineage AS current_lineage,
+            lastNode.ictv_id,
+            lastNode.left_idx,
+            MAX(next_delta.notes) AS prev_notes,
+            (
+                SELECT dx.next_proposal
+                FROM taxonomy_node_dx dx
+                JOIN taxonomy_node t ON dx.left_idx <= t.left_idx 
+                                    AND dx.right_idx >= t.right_idx
+                                    AND dx.tree_id = t.tree_id 
+                                    AND dx.level_id > 100
+                WHERE t.taxnode_id = lastNode.taxnode_id
+                  AND dx.next_proposal IS NOT NULL
+                  AND dx.next_proposal <> ''
+                ORDER BY dx.level_id DESC
+                LIMIT 1
+            ) AS prev_proposal,
+            CASE WHEN MAX(next_delta.is_deleted)=1 THEN 'Abolished,' ELSE '' END AS prev_tag_csv,
+            lastNode.taxnode_id,
+            abolishedTreeID AS tree_id
+        FROM taxonomy_node_x AS lastNode
+        LEFT JOIN taxonomy_node_delta next_delta ON next_delta.prev_taxid = lastNode.taxnode_id
+        WHERE abolishedTreeID IS NOT NULL
+          AND lastNode.tree_id >= 19000000
+          AND lastNode.tree_id <= currentTreeID
+          AND lastNode.is_deleted = 0
+          AND lastNode.is_hidden = 0
+          AND lastNode.target_taxnode_id = taxNodeID
+          AND lastNode.tree_id = lastTreeID
+          AND next_delta.is_deleted = 1
+        GROUP BY lastNode.taxnode_id, lastNode.tree_id, lastNode.ictv_id, lastNode.lineage, lastNode.is_ref, lastNode.left_idx
+    ) releaseNodes
+    ORDER BY tree_id DESC, left_idx ASC;
+
+    
+    
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS getVirusIsolates
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.getVirusIsolates does not exist
+--------------
+CREATE PROCEDURE getVirusIsolates(
+    IN mslRelease INT,
+    IN onlyUnassigned BOOLEAN,
+    IN searchTaxon NVARCHAR(100)
+)
+BEGIN
+    DECLARE errorMsg VARCHAR(200);
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE targetLeftIndex INT;
+    DECLARE targetLevelID INT;
+    DECLARE targetRightIndex INT;
+    DECLARE targetTaxNodeID INT;
+    DECLARE speciesLevelID INT;
+
+    
+    IF searchTaxon IS NULL OR CHAR_LENGTH(TRIM(searchTaxon)) < 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid searchTaxonName parameter';
+    END IF;
+
+    
+    IF mslRelease IS NULL OR mslRelease < 1 THEN
+        SELECT MAX(msl_release_num) INTO mslRelease FROM taxonomy_toc;
+    END IF;
+
+    
+    SELECT target.left_idx, target.level_id, target.right_idx, target.taxnode_id
+    INTO targetLeftIndex, targetLevelID, targetRightIndex, targetTaxNodeID
+    FROM taxonomy_node target
+    WHERE target.name = searchTaxon
+      AND target.msl_release_num = mslRelease
+    LIMIT 1;
+
+    IF targetLeftIndex IS NULL OR targetLevelID IS NULL OR targetRightIndex IS NULL OR targetTaxNodeID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid target node values';
+    END IF;
+
+    
+    SELECT id INTO speciesLevelID FROM taxonomy_level WHERE name = 'species' LIMIT 1;
+
+    IF speciesLevelID IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Could not find species level ID';
+    END IF;
+
+    
+    SELECT 
+        si.isolate_id AS isolate_id,
+        IFNULL(si.isolate_abbrevs, '') AS abbrev,
+        IFNULL(si.genbank_accessions, '') AS accession_number,
+        IFNULL(si.isolate_names, '') AS alternative_name_csv,
+        IFNULL(si.genome_coverage, '') AS available_sequence,
+        si.isolate_type AS exemplar,
+        IFNULL(si.isolate_designation, '') AS isolate,
+        IFNULL(si.refseq_accessions, '') AS refseq_accession,
+        species.taxnode_id,
+
+        IFNULL(subrealm.name, '') AS subrealm,
+        IFNULL(kingdom.name, '') AS kingdom,
+        IFNULL(subkingdom.name, '') AS subkingdom,
+        IFNULL(phylum.name, '') AS phylum,
+        IFNULL(class.name, '') AS class,
+        IFNULL(subclass.name, '') AS subclass,
+        IFNULL(`order`.name, '') AS `order`,
+        IFNULL(suborder.name, '') AS suborder,
+        IFNULL(family.name, '') AS family,
+        IFNULL(subfamily.name, '') AS subfamily,
+        IFNULL(genus.name, '') AS genus,
+        IFNULL(subgenus.name, '') AS subgenus,
+        species.name AS species
+
+    FROM taxonomy_node species
+    JOIN species_isolates si ON si.taxnode_id = species.taxnode_id
+
+    LEFT JOIN taxonomy_node subrealm ON (
+        species.subrealm_id IS NOT NULL
+        AND subrealm.taxnode_id = species.subrealm_id
+        AND subrealm.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node kingdom ON (
+        species.kingdom_id IS NOT NULL
+        AND kingdom.taxnode_id = species.kingdom_id
+        AND kingdom.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node subkingdom ON (
+        species.subkingdom_id IS NOT NULL
+        AND subkingdom.taxnode_id = species.subkingdom_id
+        AND subkingdom.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node phylum ON (
+        species.phylum_id IS NOT NULL
+        AND phylum.taxnode_id = species.phylum_id
+        AND phylum.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node subphylum ON (
+        species.subphylum_id IS NOT NULL
+        AND subphylum.taxnode_id = species.subphylum_id
+        AND subphylum.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node class ON (
+        species.class_id IS NOT NULL
+        AND class.taxnode_id = species.class_id
+        AND class.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node subclass ON (
+        species.subclass_id IS NOT NULL
+        AND subclass.taxnode_id = species.subclass_id
+        AND subclass.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node `order` ON (
+        species.order_id IS NOT NULL
+        AND `order`.taxnode_id = species.order_id
+        AND `order`.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node suborder ON (
+        species.suborder_id IS NOT NULL
+        AND suborder.taxnode_id = species.suborder_id
+        AND suborder.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node family ON (
+        species.family_id IS NOT NULL
+        AND family.taxnode_id = species.family_id
+        AND family.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node subfamily ON (
+        species.subfamily_id IS NOT NULL
+        AND subfamily.taxnode_id = species.subfamily_id
+        AND subfamily.level_id > targetLevelID
+    )
+
+    LEFT JOIN taxonomy_node genus ON genus.taxnode_id = species.genus_id
+
+    LEFT JOIN taxonomy_node subgenus ON (
+        species.subgenus_id IS NOT NULL
+        AND subgenus.taxnode_id = species.subgenus_id
+        AND subgenus.level_id > targetLevelID
+    )
+
+    WHERE species.left_idx BETWEEN targetLeftIndex AND targetRightIndex
+      AND species.msl_release_num = mslRelease
+      AND species.is_deleted = 0
+      AND species.is_hidden = 0
+      AND species.is_obsolete = 0
+      AND species.level_id = speciesLevelID
+      AND (
+           onlyUnassigned = 0
+           OR (
+               onlyUnassigned = 1
+               AND (
+                   genus.name = 'unassigned' 
+                   OR (species.genus_id IS NULL AND species.subgenus_id IS NULL)
+               )
+               AND species.parent_id = targetTaxNodeID
+           )
+         )
+    ORDER BY species.left_idx, si.isolate_sort;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS initializeTaxonomyJsonRanks
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.initializeTaxonomyJsonRanks does not exist
+--------------
+CREATE PROCEDURE initializeTaxonomyJsonRanks()
+BEGIN
+    
+    DECLARE treeID INT;
+    DECLARE done INT DEFAULT 0;
+
+    
+    DECLARE tree_cursor CURSOR FOR
+        SELECT DISTINCT tree_id 
+        FROM taxonomy_toc 
+        WHERE msl_release_num IS NOT NULL
+          AND tree_id NOT IN (
+              SELECT tree_id
+              FROM taxonomy_json_rank
+          );
+
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    
+    
+    
+    DELETE FROM taxonomy_json_rank;
+
+    
+    
+    
+    OPEN tree_cursor;
+
+    read_loop: LOOP
+        FETCH tree_cursor INTO treeID;
+        IF done = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        
+        INSERT INTO taxonomy_json_rank (
+            level_id,
+            rank_index,
+            rank_name,
+            tree_id
+        )
+        SELECT 
+            levels.level_id,
+            rn.rank_index,
+            tl.name AS rank_name,
+            treeID AS tree_id
+        FROM (
+            SELECT DISTINCT tn.level_id
+            FROM taxonomy_node tn
+            WHERE tn.tree_id = treeID
+        ) levels
+        JOIN taxonomy_level tl ON tl.id = levels.level_id
+        JOIN (
+            SELECT
+                level_id,
+                (ROW_NUMBER() OVER (ORDER BY level_id ASC) - 1) AS rank_index
+            FROM (
+                SELECT DISTINCT tn.level_id
+                FROM taxonomy_node tn
+                WHERE tn.tree_id = treeID
+            ) tn_levels
+        ) rn ON rn.level_id = levels.level_id
+        ORDER BY levels.level_id;
+
+    END LOOP read_loop;
+
+    CLOSE tree_cursor;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS MSL_delta_counts
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.MSL_delta_counts does not exist
+--------------
+CREATE PROCEDURE MSL_delta_counts(IN msl_or_tree INT)
+BEGIN
+    
+    DECLARE msl INT;
+
+    
+    SELECT MAX(msl_release_num) INTO msl
+    FROM taxonomy_toc
+    WHERE msl_or_tree IS NULL OR msl_release_num = msl_or_tree OR tree_id = msl_or_tree;
+
+    
+    SELECT CONCAT('TARGET MSL:', RTRIM(msl)) AS target_msl;
+
+    
+    SELECT 
+        
+        tax_level.name AS `rank`,
+        
+        msl - 1 AS old_msl,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node tn
+            WHERE tn.msl_release_num = msl - 1
+              AND tn.level_id = tax_level.id
+        ) AS old_msl_ct,
+        
+        '+' AS `plus`,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_new = 1
+              AND tnode.level_id = tax_level.id
+        ) AS `create`,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_promoted = 1
+              AND tnode.level_id = tax_level.id
+        ) AS create_by_promote,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_demoted = 1
+              AND tnode.level_id = tax_level.id
+        ) AS create_by_demote,
+        (
+            SELECT COUNT(DISTINCT delta.new_taxid) - COUNT(DISTINCT delta.prev_taxid)
+            FROM taxonomy_node_delta delta
+            WHERE delta.prev_taxid IN (
+                SELECT tn.taxnode_id
+                FROM taxonomy_node tn
+                JOIN taxonomy_node_delta tax_delta ON tax_delta.prev_taxid = tn.taxnode_id
+                WHERE tn.msl_release_num = msl - 1
+                  AND tax_delta.is_split = 1
+                  AND tn.level_id = tax_level.id
+            )
+        ) AS create_by_split,
+        '-' AS `minus`,
+        (
+            SELECT -COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.prev_taxid
+            WHERE tnode.msl_release_num = msl - 1
+              AND tax_delta.is_deleted = 1
+              AND tnode.level_id = tax_level.id
+        ) AS abolish,
+        (
+            SELECT COUNT(DISTINCT delta.new_taxid) - COUNT(DISTINCT delta.prev_taxid)
+            FROM taxonomy_node_delta delta
+            WHERE delta.new_taxid IN (
+                SELECT tn.taxnode_id
+                FROM taxonomy_node tn
+                JOIN taxonomy_node_delta tax_delta ON tax_delta.new_taxid = tn.taxnode_id
+                WHERE tn.msl_release_num = msl
+                  AND tax_delta.is_merged = 1
+                  AND tn.level_id = tax_level.id
+            )
+        ) AS abolish_by_merge,
+        (
+            SELECT -COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.prev_taxid
+            WHERE tnode.msl_release_num = msl - 1
+              AND tax_delta.is_promoted = 1
+              AND tnode.level_id = tax_level.id
+        ) AS abolish_by_promote,
+        (
+            SELECT -COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.prev_taxid
+            WHERE tnode.msl_release_num = msl - 1
+              AND tax_delta.is_demoted = 1
+              AND tnode.level_id = tax_level.id
+        ) AS abolish_by_demote,
+        '~' AS `same`,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_moved = 1
+              AND tnode.level_id = tax_level.id
+        ) AS action_move,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_renamed = 1
+              AND tnode.level_id = tax_level.id
+        ) AS action_rename,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node_delta tax_delta
+            JOIN taxonomy_node tnode ON tnode.taxnode_id = tax_delta.new_taxid
+            WHERE tnode.msl_release_num = msl
+              AND tax_delta.is_lineage_updated = 1
+              AND tnode.level_id = tax_level.id
+        ) AS action_lineage_update,
+        
+        '=' AS `eq`,
+        (
+            SELECT COUNT(*)
+            FROM taxonomy_node tn
+            WHERE tn.msl_release_num = msl
+              AND tn.level_id = tax_level.id
+        ) AS new_msl_ct,
+        msl AS new_msl
+    FROM taxonomy_level tax_level
+    WHERE tax_level.name <> 'tree'
+    ORDER BY tax_level.id;
+
+    
+    SELECT  
+        p.msl,
+        p.rank,
+        p.name,
+        p.taxnode_id,
+        '<PREV<' AS `PREV`,
+        d.*,
+        '>NEXT>' AS `NEXT`,
+        n.taxnode_id,
+        n.name,
+        n.rank,
+        n.msl
+    FROM taxonomy_node_delta d
+    LEFT JOIN taxonomy_node_names p ON p.taxnode_id = d.prev_taxid
+    LEFT JOIN taxonomy_node_names n ON n.taxnode_id = d.new_taxid
+    WHERE d.msl = msl
+      AND (p.msl IS NOT NULL OR n.msl IS NOT NULL)
+    ORDER BY IFNULL(n.lineage, p.lineage);
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS MSL_delta_report
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.MSL_delta_report does not exist
+--------------
+CREATE PROCEDURE MSL_delta_report(IN in_msl INT)
+BEGIN
+    DECLARE msl INT;
+    DECLARE prev_msl INT;
+
+    
+    SET msl = in_msl;
+
+    
+    IF msl IS NULL THEN
+        SELECT MAX(msl_release_num) INTO msl FROM taxonomy_node;
+    END IF;
+
+    
+    SET prev_msl = msl - 1;
+
+    
+    SELECT 'TARGET MSLs' AS target_msls,
+           msl AS `current`,
+           prev_msl AS `prev`,
+           CONCAT('Deltas MSL', RTRIM(prev_msl), ' v ', RTRIM(msl)) AS excel_tab_name;
+
+    
+    SELECT 
+        IFNULL(RTRIM(prev.left_idx), '') AS sort_old,
+        IFNULL(plevel.name, '') AS old_level,
+        IFNULL(prev.lineage, '') AS old_lineage,
+        delta.tag_csv AS `change`,
+        IFNULL(delta.proposal, '') AS proposal,
+        IFNULL(dlevel.name, '') AS new_level,
+        IFNULL(dx.lineage, '') AS new_lineage,
+        IFNULL(dx.left_idx, '') AS sort_new
+    FROM taxonomy_node_delta delta
+    LEFT JOIN taxonomy_node dx ON delta.new_taxid = dx.taxnode_id
+    LEFT JOIN taxonomy_level dlevel ON dlevel.id = dx.level_id
+    LEFT JOIN taxonomy_node prev ON prev.taxnode_id = delta.prev_taxid
+    LEFT JOIN taxonomy_level plevel ON plevel.id = prev.level_id
+    WHERE (dx.msl_release_num = msl AND delta.tag_csv <> '')
+       OR (prev.msl_release_num = prev_msl AND delta.is_deleted = 1)
+    ORDER BY dx.left_idx, prev.left_idx;
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS MSL_export_fast
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.MSL_export_fast does not exist
+--------------
+CREATE PROCEDURE MSL_export_fast(IN msl_or_tree INT, IN taxnode_id INT)
+BEGIN
+    
+    DECLARE msl INT;
+    DECLARE tree_id INT;
+    DECLARE notes TEXT;
+
+    
+    
+    
+
+    
+    SELECT toc.tree_id, toc.msl_release_num, toc.notes INTO tree_id, msl, notes
+    FROM taxonomy_toc toc
+    WHERE msl_or_tree IS NULL OR toc.msl_release_num = msl_or_tree OR toc.tree_id = msl_or_tree
+    ORDER BY toc.msl_release_num DESC
+    LIMIT 1;
+
+    
+    SELECT CONCAT('TARGET MSL: ', msl) AS target_msl, CONCAT('TARGET TREE: ', tree_id) AS target_tree;
+
+    
+    SELECT 'THIS EXPORT DOES NOT PULL HISTORY INFO, and GENOME_MOLECULE is ONLY FROM CUR MSL, NO FALLBACK TO OLDER MSLs IF THERE IS MISSING INFO' AS WARNING;
+    SELECT 'FOR FULL EXPORT USE:' AS ADVICE, 'exec MSL_export_official' AS `SQL`;
+
+    
+    SELECT 
+        'version info:' AS PASTE_TEXT_FOR_VERSION_WORKSHEET,
+        CONCAT('ICTV ', LEFT(RTRIM(tree_id), 4), ' Master Species List (MSL', RTRIM(msl), ')') AS cell_2B,
+        'update today''s date!' AS cell_5C,
+        CONCAT('New MSL including all taxa updates since the ', (SELECT name FROM taxonomy_node WHERE level_id = 100 AND msl_release_num = (msl - 1)), ' release') AS cell_6E,
+        CONCAT('Updates approved during ', CAST(notes AS CHAR)) AS cell_7F,
+        CONCAT('and ratified by the ICTV membership in ', LEFT(RTRIM(tree_id + 10000), 4)) AS cell_8F,
+        CONCAT('ICTV', LEFT(RTRIM(tree_id), 4), ' Master Species List#', RTRIM(msl)) AS taxa_tab_name
+    FROM taxonomy_node
+    WHERE level_id = 100
+      AND msl_release_num = msl;
+
+    
+    SELECT 'molecule stats' AS REPORT, m.*, 
+        (SELECT COUNT(n.taxnode_id) FROM taxonomy_node n WHERE n.inher_molecule_id = m.id AND n.tree_id = tree_id) AS `usage`
+    FROM taxonomy_molecule m
+    ORDER BY id;
+
+    
+    SELECT 'rank stats' AS REPORT, l.*, 
+        (SELECT COUNT(n.taxnode_id) FROM taxonomy_node n WHERE n.level_id = l.id AND n.tree_id = tree_id) AS `usage`
+    FROM taxonomy_level l
+    ORDER BY id;
+
+    
+    SELECT
+        ROW_NUMBER() OVER(ORDER BY tn.left_idx ASC) AS `sort`,
+        IFNULL(`realm`.name, '') AS `realm`,
+        IFNULL(`subrealm`.name, '') AS `subrealm`,
+        IFNULL(`kingdom`.name, '') AS `kingdom`,
+        IFNULL(`subkingdom`.name, '') AS `subkingdom`,
+        IFNULL(`phylum`.name, '') AS `phylum`,
+        IFNULL(`subphylum`.name, '') AS `subphylum`,
+        IFNULL(`class`.name, '') AS `class`,
+        IFNULL(`subclass`.name, '') AS `subclass`,
+        IFNULL(`order`.name, '') AS `order`,
+        IFNULL(`suborder`.name, '') AS `suborder`,
+        IFNULL(`family`.name, '') AS `family`,
+        IFNULL(`subfamily`.name, '') AS `subfamily`,
+        IFNULL(`genus`.name, '') AS `genus`,
+        IFNULL(`subgenus`.name, '') AS `subgenus`,
+        IFNULL(`species`.name, '') AS `species`,
+        
+        IFNULL((
+            SELECT mol.abbrev
+            FROM taxonomy_molecule mol
+            WHERE mol.id = tn.inher_molecule_id
+            LIMIT 1
+        ), '') AS molecule,
+        
+        'exec MSL_export_official' AS last_change,
+        'exec MSL_export_official' AS last_change_msl,
+        'exec MSL_export_official' AS last_change_proposal,
+        
+        CONCAT('=HYPERLINK("https://ictv.global/taxonomy/taxondetails?taxnode_id=', RTRIM(tn.taxnode_id), '","ictv.global=', RTRIM(tn.taxnode_id), '")') AS history_url
+    FROM taxonomy_node tn
+    LEFT JOIN taxonomy_node `tree` ON `tree`.taxnode_id = tn.tree_id
+    LEFT JOIN taxonomy_node `realm` ON `realm`.taxnode_id = tn.realm_id
+    LEFT JOIN taxonomy_node `subrealm` ON `subrealm`.taxnode_id = tn.subrealm_id
+    LEFT JOIN taxonomy_node `kingdom` ON `kingdom`.taxnode_id = tn.kingdom_id
+    LEFT JOIN taxonomy_node `subkingdom` ON `subkingdom`.taxnode_id = tn.subkingdom_id
+    LEFT JOIN taxonomy_node `phylum` ON `phylum`.taxnode_id = tn.phylum_id
+    LEFT JOIN taxonomy_node `subphylum` ON `subphylum`.taxnode_id = tn.subphylum_id
+    LEFT JOIN taxonomy_node `class` ON `class`.taxnode_id = tn.class_id
+    LEFT JOIN taxonomy_node `subclass` ON `subclass`.taxnode_id = tn.subclass_id
+    LEFT JOIN taxonomy_node `order` ON `order`.taxnode_id = tn.order_id
+    LEFT JOIN taxonomy_node `suborder` ON `suborder`.taxnode_id = tn.suborder_id
+    LEFT JOIN taxonomy_node `family` ON `family`.taxnode_id = tn.family_id
+    LEFT JOIN taxonomy_node `subfamily` ON `subfamily`.taxnode_id = tn.subfamily_id
+    LEFT JOIN taxonomy_node `genus` ON `genus`.taxnode_id = tn.genus_id
+    LEFT JOIN taxonomy_node `subgenus` ON `subgenus`.taxnode_id = tn.subgenus_id
+    LEFT JOIN taxonomy_node `species` ON `species`.taxnode_id = tn.species_id
+    WHERE tn.is_deleted = 0 AND tn.is_hidden = 0 AND tn.is_obsolete = 0
+      AND tn.tree_id = tree_id
+      AND tn.level_id = 600 
+      
+      AND (taxnode_id IS NULL OR tn.taxnode_id = taxnode_id)
+    ORDER BY tn.left_idx;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS MSL_export_official
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.MSL_export_official does not exist
+--------------
+CREATE PROCEDURE MSL_export_official(IN msl_or_tree INT, IN taxnode_id INT)
+BEGIN
+    
+    DECLARE msl INT;
+    DECLARE tree_id INT;
+    DECLARE notes TEXT;
+
+    
+    
+    
+
+    
+    SELECT toc.tree_id, toc.msl_release_num, toc.notes INTO tree_id, msl, notes
+    FROM taxonomy_toc toc
+    WHERE msl_or_tree IS NULL OR toc.msl_release_num = msl_or_tree OR toc.tree_id = msl_or_tree
+    ORDER BY toc.msl_release_num DESC
+    LIMIT 1;
+
+    
+    SELECT CONCAT('TARGET MSL: ', msl) AS target_msl, CONCAT('TARGET TREE: ', tree_id) AS target_tree;
+
+    
+    SELECT 
+        'version info:' AS PASTE_TEXT_FOR_VERSION_WORKSHEET,
+        CONCAT('ICTV ', LEFT(RTRIM(tree_id), 4), ' Master Species List (MSL', RTRIM(msl), ')') AS cell_2B,
+        'update today''s date!' AS cell_5C,
+        CONCAT('New MSL including all taxa updates since the ', (SELECT name FROM taxonomy_node WHERE level_id = 100 AND msl_release_num = (msl - 1)), ' release') AS cell_6E,
+        CONCAT('Updates approved during ', CAST(notes AS CHAR)) AS cell_7F,
+        CONCAT('and ratified by the ICTV membership in ', LEFT(RTRIM(tree_id + 10000), 4)) AS cell_8F,
+        CONCAT('ICTV', LEFT(RTRIM(tree_id), 4), ' Master Species List#', RTRIM(msl)) AS taxa_tab_name
+    FROM taxonomy_node
+    WHERE level_id = 100
+      AND msl_release_num = msl;
+
+    
+    SELECT 'molecule stats' AS REPORT, m.*, 
+        (SELECT COUNT(n.taxnode_id) FROM taxonomy_node n WHERE n.inher_molecule_id = m.id AND n.tree_id = tree_id) AS `usage`
+    FROM taxonomy_molecule m
+    ORDER BY id;
+
+    
+    SELECT 'rank stats' AS REPORT, l.*, 
+        (SELECT COUNT(n.taxnode_id) FROM taxonomy_node n WHERE n.level_id = l.id AND n.tree_id = tree_id) AS `usage`
+    FROM taxonomy_level l
+    ORDER BY id;
+
+    
+    SELECT
+        ROW_NUMBER() OVER(ORDER BY tn.left_idx ASC) AS `sort`,
+        IFNULL(`realm`.name, '') AS `realm`,
+        IFNULL(`subrealm`.name, '') AS `subrealm`,
+        IFNULL(`kingdom`.name, '') AS `kingdom`,
+        IFNULL(`subkingdom`.name, '') AS `subkingdom`,
+        IFNULL(`phylum`.name, '') AS `phylum`,
+        IFNULL(`subphylum`.name, '') AS `subphylum`,
+        IFNULL(`class`.name, '') AS `class`,
+        IFNULL(`subclass`.name, '') AS `subclass`,
+        IFNULL(`order`.name, '') AS `order`,
+        IFNULL(`suborder`.name, '') AS `suborder`,
+        IFNULL(`family`.name, '') AS `family`,
+        IFNULL(`subfamily`.name, '') AS `subfamily`,
+        IFNULL(`genus`.name, '') AS `genus`,
+        IFNULL(`subgenus`.name, '') AS `subgenus`,
+        IFNULL(`species`.name, '') AS `species`,
+        
+        IFNULL((
+            SELECT mol.abbrev
+            FROM taxonomy_node_merge_split tms
+            JOIN taxonomy_node t ON
+                t.ictv_id = tms.prev_ictv_id
+                AND t.tree_id <= tn.tree_id
+            JOIN taxonomy_node tancestor ON
+                tancestor.left_idx <= t.left_idx AND tancestor.right_idx >= t.right_idx
+                AND tancestor.tree_id = t.tree_id AND tancestor.level_id > 100
+            JOIN taxonomy_molecule mol ON mol.id = tancestor.inher_molecule_id
+            WHERE tms.next_ictv_id = tn.ictv_id
+              AND mol.abbrev IS NOT NULL
+            ORDER BY tn.tree_id - tancestor.tree_id, tancestor.node_depth DESC
+            LIMIT 1
+        ), '') AS molecule,
+        
+        (
+            SELECT dx.prev_tags
+            FROM taxonomy_node_merge_split tms
+            JOIN taxonomy_node t ON
+                t.ictv_id = tms.prev_ictv_id
+                AND t.tree_id <= tn.tree_id
+            JOIN taxonomy_node_dx dx ON
+                dx.left_idx <= t.left_idx AND dx.right_idx >= t.right_idx
+                AND dx.tree_id = t.tree_id AND dx.level_id > 100
+                AND dx.prev_tags IS NOT NULL AND dx.prev_tags <> ''
+            WHERE tms.next_ictv_id = tn.ictv_id
+            ORDER BY tn.tree_id - dx.tree_id, dx.node_depth DESC
+            LIMIT 1
+        ) AS last_change,
+        
+        (
+            SELECT dx.msl_release_num
+            FROM taxonomy_node_merge_split tms
+            JOIN taxonomy_node t ON
+                t.ictv_id = tms.prev_ictv_id
+                AND t.tree_id <= tn.tree_id
+            JOIN taxonomy_node_dx dx ON
+                dx.left_idx <= t.left_idx AND dx.right_idx >= t.right_idx
+                AND dx.tree_id = t.tree_id AND dx.level_id > 100
+                AND dx.prev_tags IS NOT NULL AND dx.prev_tags <> ''
+            WHERE tms.next_ictv_id = tn.ictv_id
+            ORDER BY tn.tree_id - dx.tree_id, dx.node_depth DESC
+            LIMIT 1
+        ) AS last_change_msl,
+        
+        IFNULL((
+            SELECT CASE
+                WHEN dx.prev_proposal IS NULL THEN ''
+                WHEN dx.prev_proposal NOT LIKE '%;%' THEN CONCAT('=HYPERLINK("https://ictv.global/ictv/proposals/', dx.prev_proposal, '","', dx.prev_proposal, '")')
+                WHEN dx.prev_proposal LIKE '%;%' THEN CONCAT('=HYPERLINK("https://ictv.global/ictv/proposals/', LEFT(dx.prev_proposal, INSTR(dx.prev_proposal, ';') - 1), '","', dx.prev_proposal, '")')
+                ELSE ''
+            END
+            FROM taxonomy_node_merge_split tms
+            JOIN taxonomy_node t ON
+                t.ictv_id = tms.prev_ictv_id
+                AND t.tree_id <= tn.tree_id
+            JOIN taxonomy_node_dx dx ON
+                dx.left_idx <= t.left_idx AND dx.right_idx >= t.right_idx
+                AND dx.tree_id = t.tree_id AND dx.level_id > 100
+                AND dx.prev_tags IS NOT NULL AND dx.prev_tags <> ''
+            WHERE tms.next_ictv_id = tn.ictv_id
+              AND dx.prev_proposal IS NOT NULL AND dx.prev_proposal <> ''
+              AND dx.tree_id = (
+                  SELECT dx2.tree_id
+                  FROM taxonomy_node_merge_split tms2
+                  JOIN taxonomy_node t2 ON
+                      t2.ictv_id = tms2.prev_ictv_id
+                      AND t2.tree_id <= tn.tree_id
+                  JOIN taxonomy_node_dx dx2 ON
+                      dx2.left_idx <= t2.left_idx AND dx2.right_idx >= t2.right_idx
+                      AND dx2.tree_id = t2.tree_id AND dx2.level_id > 100
+                      AND dx2.prev_tags IS NOT NULL AND dx2.prev_tags <> ''
+                  WHERE tms2.next_ictv_id = tn.ictv_id
+                  ORDER BY tn.tree_id - dx2.tree_id, dx2.node_depth DESC
+                  LIMIT 1
+              )
+            ORDER BY tn.tree_id - dx.tree_id, dx.node_depth DESC
+            LIMIT 1
+        ), '') AS last_change_proposal,
+        
+        CONCAT('=HYPERLINK("https://ictv.global/taxonomy/taxondetails?taxnode_id=', tn.taxnode_id, '","ictv.global=', tn.taxnode_id, '")') AS history_url
+    FROM taxonomy_node tn
+    LEFT JOIN taxonomy_node `tree` ON `tree`.taxnode_id = tn.tree_id
+    LEFT JOIN taxonomy_node `realm` ON `realm`.taxnode_id = tn.realm_id
+    LEFT JOIN taxonomy_node `subrealm` ON `subrealm`.taxnode_id = tn.subrealm_id
+    LEFT JOIN taxonomy_node `kingdom` ON `kingdom`.taxnode_id = tn.kingdom_id
+    LEFT JOIN taxonomy_node `subkingdom` ON `subkingdom`.taxnode_id = tn.subkingdom_id
+    LEFT JOIN taxonomy_node `phylum` ON `phylum`.taxnode_id = tn.phylum_id
+    LEFT JOIN taxonomy_node `subphylum` ON `subphylum`.taxnode_id = tn.subphylum_id
+    LEFT JOIN taxonomy_node `class` ON `class`.taxnode_id = tn.class_id
+    LEFT JOIN taxonomy_node `subclass` ON `subclass`.taxnode_id = tn.subclass_id
+    LEFT JOIN taxonomy_node `order` ON `order`.taxnode_id = tn.order_id
+    LEFT JOIN taxonomy_node `suborder` ON `suborder`.taxnode_id = tn.suborder_id
+    LEFT JOIN taxonomy_node `family` ON `family`.taxnode_id = tn.family_id
+    LEFT JOIN taxonomy_node `subfamily` ON `subfamily`.taxnode_id = tn.subfamily_id
+    LEFT JOIN taxonomy_node `genus` ON `genus`.taxnode_id = tn.genus_id
+    LEFT JOIN taxonomy_node `subgenus` ON `subgenus`.taxnode_id = tn.subgenus_id
+    LEFT JOIN taxonomy_node `species` ON `species`.taxnode_id = tn.species_id
+    WHERE tn.is_deleted = 0 AND tn.is_hidden = 0 AND tn.is_obsolete = 0
+      AND tn.tree_id = tree_id
+      AND tn.level_id = 600 
+      
+      AND (taxnode_id IS NULL OR tn.taxnode_id = taxnode_id)
+    ORDER BY tn.left_idx;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS QC_module_taxonomy_node_suffixes
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.QC_module_taxonomy_node_suffixes does not exist
+--------------
+CREATE PROCEDURE QC_module_taxonomy_node_suffixes(IN filter VARCHAR(1000))
+BEGIN
+    
+
+
+
+
+    SELECT
+        'QC_module_taxonomy_node_suffixes' AS qc_module,
+        src.*
+    FROM (
+        SELECT
+            tn.msl_release_num,
+            tn.left_idx,
+            tn.tree_id,
+            tn.taxnode_id,
+            tn.name,
+            tn.level_id,
+            lvl.name AS `rank`,
+            lvl.suffix,
+            lvl.suffix_viroid,
+            lvl.suffix_nuc_acid,
+            lvl.suffix_viriform,
+            CASE
+                WHEN tn.name LIKE CONCAT('%', lvl.suffix) THEN CONCAT('OK: suffix = ', lvl.suffix)
+                WHEN tn.name LIKE CONCAT('%', lvl.suffix_viroid) THEN CONCAT('OK: suffix_viriod = ', lvl.suffix_viroid)
+                WHEN tn.name LIKE CONCAT('%', lvl.suffix_nuc_acid) THEN CONCAT('OK: suffix_nuc_acid = ', lvl.suffix_nuc_acid)
+                WHEN tn.name LIKE CONCAT('%', lvl.suffix_viriform) THEN CONCAT('OK: suffix_viriform = ', lvl.suffix_viriform)
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name LIKE '%virus _' THEN 'OK: (historic pre-MSL32) "Influenza virus *" genus'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name LIKE '%viruses' THEN 'OK: (historic pre-MSL32) "*viruses"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus','family') AND tn.name LIKE '%phages' THEN 'OK: (historic pre-MSL32) "*phages"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name LIKE '%phage' THEN 'OK: (historic pre-MSL32) "*phage"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name LIKE '%genus%' THEN 'OK: (historic pre-MSL32) "*genus*"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('family') AND tn.name LIKE '%family' THEN 'OK: (historic pre-MSL32) "*family"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus','family') AND tn.name LIKE '%group%' THEN 'OK: (historic pre-MSL32) "*group*"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name LIKE '%viroids%' THEN 'OK: (historic pre-MSL32) "*viroids*"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('family') AND tn.name LIKE '%viroids%' THEN 'OK: (historic pre-MSL32) "*viroids*"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name = 'Influenza virus A and B' THEN 'OK: (historic pre-MSL32) "Influenza virus A and B"'
+                WHEN tn.msl_release_num < 32 AND lvl.name IN ('genus') AND tn.name = 'Lipid phage PM2' THEN 'OK: (historic pre-MSL32) "Lipid phage PM2"'
+                WHEN tn.msl_release_num < 38 AND lvl.name IN ('genus') AND tn.name = 'Tunggulviirus' THEN 'OK: (historic pre-MSL38) "Tunggulviirus" (typo)'
+                WHEN tn.msl_release_num < 38 AND lvl.name IN ('genus') AND tn.name = 'Incheonvrus' THEN 'OK: (historic pre-MSL38) "Incheonvrus" (typo)'
+                ELSE 'ERROR: SUFFIX MISMATCH - look in taxonomy_level for legal suffix lists'
+            END AS mesg
+        FROM taxonomy_node tn
+        JOIN taxonomy_level lvl ON lvl.id = tn.level_id
+        WHERE tn.msl_release_num IS NOT NULL
+          AND tn.name IS NOT NULL
+          AND tn.name NOT IN ('Unassigned')
+          AND lvl.suffix IS NOT NULL
+    ) AS src
+    WHERE src.mesg LIKE filter
+    ORDER BY msl_release_num DESC, left_idx;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS QC_run_modules
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.QC_run_modules does not exist
+--------------
+CREATE PROCEDURE QC_run_modules(IN module_filter VARCHAR(200))
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE sp_name VARCHAR(200);
+    DECLARE sql_statement VARCHAR(255);
+
+    DECLARE qc_module_cursor CURSOR FOR
+        SELECT ROUTINE_NAME
+        FROM INFORMATION_SCHEMA.ROUTINES
+        WHERE ROUTINE_TYPE = 'PROCEDURE'
+          AND ROUTINE_SCHEMA = DATABASE()
+          AND ROUTINE_NAME NOT LIKE 'dt_%'
+          AND ROUTINE_NAME NOT LIKE 'sp_%diagram%'
+          AND ROUTINE_NAME LIKE CONCAT('QC_module_',
+              CASE
+                  WHEN module_filter IS NULL OR module_filter = '' THEN '%'
+                  ELSE module_filter
+              END,
+              '%')
+        ORDER BY ROUTINE_NAME;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN qc_module_cursor;
+
+    read_loop: LOOP
+        FETCH qc_module_cursor INTO sp_name;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF module_filter IS NULL OR module_filter = '' THEN
+            SET sql_statement = CONCAT('CALL ', sp_name, '("ERROR%")');
+        ELSE
+            SET sql_statement = CONCAT('CALL ', sp_name, '("', module_filter, '")');
+        END IF;
+
+        SELECT CONCAT('SQL: ', sql_statement) AS debug_output;
+
+        PREPARE stmt FROM sql_statement;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+    END LOOP read_loop;
+
+    CLOSE qc_module_cursor;
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS rebuild_delta_nodes
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.rebuild_delta_nodes does not exist
+--------------
+CREATE PROCEDURE rebuild_delta_nodes(
+    IN in_msl INT
+)
+BEGIN
+    DECLARE errorCode INT DEFAULT 50000;
+    DECLARE current_msl INT;
+
+    
+    IF in_msl IS NULL OR in_msl < 1 THEN
+        SELECT IFNULL(MAX(msl_release_num),1) INTO current_msl FROM taxonomy_node;
+    ELSE
+        SET current_msl = in_msl;
+    END IF;
+
+    SELECT CONCAT('TARGET MSL: ', current_msl) AS debug_output;
+
+    
+    DELETE FROM taxonomy_node_delta
+    WHERE msl = current_msl;
+    SELECT '-- MSL deltas DELETED' AS debug_output;
+
+    
+    INSERT INTO taxonomy_node_delta (msl, prev_taxid, new_taxid, proposal, notes, is_new, is_split, is_now_type, is_promoted, is_demoted)
+    SELECT 
+        n.msl_release_num,
+        p.taxnode_id,
+        n.taxnode_id,
+        n.in_filename AS proposal,
+        n.in_notes AS notes,
+        CASE WHEN n.in_change='new' THEN 1 ELSE 0 END AS is_new,
+        CASE WHEN n.in_change='split' THEN 1 ELSE 0 END AS is_split,
+        CASE 
+            WHEN p.is_ref = 1 AND n.is_ref = 0 THEN -1
+            WHEN p.is_ref = 0 AND n.is_ref = 1 THEN 1
+            ELSE 0
+        END AS is_now_type,
+        CASE WHEN p.level_id > n.level_id THEN 1 ELSE 0 END AS is_promoted,
+        CASE WHEN p.level_id < n.level_id THEN 1 ELSE 0 END AS is_demoted
+    FROM taxonomy_node n
+    LEFT JOIN taxonomy_node p ON p.msl_release_num = n.msl_release_num - 1
+       AND (n.in_target = p.lineage OR n.in_target = p.name)
+    LEFT JOIN taxonomy_node_delta d ON d.new_taxid = n.taxnode_id
+    WHERE n.in_change IN ('new','split')
+      AND d.new_taxid IS NULL
+      AND n.msl_release_num = current_msl
+      AND n.is_deleted = 0
+    ORDER BY n.taxnode_id, n.msl_release_num, n.lineage;
+    SELECT '-- MSL_delta new/split INSERTED' AS debug_output;
+
+    
+    INSERT INTO taxonomy_node_delta (msl, prev_taxid, new_taxid, proposal, notes, is_renamed, is_merged, is_lineage_updated, is_promoted, is_demoted, is_now_type, is_deleted)
+    SELECT
+        src.msl,
+        src.prev_taxid,
+        src.new_taxid,
+        src.proposal,
+        src.notes,
+        CASE WHEN prev_msl.name <> next_msl.name AND src.is_merged=0 THEN 1 ELSE 0 END AS is_renamed,
+        src.is_merged,
+        CASE WHEN (prev_pmsl.lineage <> next_pmsl.lineage AND (prev_pmsl.level_id<>100 OR next_pmsl.level_id<>100)) THEN 1 ELSE 0 END AS is_lineage_updated,
+        CASE WHEN prev_msl.level_id > next_msl.level_id THEN 1 ELSE 0 END AS is_promoted,
+        CASE WHEN prev_msl.level_id < next_msl.level_id THEN 1 ELSE 0 END AS is_demoted,
+        CASE 
+            WHEN prev_msl.is_ref=1 AND next_msl.is_ref=0 THEN -1
+            WHEN prev_msl.is_ref=0 AND next_msl.is_ref=1 THEN 1
+            ELSE 0
+        END AS is_now_type,
+        src.is_abolish AS is_deleted
+    FROM (
+        SELECT DISTINCT
+            p.msl_release_num+1 AS msl,
+            p.taxnode_id AS prev_taxid,
+            CASE
+                WHEN p.out_change <> 'promote' AND p.level_id > targ.level_id AND targ_child.taxnode_id IS NOT NULL THEN targ_child.taxnode_id
+                WHEN p.level_id=500 AND targ.level_id=600 AND p.name <> 'Unassigned' THEN targ.parent_id
+                ELSE targ.taxnode_id
+            END AS new_taxid,
+            p.out_filename AS proposal,
+            CAST(p.out_notes AS CHAR(200)) AS notes,
+            CASE WHEN p.out_change='merge' THEN 1 ELSE 0 END AS is_merged,
+            CASE WHEN p.out_change='abolish' THEN 1 ELSE 0 END AS is_abolish
+        FROM taxonomy_node p
+        LEFT JOIN taxonomy_node targ ON p.msl_release_num = targ.msl_release_num-1
+           AND (p.out_target = targ.lineage OR p.out_target = targ.name OR p._out_target_name = targ.name)
+           AND p.is_deleted=0
+        LEFT JOIN taxonomy_node targ_child ON 
+             targ_child.parent_id = targ.taxnode_id
+             AND (targ_child.name = p.name OR targ_child.name = p.out_target)
+             AND targ_child.level_id = p.level_id
+             AND p.out_change <> 'promote'
+             AND targ_child.name <> 'Unassigned'
+             AND targ_child.name IS NOT NULL
+             AND targ_child.is_hidden = 0
+        LEFT JOIN taxonomy_node_delta d ON d.prev_taxid = p.taxnode_id
+        WHERE p.out_change IS NOT NULL
+          AND p.msl_release_num = (current_msl-1)
+          AND d.prev_taxid IS NULL
+    ) src
+    JOIN taxonomy_node prev_msl ON prev_msl.taxnode_id = src.prev_taxid
+    JOIN taxonomy_node prev_pmsl ON prev_pmsl.taxnode_id = prev_msl.parent_id
+    LEFT JOIN taxonomy_node next_msl ON next_msl.taxnode_id = src.new_taxid
+    LEFT JOIN taxonomy_node next_pmsl ON next_pmsl.taxnode_id = next_msl.parent_id;
+
+    SELECT '-- MSL_delta OUT_CHANGE: rename, merge, promote, move, abolish INSERTED' AS debug_output;
+
+    
+    INSERT INTO taxonomy_node_delta (msl,prev_taxid, new_taxid, proposal, notes, is_lineage_updated, is_promoted, is_demoted, is_now_type)
+    SELECT 
+        n.msl_release_num,
+        p.taxnode_id,
+        n.taxnode_id,
+        p.out_filename,
+        p.out_notes,
+        CASE WHEN pp.lineage <> pn.lineage AND pp.level_id<>100 THEN 1 ELSE 0 END,
+        CASE WHEN p.level_id > n.level_id THEN 1 ELSE 0 END,
+        CASE WHEN p.level_id < n.level_id THEN 1 ELSE 0 END,
+        CASE 
+            WHEN p.is_ref=1 AND n.is_ref=0 THEN -1
+            WHEN p.is_ref=0 AND n.is_ref=1 THEN 1
+            ELSE 0
+        END
+    FROM taxonomy_node p
+    JOIN taxonomy_node n ON n.msl_release_num = p.msl_release_num + 1
+       AND (
+          n.lineage = p.lineage
+          OR (n.name = p.name AND n.name<>'Unassigned' AND n.level_id=p.level_id)
+          OR (n.level_id=100 AND p.level_id=100)
+       )
+       AND ((p.is_hidden=0 AND n.is_hidden=0) OR (n.level_id=100 AND p.level_id=100))
+    LEFT JOIN taxonomy_node_delta pd ON pd.prev_taxid = p.taxnode_id AND pd.is_split=0
+    LEFT JOIN taxonomy_node_delta nd ON nd.new_taxid = n.taxnode_id AND nd.is_merged=0
+    JOIN taxonomy_node pp ON pp.taxnode_id = p.parent_id
+    JOIN taxonomy_node pn ON pn.taxnode_id = n.parent_id
+    WHERE n.msl_release_num=current_msl
+      AND pd.prev_taxid IS NULL AND nd.new_taxid IS NULL
+      AND p.is_deleted=0 AND n.is_deleted=0
+    ORDER BY p.name, p.msl_release_num;
+    SELECT '-- MSL_delta NO_CHANGE: INSERTED' AS debug_output;
+
+    
+    UPDATE taxonomy_node_delta d
+    JOIN taxonomy_node_names prev_node ON d.prev_taxid=prev_node.taxnode_id
+    JOIN taxonomy_node prev_parent ON prev_parent.taxnode_id=prev_node.parent_id
+    JOIN taxonomy_node_names next_node ON next_node.taxnode_id=d.new_taxid
+    JOIN taxonomy_node next_parent ON next_parent.taxnode_id=next_node.parent_id
+    LEFT JOIN taxonomy_node_delta parent_delta ON parent_delta.prev_taxid=prev_parent.taxnode_id AND parent_delta.new_taxid=next_parent.taxnode_id
+    SET d.is_moved =
+        (CASE WHEN prev_parent.ictv_id <> next_parent.ictv_id THEN 1 ELSE 0 END)
+        * (CASE WHEN prev_node.out_change LIKE '%promot%' THEN 0 ELSE 1 END)
+        * (CASE WHEN next_node.out_change LIKE '%demot%' THEN 0 ELSE 1 END)
+        * (CASE WHEN parent_delta.is_merged=1 THEN (CASE WHEN prev_parent.name<>next_parent.name THEN 1 ELSE 0 END) ELSE 1 END)
+        * (CASE WHEN parent_delta.is_split=1 THEN (CASE WHEN prev_parent.name<>next_parent.name THEN 1 ELSE 0 END) ELSE 1 END)
+        * (CASE WHEN prev_parent.level_id=100 AND next_parent.level_id=100 THEN 0 ELSE 1 END)
+    WHERE prev_node.msl_release_num+1=current_msl
+      AND (
+         prev_node.out_change LIKE '%move%'
+         OR (parent_delta.is_merged=1 AND prev_parent.name<>next_parent.name)
+         OR (parent_delta.is_split=1 AND prev_parent.name<>next_parent.name)
+         OR prev_parent.ictv_id<>next_parent.ictv_id
+      );
+    SELECT '-- MSL_delta IS_MOVED: UPDATED' AS debug_output;
+
+    SELECT msl, IF(tag_csv='', 'UNCHANGED', tag_csv) AS change_type, COUNT(*) AS counts
+    FROM taxonomy_node_delta
+    WHERE msl = current_msl
+    GROUP BY msl, tag_csv
+    ORDER BY msl, tag_csv;
+    SELECT '-- MSL_delta stats' AS debug_output;
+
+    SELECT msl, IF(tag_csv2='', 'UNCHANGED', tag_csv2) AS change_type, COUNT(*) AS counts
+    FROM taxonomy_node_delta
+    WHERE msl = current_msl
+    GROUP BY msl, tag_csv2
+    ORDER BY msl, tag_csv2;
+    SELECT '-- MSL_delta stats2' AS debug_output;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS searchTaxonomy
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.searchTaxonomy does not exist
+--------------
+CREATE PROCEDURE searchTaxonomy(
+    IN currentMslRelease INT,
+    IN includeAllReleases BOOLEAN,
+    IN searchText NVARCHAR(100),
+    IN selectedMslRelease INT
+)
+BEGIN
+    
+    DECLARE filteredSearchText VARCHAR(100);
+    DECLARE trimmedSearchText NVARCHAR(100);
+
+    
+    IF currentMslRelease IS NULL OR currentMslRelease < 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Please enter a valid current MSL release';
+    END IF;
+
+    
+    SET trimmedSearchText = TRIM(searchText);
+    IF trimmedSearchText IS NULL OR CHAR_LENGTH(trimmedSearchText) < 1 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Please enter non-empty search text';
+    END IF;
+
+    
+    SET filteredSearchText = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+        trimmedSearchText,
+        'í','i'),'é','e'),'ó','o'),'ú','u'),'á','a'),'ì','i'),'è','e'),'ò','o'),'ù','u'),'à','a'),'î','i'),'ê','e'),'ô','o'),'û','u'),'â','a'),'ü','u'),'ö','o'),'ï','i'),'ë','e'),'ä','a'),'ç','c'),'ñ','n'),'‘',''''),'’',''''),'`',' '),'  ',' '),'ā','a'),'ī','i'),'ĭ','i'),'ǎ','a'),'ē','e'),'ō','o');
+
+    
+    IF includeAllReleases IS NULL THEN
+        SET includeAllReleases = FALSE;
+    END IF;
+
+    
+    IF includeAllReleases = FALSE AND selectedMslRelease IS NULL THEN
+        SET selectedMslRelease = currentMslRelease;
+    END IF;
+
+    
+    
+    
+
+    WITH sibling_ranks AS (
+        SELECT 
+            s.taxnode_id,
+            s.parent_id,
+            s.level_id,
+            DENSE_RANK() OVER (PARTITION BY s.parent_id, s.level_id ORDER BY s.left_idx ASC) AS display_order
+        FROM taxonomy_node s
+        WHERE s.taxnode_id <> s.tree_id  
+    )
+
+    SELECT
+        sr.display_order,
+        tn.ictv_id AS ictv_id,
+        REPLACE(IFNULL(tn.lineage, ''), ';', '>') AS lineage,
+        tn.parent_id AS parent_taxnode_id,
+        tl.name AS rank_name,
+        tn.msl_release_num AS release_number,
+        searchText AS search_text,
+        tn.taxnode_id AS taxnode_id,
+        CONCAT(
+            tn.tree_id,
+            IF(tn.realm_id IS NOT NULL, CONCAT(',', tn.realm_id), ''),
+            IF(tn.subrealm_id IS NOT NULL, CONCAT(',', tn.subrealm_id), ''),
+            IF(tn.kingdom_id IS NOT NULL, CONCAT(',', tn.kingdom_id), ''),
+            IF(tn.subkingdom_id IS NOT NULL, CONCAT(',', tn.subkingdom_id), ''),
+            IF(tn.phylum_id IS NOT NULL, CONCAT(',', tn.phylum_id), ''),
+            IF(tn.subphylum_id IS NOT NULL, CONCAT(',', tn.subphylum_id), ''),
+            IF(tn.class_id IS NOT NULL, CONCAT(',', tn.class_id), ''),
+            IF(tn.subclass_id IS NOT NULL, CONCAT(',', tn.subclass_id), ''),
+            IF(tn.order_id IS NOT NULL, CONCAT(',', tn.order_id), ''),
+            IF(tn.suborder_id IS NOT NULL, CONCAT(',', tn.suborder_id), ''),
+            IF(tn.family_id IS NOT NULL, CONCAT(',', tn.family_id), ''),
+            IF(tn.subfamily_id IS NOT NULL, CONCAT(',', tn.subfamily_id), ''),
+            IF(tn.genus_id IS NOT NULL, CONCAT(',', tn.genus_id), ''),
+            IF(tn.subgenus_id IS NOT NULL, CONCAT(',', tn.subgenus_id), ''),
+            IF(tn.species_id IS NOT NULL, CONCAT(',', tn.species_id), '')
+        ) AS taxnode_lineage,
+        tn.tree_id AS tree_id,
+        tree.name AS tree_name
+    FROM taxonomy_node tn
+    JOIN taxonomy_level tl ON tl.id = tn.level_id
+    JOIN taxonomy_node tree ON tree.taxnode_id = tn.tree_id AND tree.msl_release_num IS NOT NULL
+    LEFT JOIN sibling_ranks sr ON sr.taxnode_id = tn.taxnode_id
+        AND sr.parent_id = tn.parent_id
+        AND sr.level_id = tn.level_id
+    WHERE tn.cleaned_name LIKE CONCAT('%', filteredSearchText, '%')
+      AND tn.is_hidden = 0
+      AND tn.is_deleted = 0
+      AND (includeAllReleases = TRUE OR tn.msl_release_num = selectedMslRelease)
+      AND tn.msl_release_num <= currentMslRelease
+    ORDER BY tn.tree_id DESC, tn.left_idx;
+
+END
+--------------
+
+Query OK, 0 rows affected (0.003 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS sp_simplify_molecule_id_settings
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.sp_simplify_molecule_id_settings does not exist
+--------------
+CREATE PROCEDURE sp_simplify_molecule_id_settings(
+    IN in_msl INT
+)
+BEGIN
+    DECLARE current_msl INT;
+    DECLARE tree_id INT;
+    DECLARE affected_rows INT;
+
+    
+    IF in_msl IS NULL OR in_msl < 1 THEN
+        SET current_msl = udf_getMSL(NULL);
+    ELSE
+        SET current_msl = in_msl;
+    END IF;
+
+    SELECT MAX(tree_id), MAX(msl_release_num) INTO tree_id, current_msl
+    FROM taxonomy_toc
+    WHERE tree_id = current_msl 
+       OR msl_release_num = current_msl 
+       OR (msl_release_num IS NOT NULL AND in_msl IS NULL);
+
+    SELECT CONCAT('TARGET MSL=', current_msl, ' TARGET TREE=', tree_id) AS debug_info;
+
+    
+    loop1: WHILE 1=1 DO
+        UPDATE taxonomy_node tn
+        JOIN (
+            SELECT 
+                t.left_idx, t.taxnode_id, t.`rank`, t.lineage, t.molecule_id, t.inher_molecule_id,
+                COUNT(n.taxnode_id) AS n_ct, COUNT(n.inher_molecule_id) AS im_ct,
+                MIN(n.inher_molecule) AS im_min, MAX(n.inher_molecule) AS im_max,
+                MIN(n.inher_molecule_id) AS consensus_mol_id
+            FROM taxonomy_node_names t
+            JOIN taxonomy_node_names n ON n.left_idx BETWEEN t.left_idx AND t.right_idx 
+                                       AND n.tree_id = t.tree_id 
+                                       AND n.taxnode_id <> t.taxnode_id
+            WHERE t.msl_release_num = current_msl 
+              AND (
+                    (t.level_id >= 200 AND (t.`order` <> 'Bunyavirales' OR t.`order` IS NULL))
+                    OR
+                    (t.level_id >= 500 AND t.`order` = 'Bunyavirales')
+                  )
+            GROUP BY t.left_idx, t.taxnode_id, t.`rank`, t.lineage, t.molecule_id, t.inher_molecule_id
+            HAVING COUNT(n.taxnode_id) = COUNT(n.inher_molecule_id)
+              AND MIN(n.inher_molecule_id) = MAX(n.inher_molecule_id)
+              AND (
+                   t.molecule_id IS NULL
+                   AND (
+                        t.inher_molecule_id IS NULL
+                        OR t.inher_molecule_id <> MIN(n.inher_molecule_id)
+                      )
+                  )
+            ORDER BY t.left_idx
+            LIMIT 1000000
+        ) AS src ON src.taxnode_id = tn.taxnode_id
+        SET tn.molecule_id = src.consensus_mol_id;
+
+        SET affected_rows = ROW_COUNT();
+        IF affected_rows = 0 THEN
+            LEAVE loop1;
+        END IF;
+    END WHILE loop1;
+
+    
+    loop2: WHILE 1=1 DO
+        UPDATE taxonomy_node tn
+        JOIN taxonomy_node p ON p.taxnode_id = tn.parent_id
+        SET tn.molecule_id = NULL
+        WHERE tn.molecule_id = p.inher_molecule_id
+          AND tn.msl_release_num = current_msl;
+
+        SET affected_rows = ROW_COUNT();
+        IF affected_rows = 0 THEN
+            LEAVE loop2;
+        END IF;
+    END WHILE loop2;
+
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+END
+--------------
+
+Query OK, 0 rows affected (0.002 sec)
+
+Bye
+--------------
+DROP PROCEDURE IF EXISTS species_isolates_update_sorts
+--------------
+
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+Note (Code 1305): PROCEDURE ictv_taxonomy.species_isolates_update_sorts does not exist
+--------------
+CREATE PROCEDURE species_isolates_update_sorts()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE cur_species_name VARCHAR(200);
+    DECLARE cur_isolate_id INT;
+    DECLARE prev_species_name VARCHAR(200) DEFAULT '';
+    DECLARE species_sort INT DEFAULT 0;
+    DECLARE isolate_sort INT DEFAULT 1;
+    DECLARE mesg VARCHAR(4000);
+
+    DECLARE isolates_cursor CURSOR FOR
+        SELECT vmr.isolate_id, vmr.species_name
+        FROM species_isolates_alpha_num1_num2 vmr
+        JOIN taxonomy_node tn ON tn.taxnode_id = vmr.taxnode_id
+        ORDER BY
+            tn.left_idx,
+            isolate_type DESC,
+            _isolate_name_alpha,
+            _isolate_name_num1,
+            _isolate_name_num2;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    SELECT 'updating [species_isolates_update_sorts].[species_sort] and [isolate_sort]' AS info_message;
+
+    OPEN isolates_cursor;
+
+    read_loop: LOOP
+        FETCH isolates_cursor INTO cur_isolate_id, cur_species_name;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF prev_species_name <> cur_species_name THEN
+            SET species_sort = species_sort + 1;
+            SET isolate_sort = 1;
+            SET prev_species_name = cur_species_name;
+        ELSE
+            SET isolate_sort = isolate_sort + 1;
+        END IF;
+
+        UPDATE species_isolates
+        SET species_sort = species_sort,
+            isolate_sort = isolate_sort
+        WHERE isolate_id = cur_isolate_id;
+
+        SET mesg = CONCAT('UPDATE [species_isolates] SET species_sort=', species_sort, ', isolate_sort=', isolate_sort, ' where isolate_id=', cur_isolate_id);
+        SELECT mesg AS debug_message;
+    END LOOP read_loop;
+
+    CLOSE isolates_cursor;
+END
+--------------
+
+Query OK, 0 rows affected (0.004 sec)
+
+Bye
+--------------
+CALL initializeTaxonomyJsonRanks()
+--------------
+
+Query OK, 268 rows affected (0.656 sec)
+
+--------------
+SET @autoIncVal := (
+  SELECT COALESCE(MAX(id), 0) + 1
+  FROM taxonomy_json_rank
+)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+SET @sql = CONCAT('ALTER TABLE taxonomy_json_rank AUTO_INCREMENT = ', @autoIncVal)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+PREPARE st FROM @sql
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+Statement prepared
+
+--------------
+EXECUTE st
+--------------
+
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+DEALLOCATE PREPARE st
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+Bye
+--------------
+CALL populateTaxonomyJsonForAllReleases()
+--------------
+
+Query OK, 1015021 rows affected (4 min 0.069 sec)
+
+--------------
+SET @autoIncVal := (
+  SELECT COALESCE(MAX(id), 0) + 1
+  FROM taxonomy_json
+)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+SET @sql = CONCAT('ALTER TABLE taxonomy_json AUTO_INCREMENT = ', @autoIncVal)
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+--------------
+PREPARE st FROM @sql
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+Statement prepared
+
+--------------
+EXECUTE st
+--------------
+
+Query OK, 0 rows affected (0.028 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+DEALLOCATE PREPARE st
+--------------
+
+Query OK, 0 rows affected (0.000 sec)
+
+Bye
+Total execution time: 9 minutes and 21 seconds

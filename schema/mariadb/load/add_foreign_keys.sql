@@ -164,3 +164,25 @@ ALTER TABLE `taxonomy_node`
 ADD CONSTRAINT `FK_taxonomy_node_taxonomy_toc`
 FOREIGN KEY (`tree_id`, `msl_release_num`)
 REFERENCES `taxonomy_toc` (`tree_id`, `msl_release_num`);
+
+-- taxonomy_json_rank
+ALTER TABLE `taxonomy_json_rank`
+  ADD CONSTRAINT `FK_taxonomy_json_rank_taxonomy_level` 
+  FOREIGN KEY (`level_id`) REFERENCES `taxonomy_level` (`id`);
+
+ALTER TABLE `taxonomy_json_rank`
+  ADD CONSTRAINT `FK_taxonomy_json_rank_tree_id` 
+  FOREIGN KEY (`tree_id`) REFERENCES `taxonomy_node` (`taxnode_id`);
+
+-- taxonomy_json
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_parent_taxonomy_node` 
+  FOREIGN KEY (`parent_taxnode_id`) REFERENCES `taxonomy_node` (`taxnode_id`);
+
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_taxonomy_node` 
+  FOREIGN KEY (`taxnode_id`) REFERENCES `taxonomy_node` (`taxnode_id`);
+
+ALTER TABLE `taxonomy_json`
+  ADD CONSTRAINT `FK_taxonomy_json_tree_id` 
+  FOREIGN KEY (`tree_id`) REFERENCES `taxonomy_node` (`taxnode_id`);

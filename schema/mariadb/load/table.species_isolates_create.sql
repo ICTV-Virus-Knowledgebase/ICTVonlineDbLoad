@@ -1,7 +1,3 @@
--- SET foreign_key_checks = 0;
--- DROP TABLE IF EXISTS `species_isolates`;
--- SET foreign_key_checks = 1;
-
 CREATE TABLE `species_isolates` (
   `isolate_id` INT AUTO_INCREMENT NOT NULL,
   `taxnode_id` INT,

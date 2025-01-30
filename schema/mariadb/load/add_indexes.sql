@@ -16,3 +16,20 @@ CREATE INDEX name ON taxonomy_genome_coverage (name);
 -- taxonomy_node_merge_split
 CREATE INDEX taxonomy_node_merge_split_next_ictv_id_IDX ON taxonomy_node_merge_split (next_ictv_id);
 CREATE INDEX taxonomy_node_merge_split_prev_ictv_id_IDX ON taxonomy_node_merge_split (prev_ictv_id);
+
+-- taxonomy_node_delta
+CREATE INDEX idx_taxonomy_node_delta_prev_taxid ON taxonomy_node_delta (prev_taxid);
+CREATE INDEX idx_taxonomy_node_delta_new_taxid ON taxonomy_node_delta (new_taxid);
+
+-- taxonomy_json
+CREATE INDEX idx_taxonomy_json_taxnode_tree_ghost ON taxonomy_json (taxnode_id, tree_id, is_ghost_node);
+CREATE INDEX idx_taxonomy_json_parent_taxnode_tree_ghost ON taxonomy_json (parent_taxnode_id, tree_id, is_ghost_node);
+CREATE INDEX idx_taxonomy_json_id ON taxonomy_json (id);
+CREATE INDEX idx_tj_tree_rank ON taxonomy_json (tree_id, rank_index);
+CREATE INDEX idx_tj_tree_parent ON taxonomy_json (tree_id, parent_id);
+
+-- taxonomy_json_rank
+CREATE INDEX idx_taxonomy_json_rank_level_tree ON taxonomy_json_rank (level_id, tree_id);
+CREATE INDEX idx_tjr_tree_rank ON taxonomy_json_rank (tree_id, rank_index);
+
+
