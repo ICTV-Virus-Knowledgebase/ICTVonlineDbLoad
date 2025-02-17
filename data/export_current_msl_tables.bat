@@ -20,7 +20,6 @@ sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline39].[dbo].[taxonomy_node_mariadb_etl]"| findstr /v /c:"-" /b > "taxonomy_node_mariadb_etl.utf8.txt"
 
 @REM replaced with species_isolates
-@REM sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[vmr]"| findstr /v /c:"-" /b > "vmr.utf8.txt"
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[species_isolates]"| findstr /v /c:"-" /b > "species_isolates.utf8.txt"
 
 @REM CV tables
@@ -38,6 +37,7 @@ sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[taxonomy_node_merge_split]"| findstr /v /c:"-" /b > "taxonomy_node_merge_split.utf8.txt"
 
 @REM convenience views
+sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[vmr_export]"| findstr /v /c:"-" /b > "vmr_export.utf8.txt"
 
 @REM copy back to laptop
 copy /Y  *.txt \\tsclient\ICTV\xfer\prod\export_msl
