@@ -11,4 +11,4 @@ IGNORE 1 ROWS
   comments
 );
 
-SELECT COUNT(*) AS total_count, '41' AS should_be FROM taxonomy_toc;
+-- SELECT COUNT(*) AS total_count, '41' AS should_be FROM taxonomy_toc;

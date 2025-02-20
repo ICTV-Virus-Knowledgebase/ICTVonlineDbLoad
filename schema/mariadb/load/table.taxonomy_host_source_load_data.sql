@@ -9,4 +9,4 @@ IGNORE 1 ROWS
 host_source
 );
 
-SELECT COUNT(*) AS total_count, '26' AS should_be FROM taxonomy_host_source;
+-- SELECT COUNT(*) AS total_count, '26' AS should_be FROM taxonomy_host_source;

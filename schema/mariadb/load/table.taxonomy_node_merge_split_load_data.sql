@@ -14,4 +14,4 @@ IGNORE 1 ROWS
   rev_count
 );
 
-SELECT COUNT(*) AS total_count, '37475' AS should_be FROM taxonomy_node_merge_split;
+-- SELECT COUNT(*) AS total_count, '37475' AS should_be FROM taxonomy_node_merge_split;

@@ -10,4 +10,4 @@ IGNORE 1 ROWS
 notes
 );
 
-SELECT COUNT(*) AS total_count, '7' AS should_be FROM taxonomy_change_out;
+-- SELECT COUNT(*) AS total_count, '7' AS should_be FROM taxonomy_change_out;

@@ -11,4 +11,4 @@ name,
 priority
 );
 
-SELECT COUNT(*) AS total_count, '4' AS should_be FROM taxonomy_genome_coverage;
+-- SELECT COUNT(*) AS total_count, '4' AS should_be FROM taxonomy_genome_coverage;

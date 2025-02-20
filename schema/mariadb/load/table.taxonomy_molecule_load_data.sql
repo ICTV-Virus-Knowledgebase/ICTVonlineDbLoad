@@ -16,4 +16,4 @@ IGNORE 1 ROWS
   right_idx
 );
 
-SELECT COUNT(*) AS total_count, '16' AS should_be FROM taxonomy_molecule;
+-- SELECT COUNT(*) AS total_count, '16' AS should_be FROM taxonomy_molecule;

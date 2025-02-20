@@ -31,7 +31,7 @@ IGNORE 1 ROWS
 );
 
 -- check number of rows:
-SELECT COUNT(*) AS total_count, '16521' AS should_be FROM species_isolates;
+-- SELECT COUNT(*) AS total_count, '16521' AS should_be FROM species_isolates;
 
 -- set auto increment column to the value of the last isolate_id + 1
 -- Now compute the next ID in a user variable

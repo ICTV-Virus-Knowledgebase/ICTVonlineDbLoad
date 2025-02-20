@@ -30,4 +30,4 @@ SET
   tag_csv2 = NULL,
   tag_csv_min = NULL;
 
-SELECT COUNT(*) AS total_count, '153849' AS should_be FROM taxonomy_node_delta;
+-- SELECT COUNT(*) AS total_count, '153849' AS should_be FROM taxonomy_node_delta;
