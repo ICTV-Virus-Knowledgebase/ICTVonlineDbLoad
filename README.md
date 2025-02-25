@@ -1,4 +1,4 @@
-# ICTVonlineDbLoad
+# ICTVdatabase
 
 Data and Schema from the website of the International Committee on the Taxonomy of Viruses (ICTV)
 	* https://ICTV.global 

@@ -29,29 +29,3 @@ CREATE TABLE `species_isolates` (
   ) PERSISTENT,
   `notes` TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Adding Foreign Key Constraints
-ALTER TABLE `species_isolates` 
-ADD CONSTRAINT `FK_species_isolates_taxonomy_genome_coverage` 
-FOREIGN KEY (`genome_coverage`) 
-REFERENCES `taxonomy_genome_coverage` (`name`);
-
-ALTER TABLE `species_isolates` 
-ADD CONSTRAINT `FK_species_isolates_taxonomy_host_source` 
-FOREIGN KEY (`host_source`) 
-REFERENCES `taxonomy_host_source` (`host_source`);
-
-ALTER TABLE `species_isolates` 
-ADD CONSTRAINT `FK_species_isolates_taxonomy_molecule` 
-FOREIGN KEY (`molecule`) 
-REFERENCES `taxonomy_molecule` (`abbrev`);
-
-ALTER TABLE `species_isolates` 
-ADD CONSTRAINT `FK_species_isolates_taxonomy_node` 
-FOREIGN KEY (`taxnode_id`) 
-REFERENCES `taxonomy_node` (`taxnode_id`);
-
-ALTER TABLE `species_isolates` 
-ADD CONSTRAINT `FK_species_isolates_taxonomy_update_prev_taxnode_id` 
-FOREIGN KEY (`update_prev_taxnode_id`) 
-REFERENCES `taxonomy_node` (`taxnode_id`);

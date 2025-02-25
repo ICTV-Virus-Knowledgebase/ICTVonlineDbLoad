@@ -1,4 +1,4 @@
-
+-- taxonomy_node
 LOAD DATA LOCAL INFILE '../../../data//taxonomy_node_mariadb_etl.utf8.osx.txt'
 INTO TABLE taxonomy_node
 FIELDS TERMINATED BY '\t'
@@ -96,3 +96,5 @@ IGNORE 1 ROWS
   genome_coverage,
   host_source
 );
+
+-- SELECT COUNT(*) AS total_count, '154166' AS should_be FROM taxonomy_node;

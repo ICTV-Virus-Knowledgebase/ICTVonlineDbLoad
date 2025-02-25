@@ -1,14 +1,18 @@
-USE [ICTVonline39]
+USE [ICTVonline40]
 GO
-/****** Object:  StoredProcedure [dbo].[MSL_export_official]    Script Date: 10/8/2024 4:22:48 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[MSL_export_official]    Script Date: 1/31/2025 3:08:19 PM ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 CREATE procedure [dbo].[MSL_export_official]
 	@msl_or_tree int = NULL,
-	@taxnode_id int = NULL
+	@taxnode_id int = NULL,
+	@server varchar(200) = 'ictv.global'
 as
 -- DEBUG - uncomment to replace procedure definition for testing.
 --declare @msl_or_tree int; set @msl_or_tree=38 /*170000*/ ; declare @taxnode_id int; set @taxnode_id = 202201547 -- DEBUG
@@ -17,7 +21,9 @@ as
 -- 		ncbi, isoalte, molecule, last_change, last_change_msl, history_url
 -- NON-included extended fields:
 --		FYI_molecule_type
---
+-- TEST:
+--     exec [MSL_export_official_test] 38, 202201547, 'test.ictv.global'
+--     exec [MSL_export_official_test] NULL, NULL, 'test.ictv.global'
 -- -------------------------------------------------------------------------
 -- Run time 
 --	~ 15 minutes (full)
@@ -192,9 +198,9 @@ select
 		select top(1) 
 			prev_proposal = (case
 				when dx.prev_proposal is null then ''
-				when dx.prev_proposal not like '%;%' then '=HYPERLINK("https://ictv.global/ictv/proposals/'+dx.prev_proposal+'","'+dx.prev_proposal+'")'
+				when dx.prev_proposal not like '%;%' then '=HYPERLINK("https://'+@server+'/ictv/proposals/'+dx.prev_proposal+'","'+dx.prev_proposal+'")'
 				-- if multiple proposals in a ;-sep list, link them all to the first one (Excel only allows one link per cell)
-				when dx.prev_proposal     like '%;%' then '=HYPERLINK("https://ictv.global/ictv/proposals/'+left(dx.prev_proposal,charindex(';',dx.prev_proposal)-1)+'","'+dx.prev_proposal+'")'
+				when dx.prev_proposal     like '%;%' then '=HYPERLINK("https://'+@server+'/ictv/proposals/'+left(dx.prev_proposal,charindex(';',dx.prev_proposal)-1)+'","'+dx.prev_proposal+'")'
 				end)
 		from taxonomy_node_merge_split tms
 		join taxonomy_node t on 
@@ -226,7 +232,7 @@ select
 		)
 		order by tn.tree_id-dx.tree_id, dx.node_depth desc	
 	),'')
-	, history_url = '=HYPERLINK("https://ictv.global/taxonomy/taxondetails?taxnode_id='+rtrim(tn.taxnode_id)+'","ictv.global='+rtrim(tn.taxnode_id)+'")'
+	, history_url = '=HYPERLINK("https://'+@server+'/taxonomy/taxondetails?taxnode_id='+rtrim(tn.taxnode_id)+'","ictv.global='+rtrim(tn.taxnode_id)+'")'
 	-- these columns are not currently released in the official MSL
 	-- ICTV does not OFFICIALLY track abbreviations 
 	/*, FYI_last_abbrev=isnull((
@@ -357,3 +363,5 @@ and targ.molecule_id is null
 exec MSL_export_official
 */
 GO
+
+
