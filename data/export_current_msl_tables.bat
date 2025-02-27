@@ -1,7 +1,8 @@
 @REM
 @REM export tables to tsv needed for proposal_validator's current_msl/ cache
 @REM
-@REM 20250130 CurtisH MSL40
+@REM 20250227 CurtisH MSL40v1 fix taxobnomy_node_marisdb_etl to also be MSL40
+@REM 20250130 CurtisH MSL40v1
 @REM 20250113 CurtisH MSL39v4 +taxonomy_node_mariadb_etl, +virus_prop 
 @REM 20230614 CurtisH MSL38
 @REM
@@ -17,7 +18,7 @@ sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo
 @REM used by ProposalQC 
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[taxonomy_node_export]"| findstr /v /c:"-" /b > "taxonomy_node_export.utf8.txt"
 @REM used for ETL to MariaDB, until MariaDB is primary
-sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline39].[dbo].[taxonomy_node_mariadb_etl]"| findstr /v /c:"-" /b > "taxonomy_node_mariadb_etl.utf8.txt"
+sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[taxonomy_node_mariadb_etl]"| findstr /v /c:"-" /b > "taxonomy_node_mariadb_etl.utf8.txt"
 
 @REM replaced with species_isolates
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[species_isolates]"| findstr /v /c:"-" /b > "species_isolates.utf8.txt"
