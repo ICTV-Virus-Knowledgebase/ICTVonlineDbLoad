@@ -14,7 +14,11 @@ ALTER view [dbo].[taxonomy_node_mariadb_etl] as
 -- MariaDB does not (yet) have functional update SP/Triggers
 -- so we include all the trigger-maintained columns
 --
--- export: select * from taxonomy_node_export 
+-- export: select * from taxonomy_node_export
+--
+-- CHANGE LOG: 
+-- 20250228 IVK-339 fixed [notes] to mariadb-friendly escape leading double-quote
+--
 select 
 	top 10000000 -- add top so we can use 'order by' in a view
      tn.[taxnode_id]
@@ -30,8 +34,8 @@ select
     ,[genbank_refseq_accession_csv] = replace(tn.[genbank_refseq_accession_csv],char(9),'')
     ,[refseq_accession_csv]= replace(tn.[refseq_accession_csv],char(9),'')
     ,[isolate_csv] = replace(tn.[isolate_csv],char(9),'')
-    ,notes=(case when tn.[notes] like '%"%' then
-				-- internal double quotes need escaping in a mariaDB friendly format
+    ,notes=(case when tn.[notes] like '"%' then
+				-- leading double quotes need escaping in a mariaDB friendly format
 				'"'+replace(replace(replace(tn.[notes]
 				, char(13),'') -- DOS newline
 				, char(9),'') -- TAB
@@ -141,5 +145,3 @@ and tn.is_obsolete=0
 -- order so satisfies FK parent_id=>taxnode_id during load
 order by tn.msl_release_num, tn.left_idx
 GO
-
-
