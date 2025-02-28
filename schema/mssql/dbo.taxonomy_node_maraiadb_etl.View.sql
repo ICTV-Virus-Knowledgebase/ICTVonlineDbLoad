@@ -1,7 +1,6 @@
-USE [ICTVonline39]
+USE [ICTVonline40]
 GO
-
-/****** Object:  View [dbo].[taxonomy_node_mariadb_etl]    Script Date: 1/14/2025 11:24:59 PM ******/
+/****** Object:  View [dbo].[taxonomy_node_mariadb_etl]    Script Date: 2/28/2025 04:10:24 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -9,7 +8,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE view [dbo].[taxonomy_node_mariadb_etl] as
+ALTER view [dbo].[taxonomy_node_mariadb_etl] as
 --
 -- Export used to load MariaDB mirror database
 -- MariaDB does not (yet) have functional update SP/Triggers
@@ -31,9 +30,19 @@ select
     ,[genbank_refseq_accession_csv] = replace(tn.[genbank_refseq_accession_csv],char(9),'')
     ,[refseq_accession_csv]= replace(tn.[refseq_accession_csv],char(9),'')
     ,[isolate_csv] = replace(tn.[isolate_csv],char(9),'')
-    ,notes=replace(replace(tn.[notes]
-			, char(13),'') -- DOS newline
-			, char(9),'') -- TAB
+    ,notes=(case when tn.[notes] like '%"%' then
+				-- internal double quotes need escaping in a mariaDB friendly format
+				'"'+replace(replace(replace(tn.[notes]
+				, char(13),'') -- DOS newline
+				, char(9),'') -- TAB
+				, '"','""') -- escape quotes
+				+'"'
+			else 
+				-- no internal quotes
+				replace(replace(tn.[notes]
+				, char(13),'') -- DOS newline
+				, char(9),'') -- TAB
+			end)
     ,tn.[is_ref]
     ,tn.[is_official]
     ,tn.[is_hidden]
