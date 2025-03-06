@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -412,3 +415,4 @@ AS
 	-- build script to re-index all trees
 	--select 'exec taxonomy_node_compute_indexes '+rtrim(taxnode_id) from taxonomy_node where level_id =100
 GO
+

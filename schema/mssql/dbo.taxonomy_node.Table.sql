@@ -1,10 +1,13 @@
-USE [ICTVonline39]
+
 GO
-/****** Object:  Table [dbo].[taxonomy_node]    Script Date: 8/20/2024 4:10:24 PM ******/
+
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[taxonomy_node](
 	[taxnode_id] [int] NOT NULL,
 	[parent_id] [int] NULL,
@@ -107,205 +110,294 @@ CREATE TABLE [dbo].[taxonomy_node](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_ref]  DEFAULT ((0)) FOR [is_ref]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_official]  DEFAULT ((0)) FOR [is_official]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_hidden]  DEFAULT ((0)) FOR [is_hidden]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_deleted]  DEFAULT ((0)) FOR [is_deleted]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_deleted_ny]  DEFAULT ((0)) FOR [is_deleted_next_year]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_typo]  DEFAULT ((0)) FOR [is_typo]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_renamed]  DEFAULT ((0)) FOR [is_renamed_next_year]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_is_obsolete]  DEFAULT ((0)) FOR [is_obsolete]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] ADD  CONSTRAINT [DF_taxonomy_node_sort_start]  DEFAULT (NULL) FOR [start_num_sort]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_change_in] FOREIGN KEY([in_change])
 REFERENCES [dbo].[taxonomy_change_in] ([change])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_change_in]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_change_out] FOREIGN KEY([out_change])
 REFERENCES [dbo].[taxonomy_change_out] ([change])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_change_out]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_genome_coverage] FOREIGN KEY([genome_coverage])
 REFERENCES [dbo].[taxonomy_genome_coverage] ([genome_coverage])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_genome_coverage]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_host_source] FOREIGN KEY([host_source])
 REFERENCES [dbo].[taxonomy_host_source] ([host_source])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_host_source]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_level-level_id] FOREIGN KEY([level_id])
 REFERENCES [dbo].[taxonomy_level] ([id])
 ON DELETE CASCADE
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_level-level_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_molecule_inher_molecule_id] FOREIGN KEY([inher_molecule_id])
 REFERENCES [dbo].[taxonomy_molecule] ([id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_molecule_inher_molecule_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_molecule_molecule_id] FOREIGN KEY([molecule_id])
 REFERENCES [dbo].[taxonomy_molecule] ([id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_molecule_molecule_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_family_id] FOREIGN KEY([family_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_family_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_genus_id] FOREIGN KEY([genus_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_genus_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_ictv_id] FOREIGN KEY([ictv_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_ictv_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_order_id] FOREIGN KEY([order_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_order_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_Taxonomy_node_species_id] FOREIGN KEY([species_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_Taxonomy_node_species_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_subfamily_id] FOREIGN KEY([subfamily_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_subfamily_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node_tree_id] FOREIGN KEY([tree_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node_tree_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-class_id] FOREIGN KEY([class_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-class_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-kingdom_id] FOREIGN KEY([kingdom_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-kingdom_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-phylum_id] FOREIGN KEY([phylum_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-phylum_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-realm_id] FOREIGN KEY([realm_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-realm_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-subclass_id] FOREIGN KEY([subclass_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-subclass_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-subgenus_id] FOREIGN KEY([subgenus_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-subgenus_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-subkingdom_id] FOREIGN KEY([subkingdom_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-subkingdom_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-suborder_id] FOREIGN KEY([suborder_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-suborder_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-subphylum_id] FOREIGN KEY([subphylum_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-subphylum_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_node-subrealm_id] FOREIGN KEY([subrealm_id])
 REFERENCES [dbo].[taxonomy_node] ([taxnode_id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_node-subrealm_id]
 GO
+
 ALTER TABLE [dbo].[taxonomy_node]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_node_taxonomy_toc] FOREIGN KEY([tree_id], [msl_release_num])
 REFERENCES [dbo].[taxonomy_toc] ([tree_id], [msl_release_num])
 GO
+
 ALTER TABLE [dbo].[taxonomy_node] CHECK CONSTRAINT [FK_taxonomy_node_taxonomy_toc]
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'MSL#, as there can be more than one MSL per year, and some years w/o an MSL. This column is set only for the root node of the tree.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'msl_release_num'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Genomic molecule type.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'molecule_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'standard species abbreviation(s). Separated by commas, with no surounding spaces.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'abbrev_csv'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Non-RefSeq Genbank accession numbers in a comma-separate list, no spaces. (previously named ncbi_accession_csv)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'genbank_accession_csv'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Genbank accession numbers matching the RefSeq accession numbers in refseq_accession_csv, in a comma-separate list, no spaces.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'genbank_refseq_accession_csv'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'RefSeq accession numbers in a comma-separate list, no spaces.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'refseq_accession_csv'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Isolate names in a comma-separate list, no spaces.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'isolate_csv'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 if this is intentionally deleted in the next year' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'is_deleted'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 if this is intentionally deleted in the next year' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'is_deleted_next_year'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 if this matches what is published, but is thought to contain a typo' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'is_typo'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 if this is intentionally renamed in the next year. ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'is_renamed_next_year'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'1 if there is more current record for the same entry in the current tree_id' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'is_obsolete'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'change of this taxa relative to the previous MSL. Primarily used for importing the historical MSLs.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'in_change'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'name or lineage referencing a taxa in the previous MSL from which this changed. ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'in_target'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'filename of a document justifying the change of this taxa from the previous MSL' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'in_filename'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'change of this taxa in the next MSL. Primarily used for importing the historical MSLs.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'out_change'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'name or lineage referencing a taxa in the NEXT MSL into which this changed. ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'out_target'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'filename of a document justifying the change of this taxa in the next MSL' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'out_filename'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'if not null, use the first (sort_start) characters of name for alphabetic sorting, followed by the characters after (sort_start+1) for numeric sorting. This handles correct sorting of species names where they are numbered, but not right justified with spaces or zeros.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'start_num_sort'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] taxnode_id of closest ancestor (or self) taxon with level of ORDER' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'order_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] taxnode_id of closest ancestor (or self) taxon with level of FAMILY' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'family_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] taxnode_id of closest ancestor (or self) taxon with level of SUBFAMILY' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'subfamily_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] taxnode_id of closest ancestor (or self) taxon with level of GENUS' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'genus_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] taxnode_id of closest ancestor (or self) taxon with level of SPECIES' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'species_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] Inherited Genomic molecule type.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'inher_molecule_id'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] depth first traversal entry index of this node within this MSL, sort by this to get taxonomic order' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'left_idx'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] depth first traversal exit index of this node within this MSL' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'right_idx'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] depth this node within this MSL tree' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'node_depth'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'[computed by trigger: TR_taxonomy_node_UPDATE_indexes] semi-colon separated list of all ancestors, including self, within this MSL tree' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'taxonomy_node', @level2type=N'COLUMN',@level2name=N'lineage'
 GO
+

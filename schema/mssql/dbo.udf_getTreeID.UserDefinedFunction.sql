@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE function [dbo].[udf_getTreeID] (@msl as int = NULL)
@@ -41,15 +44,4 @@ as BEGIN
 	*/
 end 
 GO
-
--- Test
-
--- Test Case 1: @msl is NULL
--- SELECT dbo.udf_getTreeID(NULL) AS latest_tree_id;
-
--- Test Case 2: @msl exists
--- SELECT dbo.udf_getTreeID(32) AS tree_id_for_msl;
-
--- Test Case 3: @msl does not exist
--- SELECT ISNULL(dbo.udf_getTreeID(-1), -999) AS tree_id_for_msl;
 

@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE function [dbo].[udf_getMSL] (@tree_id as int = NULL)
 RETURNS int 
@@ -41,3 +44,4 @@ as BEGIN
 
 end 
 GO
+

@@ -1,12 +1,13 @@
-USE [ICTVonline40]
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[MSL_export_official]    Script Date: 1/31/2025 3:08:19 PM ******/
+
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE procedure [dbo].[MSL_export_official]
@@ -28,6 +29,7 @@ as
 -- Run time 
 --	~ 15 minutes (full)
 -- -------------------------------------------------------------------------
+-- 20250228 Start switch to ICTV#### for ictv_id
 -- 20230504 MSL38 add URL for proposal zip filename
 -- 20210510 MSL36 remove is_ref, remove column giving rank where molecule_id is set
 -- 20181018 changed from msl_release_num based joins to tree_id for better index usage
@@ -88,6 +90,9 @@ select
 	,[genus]        = isnull([genus].name,'')
 	,[subgenus]     = isnull([subgenus].name,'')
 	,[species]      = isnull([species].name,'')
+	-- ICTV_id (details URL) for that species
+	, history_url = '=HYPERLINK("https://'+@server+'/taxonomy/taxondetails?taxnode_id='+rtrim(tn.taxnode_id)+'&ictv_id=ICTV'+rtrim(tn.ictv_id)+'","ICTV'+rtrim(tn.ictv_id)+'")'
+
 	-- add info on most recent change to that taxon
 	--,tn.taxnode_id, tn.ictv_id, 
 	-- select msl_release_num, ictV_id, name, abbrev from taxonomy_node where abbrev is not null
@@ -232,7 +237,6 @@ select
 		)
 		order by tn.tree_id-dx.tree_id, dx.node_depth desc	
 	),'')
-	, history_url = '=HYPERLINK("https://'+@server+'/taxonomy/taxondetails?taxnode_id='+rtrim(tn.taxnode_id)+'","ictv.global='+rtrim(tn.taxnode_id)+'")'
 	-- these columns are not currently released in the official MSL
 	-- ICTV does not OFFICIALLY track abbreviations 
 	/*, FYI_last_abbrev=isnull((
@@ -363,5 +367,4 @@ and targ.molecule_id is null
 exec MSL_export_official
 */
 GO
-
 

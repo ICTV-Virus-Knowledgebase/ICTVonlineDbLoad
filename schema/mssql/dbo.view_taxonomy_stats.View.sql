@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 /*Taxa counts per MSL - used by index.asp and taxInfo.asp*/
 CREATE VIEW [dbo].[view_taxonomy_stats]
 AS
@@ -24,6 +27,7 @@ FROM         dbo.taxonomy_node AS n LEFT OUTER JOIN
 WHERE     (n.is_hidden = 0) AND (n.msl_release_num IS NOT NULL) AND (n.name NOT LIKE 'unassigned') AND (n.tree_id > 10090000)
 GROUP BY n.tree_id, n.msl_release_num
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
 Begin DesignProperties = 
    Begin PaneConfigurations = 
@@ -167,6 +171,7 @@ Begin DesignProperties =
       Begin ColumnWidths = 12
          Column = ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'view_taxonomy_stats'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'1440
          Alias = 900
          Table = 1170
@@ -185,5 +190,7 @@ EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'1440
 End
 ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'view_taxonomy_stats'
 GO
+
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'view_taxonomy_stats'
 GO
+

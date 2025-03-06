@@ -1,7 +1,7 @@
-USE [ICTVonline37]
+
 GO
 
-/****** Object:  Trigger [dbo].[TR_taxonomy_node_UPDATE_indexes]    Script Date: 5/24/2022 7:15:39 PM ******/
+
 SET ANSI_NULLS ON
 GO
 

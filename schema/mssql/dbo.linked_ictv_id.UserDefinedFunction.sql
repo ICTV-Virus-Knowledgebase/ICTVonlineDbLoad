@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE FUNCTION [dbo].[linked_ictv_id] (@ictv_id int)
 RETURNS TABLE
 AS
@@ -23,3 +26,4 @@ RETURN
 	WHERE final_id = @ictv_id
 );
 GO
+

@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE procedure [dbo].[sp_simplify_molecule_id_settings]
@@ -95,3 +98,4 @@ END
 	exec sp_simplify_molecule_id_settings
 	*/
 GO
+

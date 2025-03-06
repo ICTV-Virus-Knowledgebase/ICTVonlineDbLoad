@@ -1,0 +1,163 @@
+taxon	sub_taxon	molecule	envelope	morphology	virion_size	genome_segments	genome_configuration	genome_size	host
+Abyssoviridae		ssRNA(+)	+	unknown	unknown	1	linear	35.9	I
+Ackermannviridae		dsDNA	-	icosahedral head with tail	70-90 (head),13-18x110-130 (tail)	1	linear	150-160	B
+Adenoviridae		dsDNA	-	icosahedral	70-90	1	linear	24-46	V; H
+Albetovirus		ssRNA(+)	-	icosahedral	17	1	linear	1.2	P
+Alloherpesviridae		dsDNA	+	spherical; icosahedral	160-300	1	linear	134-295	V
+Alphaflexiviridae		ssRNA(+)	-	filamentous	10-15x470-800	1	linear	5.5-8.8	F; P
+Alphasatellitidae		ssDNA	-	N/A	N/A	1	linear	1.0-1.5	I; P
+Alphatetraviridae		ssRNA(+)	-	icosahedral	40	1-2	linear	5.7-6.6 (monopartite); 7.8-8.0 (bipartite)	I
+Alvernaviridae		ssRNA(+)	-	icosahedral	30	1	linear	4.4	Pr
+Amalgaviridae		dsRNA	-	N/A	N/A	1	linear	3.2-3.5	P
+Amnoonviridae		ssRNA(-)	+	unknown	unknown	10	linear	10.3	V
+Ampullaviridae		dsDNA	+	bottle-shaped	230x4-75	1	linear	24-28	Ar
+Anelloviridae		ssDNA(-)	-	icosahedral	30	1	circular	2.0-4.0	V; H
+Arenaviridae		ssRNA(-); ssRNA(+/-)	+	spherical; pleomorphic	50-300	2	linear	10.0-10.7	V; H
+Arteriviridae		ssRNA(+)	+	spherical; pleomorphic	50-74	1	linear	12.7-15.7	V
+Artoviridae		ssRNA(-)	+	spherical	62.5–100	1	linear	12.2	I
+Ascoviridae		dsDNA	+	bacilliform; ovoid; allantoid	130x200-400	1	circular	120-200	I
+Asfarviridae		dsDNA	+	icosahedral	175-250	1	linear	170-194	V; I
+Aspiviridae		ssRNA(-)	-	filamentous; coiled	3x700; 3x2000	3-4	linear	11.3-12.5	P
+Astroviridae		ssRNA(+)	-	icosahedral	28-30	1	linear	6-8	V; H
+Aumaivirus		ssRNA(+)	-	icosahedral	17	1	linear	1.2	P
+Avsunviroidae		ssRNA	-	unencapsidated; rod-like	N/A	1	circular (noncovalently closed)	0.25-0.4	P
+Bacilladnaviridae		ssDNA	-	icosahedral	33-38	1	circular	4.6-6.0	Al
+Baculoviridae		dsDNA	+	rod-shaped	30-60x250-300	1	circular	80-180	I
+Barnaviridae		ssRNA(+)	-	bacilliform	18-20x48-53	1	linear	4.0	F
+Belpaoviridae		ssRNA-RT(+)	+	unknown	unknown	1	linear	4-10	V; I
+Benyviridae		ssRNA(+)	-	rod-shaped	20x65-390	2-5	linear	11.3-15.9	P
+Betaflexiviridae		ssRNA(+)	-	filamentous	10-15x600->1000	1	linear	6-10.5	P
+Bicaudaviridae		dsDNA	+	spindle-shaped; two-tailed	80x120-400	1	circular	63	Ar
+Bidnaviridae		ssDNA	-	icosahedral	22	2	linear	12.5	I
+Birnaviridae		dsRNA	-	icosahedral	65	2	linear	5.6-6.7	V; I
+Bornaviridae		ssRNA(-)	+	spherical	90-130	1	linear	8.8-12.8	V; H
+Botourmiaviridae		ssRNA(+)	-	bacilliform	18x30-62	1-3	linear	2.4-4.8	F; P
+Botybirnavirus		dsRNA	-	icosahedral	35	2	linear	12.1-12.7	F
+Bromoviridae		ssRNA(+)	-	icosahedral; bacilliform	26–35 (icosahedral); 18–26x30–85 (bacilliform)	3	linear	8.2-8.5	P
+Caliciviridae		ssRNA(+)	-	icosahedral	35-40	1	linear	6.4-9.7	V; H
+Carmotetraviridae		ssRNA(+)	-	icosahedral	40	1	linear	6.2	I
+Caulimoviridae		dsDNA-RT	-	icosahedral; bacilliform	50-52 (icosahedral); 30x60-900 (bacilliform)	1	circular (noncovalently closed)	7.2-9.2	P
+Chrysoviridae		dsRNA	-	icosahedral	35-40	3-7	linear	8.9-16	F
+Chuviridae		ssRNA(-)	unknown	unknown	unknown	1-2	linear; circular	9.1-11.9	I
+Circoviridae		ssDNA(+/-)	-	icosahedral	15-25	1	circular	1.7-2.1	V; H
+Clavaviridae		dsDNA	-	bacilliform	16x153	1	circular	5.3	Ar
+Closteroviridae		ssRNA(+)	-	filamentous	12x650->2000	1-3	linear	13-19	P
+Coguvirus		ssRNA(-); ssRNA(+/-)	-	filamentous	6x200-300	2	linear	9.4	P
+Coronaviridae		ssRNA(+)	+	spherical; bacilliform	120-160 (spherical); 75-90x120-200 (bacilliform)	1	linear	25-32	V; H
+Corticoviridae		dsDNA	-	icosahedral	57	1	circular	8.8-12.5	B
+Cruliviridae		ssRNA(-)	unknown	unknown	unknown	3	linear	10.8	I
+Cystoviridae		dsRNA	+	spherical	85	3	linear	12.9-15	B
+Deltaflexiviridae		ssRNA(+)	unknown	unknown	unknown	1	linear	6.7-8.3	F
+Deltavirus		ssRNA(-)	+	spherical	36-43	1	circular	1.7	V; H
+Dicistroviridae		ssRNA(+)	-	icosahedral	30	1	linear	8.0-10.7	I
+Dinodnavirus		dsDNA	-	icosahedral	180-210	1	linear	356	Al
+Endornaviridae		ssRNA(+)	N/A	pleomorphic (RNA-containing cytoplasmic vesicles)	none	1	linear	9.7–17.6	Al; F; P
+Euroniviridae		ssRNA(+)	+	unknown	unknown	1	linear	24-29	I
+Filoviridae		ssRNA(-)	+	bacilliform; filamentous	80-100x660-800	1	linear	15-19	V; H
+Fimoviridae		ssRNA(-)	+	spherical	80-100	4-8	linear	12.3–18.5	P
+Flaviviridae		ssRNA(+)	+	spherical	40-60	1	linear	9-13	V; I; H
+Fuselloviridae		dsDNA	+	lemon-shaped	55-60x80-100	1	circular	11-29	Ar
+Gammaflexiviridae		ssRNA(+)	-	filamentous	13x720	1	linear	6.8	F
+Geminiviridae		ssDNA(+/-)	-	icosahedral; twinned	22x38	1-2	circular	2.4-5.5	P
+Genomoviridae		ssDNA	-	icosahedral	20-22	1	circular	2-3	V; I; F; P; H
+Globuloviridae		dsDNA	+	spherical	70-100	1	linear	21-28	Ar
+Guttaviridae		dsDNA	+	ovoid	55–80x75–130	1	circular	14-20	Ar
+Hantaviridae		ssRNA(-)	+	spherical	80-120	3	linear	12	V; I; P; H
+Hepadnaviridae		dsDNA-RT	+	spherical	42-50	1	circular (noncovalently closed)	3-4.4	V; H
+Hepeviridae		ssRNA(+)	-	icosahedral	27-34	1	linear	6.4-7.2	V; H
+Herelleviridae		dsDNA	-	icosahedral head with tail	90 (head); 19x140 (tail)	1	linear	106-167	B
+Herpesviridae		dsDNA	+	spherical; icosahedral	160-300	1	linear	125-241	V; H
+Hypoviridae		ssRNA(+)	N/A	pleomorphic (RNA-containing cytoplasmic vesicles)	50-80	1	linear	9-13	F
+Hytrosaviridae		dsDNA	+	spherical	50–80×500–1000	1	circular	124–190	I
+Idaeovirus		ssRNA(+)	-	icosahedral	33	2	linear	7.7	P
+Iflaviridae		ssRNA(+)	-	icosahedral	22-30	1	linear	9-11	I
+Inoviridae		ssDNA(+)	-	filamentous; rod-shaped	7-15x200-3500	1	circular	4.5-10.6	B
+Iridoviridae		dsDNA	+/-	icosahedral; spherical	120-350	1	linear	103-220	V; I
+Kitaviridae		ssRNA(+)	-	bacilliform	35-55x100-130	2-4	linear	13.7-15.1	P
+Lavidaviridae		dsDNA	-	icosahedral	60-75	1	circular	17-40	Pr
+Leishbuviridae		ssRNA(-)	unknown	unknown	unknown	3	linear	7.8	Pr
+Leviviridae		ssRNA(+)	-	icosahedral	26	1	linear	3.4-4.3	B
+Lipothrixviridae		dsDNA	+	filamentous	24-38x410-2200	1	linear	21-41	Ar
+Lispiviridae		ssRNA(-)	unknown	unknown	unknown	1	linear	9.9-14.4	I
+Luteoviridae		ssRNA(+)	-	icosahedral	25-30	1	linear	5-6.2	P
+Malacoherpesviridae		dsDNA	+	icosahedral	150-300	1	linear	207-212	I
+Marnaviridae		ssRNA(+)	-	icosahedral	25	1	linear	6.4-9.5	Al
+Marseilleviridae		dsDNA	-	icosahedral	190-250	1	circular	347-380	Pr
+Matonaviridae		ssRNA(+)	+	spherical	50-90	1	linear	9.8	V; H
+Medioniviridae		ssRNA(+)	unknown	unknown	unknown	1	linear	20.3	I
+Megabirnaviridae		dsRNA	+	icosahedral	52	2	linear	16-17	F
+Mesoniviridae		ssRNA(+)	+	spherical	60-120	1	linear	20-21	I
+Metaviridae		ssRNA-RT(+)	+/-	ovoid (ntracellular virus-like particles)	unknown	1	linear	7-7.5	F; I; P; V
+Microviridae		ssDNA(+)	-	icosahedral	25-27 	1	circular	3-8	B
+Mimiviridae		dsDNA	-	pseudo-icosahedral	750	1	linear	617-1400	Pr
+Mononiviridae		ssRNA(+)	+	spherical; pleomorphic	90-150	1	linear	41	I
+Mymonaviridae		ssRNA(-)	+	filamentous	25-50x1000	1	linear	9.7-11.5	F
+Myoviridae		dsDNA	-	icosahedral head with tail	60-145 (head); 80x110 (elongated head),tail:16-20x80-455	1	linear	20-550	Ar; B
+Mypoviridae		ssRNA(-)	unknown	unknown	unknown	3	linear	16	I
+Nairoviridae		ssRNA(-)	+	spherical	80-120	3	linear	17.4-20.2	V; I; P; H
+Nanoviridae		ssDNA(+)	-	icosahedral	17-20	6-8	circular	6.4-8	P
+Narnaviridae		ssRNA(+)	N/A	intracellular ribonucleoprotein complexes	N/A	1	linear	2-4.6	F
+Nimaviridae		dsDNA	+	ellipsoid; bacilliform 	70–170x210–420 	1	circular	280-309	I
+Nodaviridae		ssRNA(+)	-	icosahedral	25-33	2	linear	4.3-6.4	V; I
+Nudiviridae		dsDNA	+	rod-shaped	75-120x180-445	1	circular	97-232	I
+Nyamiviridae		ssRNA(-)	+	spherical	100-130	1-2	linear	9.4-11.8	V; I
+Orthomyxoviridae		ssRNA(-)	+	spherical; filamentous; pleomorphic	80-120	6-8	linear	10.5-14.5	V; I; H
+Ovaliviridae		dsDNA	+	ellipsoid	78-115	1	linear	23	Ar
+Papanivirus		ssRNA(+)	-	icosahedral	16	1	linear	0.8	P
+Papillomaviridae		dsDNA	-	icosahedral	55	1	circular	5.7-8.8	V; H
+Paramyxoviridae		ssRNA(-)	+	spherical; filamentous; pleomorphic	100-540	1	linear	14.8-20	V; H
+Partitiviridae		dsRNA	-	icosahedral	25-43	2-5	linear	3.1-14.7	F; P; Pr
+Parvoviridae		ssDNA(+/-)	-	icosahedral	23-28	1	linear	3.2-6.3	V; I; H
+Peribunyaviridae		ssRNA(-); ssRNA(+/-)	+	spherical	80-120	3	linear	12.3-18.3	V; I; P; H
+Permutotetraviridae		ssRNA(+)	-	icosahedral	40	1	linear	5.7	I
+Phasmaviridae		ssRNA(-)	unknown	unknown	unknown	3-4	linear	9.7-15.5	I
+Phenuiviridae		ssRNA(-); ssRNA(+/-)	+	spherical; pleomorphic	80-130	3-6	linear	10.7-25	V; I; P; H
+Phycodnaviridae		dsDNA	-	icosahedral	100-220	1	linear; circular	154-407	Al
+Picobirnaviridae		dsRNA	-	icosahedral	33-37	2	linear	3.3-4.4	V; I; H
+Picornaviridae		ssRNA(+)	-	icosahedral	30-32	1	linear	6.5-10.1	V; H
+Plasmaviridae		dsDNA	+	quasi-spherical; pleomorphic	50-125	1	circular	12	B
+Pleolipoviridae		dsDNA; ssDNA	+	pleomorphic	40-70	1	linear; circular	7.0-16.2	Ar
+Pneumoviridae		ssRNA(-)	+	spherical; filamentous	80-600 (spherical); 2x70-190 (filamentous)	1	linear	13.1-17	V; H
+Podoviridae		dsDNA	-	icosahedral head with tail	60-70 (head); 44x145 (head),8x10-46 (tail)	1	linear	17-104	B
+Polycipiviridae		ssRNA(+)	-	icosahedral	33	1	linear	11-12	I
+Polydnaviridae		dsDNA	+	prolate ellipsoid	34-40x8-150; 85x330	6-105	circular	185-600	I
+Polyomaviridae		dsDNA	-	icosahedral	40-45	1	circular	4.6-7.0	V; H
+Portogloboviridae		dsDNA	+	spherical	85	1	circular	20	Ar
+Pospiviroidae		ssRNA	-	unencapsidated; rod-like	N/A	1	circular (noncovalently closed)	0.2-0.475	P
+Potyviridae		ssRNA(+)	-	filamentous	11-20x250-950	1-2	linear	8-11	P
+Poxviridae		dsDNA	+	brick-shaped	140-260x220-450	1	linear	128-360	V; I; H
+Pseudoviridae		ssRNA-RT(+)	-	spherical; icosahedral	30-40	1	linear	5-9	Al; F; I; P; Pr
+Qinviridae		ssRNA(-)	unknown	unknown	unknown	2	linear	7.4-8.2	I
+Quadriviridae		dsRNA	-	icosahedral	45	4	linear	16.8–17.1 	F
+Reoviridae		dsRNA	-	icosahedral (turreted, non-turreted)	60-85	9-16	linear	19-33	F; I; P; Pr; V; H
+Retroviridae		ssRNA-RT(+)	+	spherical	80-100	1	linear	5.9-13.4	V; H
+Rhabdoviridae		ssRNA(-)	+/-	bullet-shaped; bacilliform; filamentous	45-100x100-430	1-2	linear	10.7-16.1	V; I; P; H
+Rhizidiovirus		dsDNA	-	icosahedral	60	1	linear	unknown	Pr
+Roniviridae		ssRNA(+)	+	bacilliform	40-60x150-200	1	linear	26-27	I
+Rudiviridae		dsDNA	-	rod-shaped	23x600-900	1	linear	25-35	Ar
+Salterprovirus		dsDNA	-	spindle-shaped	44x77	1	linear	14.5	Ar
+Sarthroviridae		ssRNA(+)	-	icosahedral	15	1	linear	0.8-0.9	I
+Secoviridae		ssRNA(+)	-	icosahedral	25-30	1-2	linear	9-13.7	P
+Sinaivirus		ssRNA(+)	-	icosahedral	28	1	linear	6	I
+Siphoviridae		dsDNA	-	icosahedral head with tail	40-80 (head); 5-10x65-570 (tail)	1	linear	15-280	Ar; B
+Smacoviridae		ssDNA(+/-)	unknown	unknown	unknown	1	circular	2.3-3.0	V; I; H
+Solemoviridae		ssRNA(+)	-	icosahedral	25-34	1	linear	4-6	P
+Solinviviridae		ssRNA(+)	-	icosahedral	26-30	1	linear	10.4-11	I
+Sphaerolipoviridae		dsDNA	-	icosahedral	50-80	1	linear; circular	16-31	Ar; B
+Spiraviridae		ssDNA(+)	-	coil-shaped	28x220	1	circular	25	Ar
+Sunviridae		ssRNA(-)	unknown	unknown	unknown	1	linear	17	V
+Tectiviridae		dsDNA	-	icosahedral	66	1	linear	14.3-18.2	B
+Tobaniviridae		ssRNA(+)	+	spherical; bacilliform	120-160 (spherical); 55-90x120-200 (bacilliform)	1	linear	20.3-33.6	V; H
+Togaviridae		ssRNA(+)	+	spherical	65-70	1	linear	11.2-12.5	V; I; H
+Tolecusatellitidae		ssDNA	-	N/A	N/A	1	linear	0.66-1.44	P
+Tombusviridae		ssRNA(+)	-	icosahedral	28-35	1-2	linear	3.6-5.3	P
+Tospoviridae		ssRNA(-); ssRNA(+/-)	+	spherical	80-120	3	linear	16.1-17.3	P
+Totiviridae		dsRNA	-	icosahedral	33-40	1	linear	4.6-8.2	F; I; Pr
+Tristromaviridae		dsDNA	+	filamentous	30x400	1	linear	17.8	Ar
+Turriviridae		dsDNA	-	icosahedral (turreted,)	70-74	1	linear	16.6-17.7	Ar
+Tymoviridae		ssRNA(+)	-	icosahedral	30	1	linear	6-7.6	I; P
+Virgaviridae		ssRNA(+)	-	rod-shaped	18-21x50-310	1-3	linear	6.3-13	P
+Virtovirus		ssRNA(+)	-	icosahedral	16-17	1	linear	1.2	P
+Wupedeviridae		ssRNA(-)	unknown	unknown	unknown	3	linear	20.5	I
+Xinmoviridae		ssRNA(-)	unknown	unknown	unknown	1	linear	12.8-13.6	I
+Yueviridae		ssRNA(-)	unknown	unknown	unknown	2	linear	7.8-8.2	I
