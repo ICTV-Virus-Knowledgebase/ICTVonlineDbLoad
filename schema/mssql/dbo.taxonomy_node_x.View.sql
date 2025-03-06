@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE view [dbo].[taxonomy_node_x] 
@@ -29,3 +32,4 @@ join taxonomy_node node on
 
 
 GO
+

@@ -1,7 +1,7 @@
-USE [ICTVonline40]
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[QC_module_taxonomy_node_orphan_taxa]    Script Date: 1/31/2025 3:06:26 PM ******/
+
 SET ANSI_NULLS ON
 GO
 
@@ -74,5 +74,4 @@ where mesg like @filter
 order by msl_release_num desc, left_idx
 
 GO
-
 

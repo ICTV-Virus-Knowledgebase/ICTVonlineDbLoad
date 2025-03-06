@@ -1,10 +1,13 @@
-USE [ICTVonline39]
+
 GO
-/****** Object:  View [dbo].[taxonomy_node_dx]    Script Date: 10/8/2024 4:19:50 PM ******/
+
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE view [dbo].[taxonomy_node_dx] as
@@ -18,3 +21,4 @@ left outer join taxonomy_node       pt on pt.taxnode_id = pd.prev_taxid
 left outer join taxonomy_node_delta nd on nd.prev_taxid = t.taxnode_id
 left outer join taxonomy_node       nt on nt.taxnode_id = nd.new_taxid
 GO
+

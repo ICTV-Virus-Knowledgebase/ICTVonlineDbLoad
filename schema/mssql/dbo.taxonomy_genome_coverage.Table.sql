@@ -1,6 +1,7 @@
+
 GO
 
-/****** Object:  Table [dbo].[taxonomy_genome_coverage]    Script Date: 7/23/2024 8:34:27 AM ******/
+
 SET ANSI_NULLS ON
 GO
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # push final scripts and linux-terminator files to box
-#
-TARGET="Virus Knowledgebase/taxonomy/ICTV_update/2025_updates/20250114_msl39v4_prod_export/"
+
+TARGET="Virus Knowledgebase/taxonomy/ICTV_update/2025_updates/20250301_msl40v1/"
 
 #
 # convert line terminators
@@ -21,7 +21,8 @@ rclone copy \
        . \
        "box:/$TARGET"
 
+
 #
-# copy to github, too
+# move towards github, too
 #
 source ./push_to_git_repo.sh

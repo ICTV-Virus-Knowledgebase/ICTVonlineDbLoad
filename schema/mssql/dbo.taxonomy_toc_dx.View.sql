@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE view [dbo].[taxonomy_toc_dx] as
@@ -17,3 +20,4 @@ select
 from taxonomy_toc t1
 join taxonomy_toc t2 on t2.msl_release_num = t1.msl_release_num - 1
 GO
+

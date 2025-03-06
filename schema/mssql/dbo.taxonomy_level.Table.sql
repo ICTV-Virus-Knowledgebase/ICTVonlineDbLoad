@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[taxonomy_level](
 	[id] [int] NOT NULL,
 	[parent_id] [int] NULL,
@@ -21,8 +24,11 @@ CREATE TABLE [dbo].[taxonomy_level](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
 ALTER TABLE [dbo].[taxonomy_level]  WITH CHECK ADD  CONSTRAINT [FK_taxonomy_level_taxonomy_level] FOREIGN KEY([parent_id])
 REFERENCES [dbo].[taxonomy_level] ([id])
 GO
+
 ALTER TABLE [dbo].[taxonomy_level] CHECK CONSTRAINT [FK_taxonomy_level_taxonomy_level]
 GO
+

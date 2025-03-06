@@ -1,7 +1,7 @@
-USE [ICTVonline40]
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[QC_module_taxonomy_node_hidden_nodes]    Script Date: 1/31/2025 2:59:17 PM ******/
+
 SET ANSI_NULLS ON
 GO
 
@@ -60,5 +60,4 @@ order by msl_release_num, left_idx
 
 */
 GO
-
 

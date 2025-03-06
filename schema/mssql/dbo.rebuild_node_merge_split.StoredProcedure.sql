@@ -1,10 +1,13 @@
-USE [ICTVonline39lmims]
+
 GO
-/****** Object:  StoredProcedure [dbo].[rebuild_node_merge_split]    Script Date: 10/8/2024 4:22:48 PM ******/
+
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE procedure [dbo].[rebuild_node_merge_split]
 AS
 
@@ -109,3 +112,4 @@ AS
 	select 'TEST', * from taxonomy_node_merge_split 
 	where next_ictV_id =20093515
 GO
+

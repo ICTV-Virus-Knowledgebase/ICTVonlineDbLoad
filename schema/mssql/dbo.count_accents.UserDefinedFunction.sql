@@ -1,10 +1,13 @@
-USE [ICTVonline39]
+
 GO
-/****** Object:  UserDefinedFunction [dbo].[count_accents]    Script Date: 10/8/2024 4:24:40 PM ******/
+
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE FUNCTION [dbo].[count_accents]( 
 	@string  AS VARCHAR(max)  -- string to look in
@@ -40,3 +43,4 @@ print '2 = '+rtrim(dbo.count_accents('Wadell, Göran & Harrach, Balázs''s'))
 */
 
 GO
+

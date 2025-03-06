@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE FUNCTION [dbo].[vgd_strrchr]( 
 	@targets AS VARCHAR(255), -- characters to look for
@@ -41,3 +44,4 @@ print '7 = ' + rtrim(dbo.vgd_strrchr(' w', 'hello world'))
 print '0 = ' + rtrim(dbo.vgd_strrchr('xy', 'hello world'))
 */
 GO
+

@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE   VIEW [dbo].[view_taxa_level_counts_by_release] AS
 -- by Don Dempsey
 SELECT 
@@ -88,3 +91,4 @@ WHERE release.msl_release_num IS NOT NULL
 AND release.name NOT LIKE 'unassigned'
 
 GO
+

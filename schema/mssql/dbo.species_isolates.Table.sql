@@ -1,6 +1,7 @@
+
 GO
 
-/****** Object:  Table [dbo].[species_isolates]    Script Date: 7/23/2024 7:57:46 AM ******/
+
 SET ANSI_NULLS ON
 GO
 
@@ -29,11 +30,12 @@ CREATE TABLE [dbo].[species_isolates](
 	[update_prev_species] [nvarchar](100) NULL,
 	[update_prev_taxnode_id] [int] NULL,
 	[update_change_proposal] [nvarchar](512) NULL,
+	[notes] [text] NULL,
  CONSTRAINT [PK_species_isolates] PRIMARY KEY CLUSTERED 
 (
 	[isolate_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 ALTER TABLE [dbo].[species_isolates] ADD  CONSTRAINT [DF_species_isolates_isolate_sort]  DEFAULT ((1)) FOR [isolate_sort]

@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE function [dbo].[lineage1] (
 	@taxnode_id int
 )
@@ -16,3 +19,4 @@ BEGIN
 	RETURN(dbo.lineage(@taxnode_id, @seperator))
 END
 GO
+

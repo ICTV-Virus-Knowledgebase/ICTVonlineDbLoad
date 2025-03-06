@@ -1,10 +1,13 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE function [dbo].[lineage] (
 	@taxnode_id int,
@@ -96,3 +99,4 @@ ENd
 
 --select top 1 * from taxonomy_node where level_id = 500
 GO
+

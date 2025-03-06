@@ -1,10 +1,13 @@
-USE [ICTVonline39]
+
 GO
-/****** Object:  View [dbo].[taxonomy_node_names]    Script Date: 10/8/2024 4:19:50 PM ******/
+
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -69,3 +72,4 @@ left outer join taxonomy_genome_coverage gcov on gcov.genome_coverage = tn.genom
 where tn.is_deleted = 0 and tn.is_hidden = 0 and tn.is_obsolete=0
 
 GO
+

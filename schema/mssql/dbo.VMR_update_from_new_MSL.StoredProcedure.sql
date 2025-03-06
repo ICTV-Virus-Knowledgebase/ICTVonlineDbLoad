@@ -1,7 +1,7 @@
-USE [ICTVonline40]
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[VMR_update_from_new_MSL]    Script Date: 1/31/2025 3:00:18 PM ******/
+
 SET ANSI_NULLS ON
 GO
 
@@ -10,7 +10,7 @@ GO
 
 
 
-CREATE procedure [dbo].[VMR_update_from_new_MSL] 
+create procedure [dbo].[VMR_update_from_new_MSL] 
 as
 /*
 -- *************************************************************
@@ -264,5 +264,4 @@ and (
 )
 
 GO
-
 

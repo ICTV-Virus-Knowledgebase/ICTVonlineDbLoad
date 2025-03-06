@@ -1,12 +1,22 @@
-USE [ICTVonline]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 CREATE  PROCEDURE [dbo].[refresh_views]
 AS
+/*
+-- TEST
+
+exec refresh_views
+
+*/
 
 DECLARE @view_name AS varchar(100)
 DECLARE @sql as NVARCHAR(200)
@@ -18,6 +28,8 @@ WHERE
 	[TABLE_TYPE] = 'VIEW'
 AND 
 	[TABLE_NAME] NOT LIKE '[_]%'
+AND 
+	[TABLE_NAME] NOT LIKE '%_abolished'
 ORDER BY [table_name]
 
 OPEN check_sp_cursor
@@ -43,3 +55,4 @@ END
 CLOSE check_sp_cursor
 DEALLOCATE check_sp_cursor
 GO
+

@@ -1,12 +1,15 @@
-USE [ICTVonline39lmims]
+
 GO
+
 
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE FUNCTION [dbo].[udf_singularOrPluralTaxLevelNames]
+
+ALTER FUNCTION [dbo].[udf_singularOrPluralTaxLevelNames]
 (
 	-- Parameter(s)
 	@level_count as int,
@@ -43,3 +46,4 @@ BEGIN
 	RETURN @result;
 END
 GO
+
