@@ -1,6 +1,7 @@
 @REM
 @REM export tables to tsv needed for proposal_validator's current_msl/ cache
 @REM
+@REM 20250307 CurtisH switch copy back to ICTVdatabase/data/
 @REM 20250306 CurtisH switch export file suffix to .utf8.dos.txt
 @REM 20250227 CurtisH MSL40v1 fix taxobnomy_node_marisdb_etl to also be MSL40
 @REM 20250130 CurtisH MSL40v1
@@ -42,5 +43,5 @@ sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo
 sqlcmd -s"	" -f o:65001 -W -Q "set nocount on; select * from [ICTVonline40].[dbo].[vmr_export]"| findstr /v /c:"-" /b > "vmr_export.utf8.dos.txt"
 
 @REM copy back to laptop
-copy /Y  *.txt \\tsclient\ICTV\xfer\prod\export_msl
-copy /Y  *.bat \\tsclient\ICTV\xfer\prod\export_msl
+copy /Y  *.txt \\tsclient\ICTV\ICTVdatabase\data
+copy /Y  *.bat \\tsclient\ICTV\ICTVdatabase\data

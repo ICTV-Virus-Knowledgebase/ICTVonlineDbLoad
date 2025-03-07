@@ -2,7 +2,7 @@
 #
 # push final scripts and linux-terminator files to box
 #
-TARGET="Virus Knowledgebase/taxonomy/ICTV_update/2025_updates/20250301_msl40v1/"
+TARGET="Virus Knowledgebase/taxonomy/ICTV_update/2025_updates/20250114_msl39v4_prod_export/"
 
 #
 # convert line terminators
